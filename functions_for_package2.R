@@ -8,7 +8,7 @@
 
 
 ### Part 1: Impute parental haplotypes `impute_parental_haplotypes`
-### Internal functions: `get_mode`, `invert_bits`, `split_with_overlap`, `reconstruct_haplotypes`
+### Internal functions: `get_mode`, `getmode`, invert_bits`, `invertbits`, `split_with_overlap`, `reconstruct_haplotypes`
 
 
 #' A function to find the more common allele (i.e., 0 or 1) at each SNP 
@@ -27,6 +27,27 @@ get_mode <- function(vector) {
   uniqv <- uniqv[!is.na(uniqv)]
   mode <- uniqv[which.max(tabulate(match(vector, uniqv)))]
   return (mode)
+}
+
+#' A function to find the more common allele or NA at each SNP
+#' 
+#' This function gets the mode of a vector for majority voting or returns NA if there is no single mode
+#' 
+#' @param vector A subset of
+#' 
+#' @return mode The most frequent value or NA at a position
+#' 
+#' @example 
+#' R code here showing how my function works
+#' 
+getmode <- function(vector){
+  uniqv <- unique(na.omit(vector))
+  tabv <- tabulate(match(vector, uniqv))
+  if (length(uniqv) != 1 & sum(max(tabv) == tabv) > 1){
+    if (is.character(uniqv)) return(NA_character_) else return(NA_real_)
+  }
+  max_tabv <- tabv == max(tabv)
+  return(uniqv[max_tabv])
 }
 
 
@@ -49,6 +70,21 @@ invert_bits <- function(input_matrix) {
   return(input_matrix)
 }
 
+
+#' A function to invert the values in a data frame or matrix, faster than invert_bits
+#' 
+#' This function replaces 0s with 1s and 1s with 0s in a dataframe or matrix
+#' 
+#' @param input_data
+#' 
+#' @return input_data inverted from the actual input
+#' 
+#' @examples
+#' R code here showing how my function works
+#' 
+invertbits <- function(input_data) {
+  return(abs(input_data-1))
+}
 
 #' A function to separate the gametes into overlapping segments 
 #' 
@@ -91,7 +127,7 @@ split_with_overlap <- function(vector_of_positions, window_size, overlap) {
 #' @example 
 #' R code here showing my function works 
 #' 
-reconstruct_haplotypes <- function(input_dt, input_positions, window_indices, threads = 1) {
+reconstruct_haplotypes <- function(input_dt, input_positions, window_indices, threads = 1) { #why do we need the threads param here?
   window_start <- min(window_indices)
   window_end <- max(window_indices)
   positions_for_window <- input_positions[window_start:window_end]
@@ -137,6 +173,15 @@ reconstruct_haplotypes <- function(input_dt, input_positions, window_indices, th
 #' 
 impute_parental_haplotypes <- function(dt, window_length, positions, threads) {
   windows <- split_with_overlap(rank(positions), window_length, overlap = window_length / 2)
+  
+  if (length(windows) > 1){ #merge the last two windows to avoid edge effect
+    combined <- unique(c(windows[[length(windows) - 1]], windows[[length(windows)]]))
+    combined <- combined[order(combined)]
+    total_combined <- windows[-c((length(windows) - 1), length(windows))]
+    total_combined[[length(total_combined) + 1]] <- combined
+    windows <- total_combined
+  }
+  
   # infer the haplotypes within the overlapping windows
   inferred_haplotypes <- pbmclapply(1:length(windows), 
                                     function(x) reconstruct_haplotypes(dt, positions, windows[[x]]),
@@ -146,7 +191,7 @@ impute_parental_haplotypes <- function(dt, window_length, positions, threads) {
   for (hap_window in 1:length(windows)) {
     olap_haps <- merge(initial_haplotype, inferred_haplotypes[[hap_window]], by = "index")
     olap_haps_complete <- merge(initial_haplotype, inferred_haplotypes[[hap_window]], by = "index", all = TRUE)
-    mean_concordance <- mean(olap_haps$h1.x == olap_haps$h1.y)
+    mean_concordance <- mean(olap_haps$h1.x == olap_haps$h1.y, na.rm=TRUE)
     if (mean_concordance < 0.1) {
       olap_haps_complete$h1.y <- invert_bits(olap_haps_complete$h1.y)
     } else if (mean_concordance < 0.9) {
@@ -171,7 +216,7 @@ impute_parental_haplotypes <- function(dt, window_length, positions, threads) {
 # complete_haplotypes <- impute_parental_haplotypes(dt, window_length=2500, positions=input_datatable[, 1], threads=1)
 
 ### Part 2: Fill gametes with assignments to one haplotype or the other `fill_gametes`
-### Internal functions: `recode_gametes`, `build_hmm`, `run_hmm`, `fill_na`
+### Internal functions: `recode_gametes`, `recodegametes`, `build_hmm`, `run_hmm`, `fill_na`
 
 #' A function to assign each allele to a haplotype
 #' 
@@ -197,6 +242,30 @@ recode_gametes <- function(dt, complete_haplotypes) {
 }
 
 
+#' A function to assign each allele to a haplotype or an NA if not enough information is known
+#' 
+#' This function reads along each gametes and replaces its read (0 or 1) with the corresponding
+#' haplotype (h1 or h2) based on the allele in each parental haplotype; alternatively, the read 
+#' may be replaced with an NA if not enough information was known for phasing
+#' 
+#' @param dt Input matrix of gamete reads
+#' @param complete_haplotypes Inferred parental haplotypes
+#' 
+#' @return dt matrix of gametes coded by haplotype at each position 
+#' 
+#' @example
+#' R code here showing how my function works
+#' 
+recodegametes <- function(dt, complete_haplotypes) {
+ for (i in 1:ncol(dt)) {
+   dt[i][dt[i] == complete_haplotypes$h1] <- "h1"
+   dt[i][dt[i] == complete_haplotypes$h2] <- "h2"
+   dt[c(which(dt[,i] == 0 | dt[,i] == 1)),i] <- NA
+ }
+  return(dt)
+}
+
+
 #' Build a model to assign haplotypes to each gamete
 #' 
 #' This function builds a hidden Markov model that considers sequencing error. Uses the 
@@ -204,12 +273,13 @@ recode_gametes <- function(dt, complete_haplotypes) {
 #' 
 #' @param dt Input matrix
 #' @param sequencing_error User-input for expected error in sequencing (default = 0.005)
+#' @param avg_recomb User-input for expected average recombination spots per chromosome
 #' 
 #' @return hmm The hidden Markov model with transition and emission probabilities set for use. 
 #' 
 #' @example 
 #' R code here showing my function works 
-build_hmm <- function(dt, sequencing_error) {
+build_hmm <- function(dt, sequencing_error, avg_recomb) {
   # set denominator for transition probability - one recombination event per chromosome
   num_snps <- nrow(dt)
   
@@ -217,8 +287,8 @@ build_hmm <- function(dt, sequencing_error) {
   states <- c("haplotype1", "haplotype2")
   
   # probability of state at position x+1 given state at position x   
-  hap1Prob <- c(1-(1/num_snps), 1/num_snps)
-  hap2Prob <- c(1/num_snps, 1-(1/num_snps))
+  hap1Prob <- c(1-(avg_recomb/num_snps), avg_recomb/num_snps)
+  hap2Prob <- rev(hap1Prob)
   # Probability of transitioning at any given position 
   transProb <- matrix(c(hap1Prob, hap2Prob), 2)
   
@@ -228,7 +298,7 @@ build_hmm <- function(dt, sequencing_error) {
   # Prob of emitting an h1 allele, prob of emitting an h2 allele in state `haplotype1`
   h1ProbEmiss <- c((1-sequencing_error), sequencing_error)
   # Prob of emitting an h1 allele, prob of emitting an h2 allele in state `haplotype2`
-  h2ProbEmiss <- c(sequencing_error, (1-sequencing_error))
+  h2ProbEmiss <- rev(h1ProbEmiss)
   emissProb <- matrix(c(h1ProbEmiss, h2ProbEmiss), 2)
   
   #build model with the above inputs
@@ -255,9 +325,9 @@ build_hmm <- function(dt, sequencing_error) {
 #' @example 
 #' R code here showing my function works 
 #' 
-run_hmm <- function(dt, column_index, complete_haplotypes, sequencing_error) {
+run_hmm <- function(dt, column_index, complete_haplotypes, sequencing_error, avg_recomb) {
   # build the hmm 
-  hmm <- build_hmm(dt, sequencing_error)
+  hmm <- build_hmm(dt, sequencing_error, avg_recomb)
   
   original_obs <- dt[,column_index]
   inferred_state <- viterbi(hmm, na.omit(dt[, column_index]))
@@ -329,15 +399,17 @@ fill_na <- function(imputed_gametes, col_index) {
 #' 
 
 # add option for boolean 
-fill_gametes <- function(dt, complete_haplotypes, sequencing_error=0.005, threads) {
+fill_gametes <- function(dt, complete_haplotypes, sequencing_error=0.005, threads) { #test to see if pbmclapply complains if a single thread is used
   dt_recoded <- recode_gametes(dt, complete_haplotypes)
   
-  imputed_gametes <- as_tibble(do.call(cbind, pbmclapply(1:ncol(dt),
-                                                         function(x) run_hmm(dt, x))))
+  imputed_gametes <- as_tibble(do.call(cbind, pbmclapply(1:ncol(dt_recoded),
+                                                         function(x) run_hmm(dt_recoded, x),
+                                                         mc.cores = getOption("mc.cores", threads))))
 
   filled_gametes <- as_tibble(do.call(cbind, 
                                       pblapply(1:ncol(imputed_gametes),
-                                               function(x) fill_na(imputed_gametes, x))))
+                                               function(x) fill_na(imputed_gametes, x),
+                                               mc.cores = getOption("mc.cores", threads))))
   colnames(filled_gametes) <- colnames(dt)
   return(filled_gametes)
 }
