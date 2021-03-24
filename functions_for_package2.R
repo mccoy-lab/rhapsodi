@@ -400,7 +400,7 @@ fill_na <- function(imputed_gametes, col_index) {
 
 # add option for boolean 
 fill_gametes <- function(dt, complete_haplotypes, sequencing_error=0.005, threads) { #test to see if pbmclapply complains if a single thread is used
-  dt_recoded <- recode_gametes(dt, complete_haplotypes)
+  dt_recoded <- recodegametes(dt, complete_haplotypes)
   
   imputed_gametes <- as_tibble(do.call(cbind, pbmclapply(1:ncol(dt_recoded),
                                                          function(x) run_hmm(dt_recoded, x),
@@ -418,13 +418,26 @@ fill_gametes <- function(dt, complete_haplotypes, sequencing_error=0.005, thread
 # outcome <- fill_gametes(dt, complete_haplotypes, sequencing_error=0.005, threads=1)
 
 
-### Part 3: Functions for plotting
+### Part 3: Find recombination spots and write out results (possibly with real reads instead of smoothed reads) `report_gametes`
+### Internal functions: `unsmooth`, `find_recomb_spots`, `re_recode_gametes`, `report_gametes`
+
+#' A function to unsmooth or replace original reads for the gametes
+#' 
+#' This fuction finds where the resulting haplotype assignments differ from the original reads and replaces the imputed data with
+#' the originally observed data, hence unsmoothing the HMM signal.
+#' 
+#' @param original_gamete_data original gamete data with haplotype by position 
+#' @param filled_gamete_data filled gamete data from `fill_gametes`
+#'
+#'
+
+### Part 4: Functions for plotting
 
 
-### Part 4: Functions for simulations 
+### Part 5: Functions for simulations 
 
 
-### Part 5: Functions for testing 
+### Part 6: Functions for testing 
 
 
 
