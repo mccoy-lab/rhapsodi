@@ -145,11 +145,11 @@ reconstruct_haplotypes <- function(input_dt, input_positions, window_indices, th
   h2_sperm <- names(haplotypes[haplotypes == 2])
   # reconstruct the original haplotypes by majority vote after inverting the opposite haplotype
   h1_inferred <- unname(apply(cbind(input_dt[window_start:window_end, h1_sperm],
-                                    invert_bits(input_dt[window_start:window_end, h2_sperm])),
-                              1, function(x) get_mode(x)))
+                                    invertbits(input_dt[window_start:window_end, h2_sperm])),
+                              1, function(x) getmode(x)))
   h2_inferred <- unname(apply(cbind(input_dt[window_start:window_end, h2_sperm],
-                                    invert_bits(input_dt[window_start:window_end, h1_sperm])),
-                              1, function(x) get_mode(x)))
+                                    invertbits(input_dt[window_start:window_end, h1_sperm])),
+                              1, function(x) getmode(x)))
   inferred_output <- tibble(index = window_indices, pos = positions_for_window, h1 = h1_inferred)
   return(inferred_output)
 }
@@ -193,7 +193,7 @@ impute_parental_haplotypes <- function(dt, window_length, positions, threads) {
     olap_haps_complete <- merge(initial_haplotype, inferred_haplotypes[[hap_window]], by = "index", all = TRUE)
     mean_concordance <- mean(olap_haps$h1.x == olap_haps$h1.y, na.rm=TRUE)
     if (mean_concordance < 0.1) {
-      olap_haps_complete$h1.y <- invert_bits(olap_haps_complete$h1.y)
+      olap_haps_complete$h1.y <- invertbits(olap_haps_complete$h1.y)
     } else if (mean_concordance < 0.9) {
       error(paste0("Haplotypes within overlapping windows are too discordant to merge. Mean: ", mean_concordance))
     }
@@ -208,7 +208,7 @@ impute_parental_haplotypes <- function(dt, window_length, positions, threads) {
                                        olap_haps_complete[is.na(olap_haps_complete$pos.x),]$h1.y))
   }
   complete_haplotypes <- initial_haplotype %>%
-    mutate(h2 = invert_bits(h1))
+    mutate(h2 = invertbits(h1))
   return(complete_haplotypes)
 }
 
