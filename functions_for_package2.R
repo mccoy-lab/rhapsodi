@@ -423,13 +423,148 @@ fill_gametes <- function(dt, complete_haplotypes, sequencing_error=0.005, thread
 
 #' A function to unsmooth or replace original reads for the gametes
 #' 
-#' This fuction finds where the resulting haplotype assignments differ from the original reads and replaces the imputed data with
+#' This function finds where the resulting haplotype assignments differ from the original reads and replaces the imputed data with
 #' the originally observed data, hence unsmoothing the HMM signal.
 #' 
 #' @param original_gamete_data original gamete data with haplotype by position 
 #' @param filled_gamete_data filled gamete data from `fill_gametes`
 #'
+#' @return filled_gamete_data filled gamete data in tibble form with replaced original reads 
+#' 
+#' @example
+#' R code here explaining what my function does
+#' 
+unsmooth <- function(original_gamete_df, filled_gamete_data) {
+  original_gamete_df[original_gamete_df == "h1"] <- "haplotype1"
+  original_gamete_df[original_gamete_df == "h2"] <- "haplotype2"
+  original_dt <- as.data.frame(original_gamete_df)
+  filled_gamete_data <- as.data.frame(filled_gamete_data)
+  filled_gamete_data[!is.na(original_dt)] <- original_dt[!is.na(original_dt)]
+  filled_gamete_data <- as_tibble(filled_gamete_data)
+  return (filled_gamete_data)
+}
+
+#' A function to find recombination breakpoint regions for a single gamete
+#' 
+#' This function finds recombination breakpoint regions for a single gamete by finding 
+#' where adjacent non-NA haplotypes switch. Most likely large regions will be returned 
+#' rather than 2bp windows because the sparsity of the original data constrains how 
+#' many NAs will remain after filling and therefore we can only say that the true
+#' exchange point occurs somewhere between these two non-matching haplotypes
+#' 
+#' @param input_gamete_data (tibble) SNPs correspond to the rows and gametes correspond to the columns
+#' @param x which gamete number to search
+#' @param identities gamete identities vector
+#' @param genomic_positions Genomic SNP positions 
+#' 
+#' @return recomb_spots tibble of the recombination spots for gamete x
+#' 
+#' @example 
+#' R code here explaining what my function does
+#' 
+find_recomb_spots <- function(input_gamete_data, x, identities, genomic_positions) {
+  ident <- identities[x]
+  input_tibble <- input_gamete_data[, x] %>%
+    mutate(., index = row_number()) %>%
+    mutate(., positions = genomic_positions)
+  complete_cases_tibble <- input_tibble[complete.cases(input_tibble),]
+  input_vec <- as.factor(complete_cases_tibble[[1]])
+  switch_indices <- which(input_vec[-1] != input_vec[-length(input_vec)])
+  switch_indices_input <- complete_cases_tibble[switch_indices,]$index
+  crossover_start <- input_tibble[switch_indices_input,]$positions
+  rev_input_tibble <- arrange(input_tibble, -index) %>%
+    mutate(., index = row_number())
+  complete_cases_rev_tibble <- rev_input_tibble[complete.cases(rev_input_tibble),]
+  rev_input_vec <- as.factor(complete_cases_rev_tibble[[1]])
+  rev_switch_indices <- which(rev_input_vec[-1] != rev_input_vec[-length(rev_input_vec)])
+  rev_switch_indices_input <- complete_cases_rev_tibble[rev_switch_indices,]$index
+  crossover_end <- rev(rev_input_tibble[rev_switch_indices_input,]$positions)
+  recomb_spots <- tibble(Ident = ident, Genomic_start = crossover_start, Genomic_end = crossover_end)
+  return (recomb_spots)
+}
+
+#' A function to turn a matrix of gamete haplotypes by position back to the 0/1 reads by
+#' position, using the phased parental haplotypes as a guide
+#' 
+#' This function builds a matrix with position by row and gametes by column such that each cell
+#' is a 0 or a 1 or an NA based on whether that cell in the input gamete matrix was from haplotype1, haplotype2, 
+#' or was an NA. Then the 0 or 1 is found in the complete_haplotypes (phased parentals) input at the corresponding
+#' positions 
 #'
+#' @param dt input gamete haplotype data in tibble form
+#' @param complete_haplotypes dataframe of phased parentals with two columns (h1 and h2) and SNP positions as rows 
+#'
+#' @return to_return gamete data in dataframe form with read data (0's and 1's and NAs) instead of haplotype information
+#' 
+#' @example
+#' R code here explaining what my function does
+#'
+re_recode_gametes <- function(dt, complete_haplotypes) {
+  to_return <- data.frame(matrix(NA_real_, nrow=nrow(dt), ncol=ncol(dt)))
+  for (i in 1:ncol(dt)) {
+    locs_h1 <- dt[,i] == "haplotype1"
+    locs_h1[which(is.na(locs_h1))] <- FALSE
+    locs_h2 <- dt[,i] == "haplotype2"
+    locs_h2[which(is.na(locs_h2))] <- FALSE
+    to_return[locs_h1, i] <- complete_haplotypes$h1[locs_h1]
+    to_return[locs_h2, i] <- complete_haplotypes$h2[locs_h2]
+  }
+  return (to_return)
+}
+
+#' A function to drive and report the unsmoothing (if desired) and recombination finding
+#' 
+#' This function takes as input two booleans controlling whether the reported genotypes are smoothed
+#' or unsmoothed (replacing inferred HMM state with the original reads if they disagree) 
+#' and whether the data given to recombination finding is smoothed or unsmoothed. Then the function
+#' runs recombination finding (and eventually reporting/exporting of the cool data)
+#' 
+#' @param smooth_crossovers boolean whether to use smoothed data for recombination finding. If TRUE, doesn't replace with original reads
+#' @param smooth_imputed_genotypes boolean whether to use smoothed data for ending genotypes. If TRUE, doesn't replace with original reads
+#' @param complete_haplotypes dataframe of phased parental genotypes in two columns, one for each parental haplotype
+#' @param original_gamete_data 
+#' 
+#'
+#' @export
+#' 
+#' @example 
+#' R code showing how my function works
+#'
+report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete_haplotypes, original_gamete_data, filled_gamete_data, sampleName, chrom, positions) {
+  if (!smooth_crossovers & !smooth_imputed_genotyptes) {
+    filled_gamete_forrecomb <- unsmooth(original_gamete_data, filled_gamete_data) #haplotypes
+    idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_forrecomb))
+    recomb_spots_all <- do.call(rbind, pbmclapply(1:ncol(filled_gamete_forrecomb),
+                                                  function(x) find_recomb_spots(filled_gamete_forrecomb, x, idents_for_csv, positions),
+                                                  mc.cores=getOption("mc.cores", threads))) %>%
+      right_join(., tibble(Ident = idents_for_csv), by = "Ident")
+    filled_gamete_recode <- re_recode_gametes(filled_gamete_forrecomb, complete_haplotypes) #0's and 1's
+  } else if (!smooth_crossovers & smooth_imputed_genotypes) {
+    filled_gamete_forrecomb <- unsmooth(original_gamete_data, filled_gamete_data)
+    idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_forrecomb))
+    recomb_spots_all <- do.call(rbind, pbmclapply(1:ncol(filled_gamete_forrecomb),
+                                                  function(x) find_recomb_spots(filled_gamete_forrecomb, x, idents_for_csv, positions),
+                                                  mc.cores=getOption("mc.cores", threads))) %>%
+      right_join(., tibble(Ident = idents_for_csv), by = "Ident")
+    filled_gamete_recode <- re_recode_gametes(filled_gamete_data, complete_haplotypes) #0's and 1's
+} else if (smooth_crossovers & !smooth_imputed_genotypes){
+    idents_for_csv <- paste0(paste0(samplenName, "_", chrom, "_"), colnames(filled_gamete_data))
+    recomb_spots_all <- do.call(rbind, pbmclapply(1:ncol(filled_gamete_data),
+                                                  function(x) find_recomb_spots(filled_gamete_data, x, idents_for_csv, positions),
+                                                  mc.cores=getOption("mc.cores", threads))) %>%
+      right_join(., tibble(Ident = idents_for_csv), by = "Ident")
+    filled_gamete_data <- unsmooth(original_gamete_data, filled_gamete_data) #haplotypes
+    filled_gamete_recode <- re_recode_gamtes(filled_gamete_data, complete_haplotypes) #0's and 1's
+    
+} else { #both are TRUE
+  idents_for_csv <- paste0(paste0(samplenName, "_", chrom, "_"), colnames(filled_gamete_data))
+  recomb_spots_all <- do.call(rbind, pbmclapply(1:ncol(filled_gamete_data),
+                                                function(x) find_recomb_spots(filled_gamete_data, x, idents_for_csv, positions),
+                                                mc.cores=getOption("mc.cores", threads))) %>%
+    right_join(., tibble(Ident = idents_for_csv), by = "Ident")
+  filled_gamete_recode <- re_recode_gamtes(filled_gamete_data, complete_haplotypes) #0's and 1's
+  }
+}
 
 ### Part 4: Functions for plotting
 
