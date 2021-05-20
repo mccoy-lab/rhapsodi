@@ -1,6 +1,7 @@
-#' A function to impute parental haplotypes 
+#' A function to impute haplotypes from diploid donor
 #' 
-#' This function 
+#' This function infers the diploid donor haplotypes by first calling `split_with_overlap` to find the overlapping SNP segments, 
+#' then `reconstruct_hap` for majority voting within each overlapping segment, finally stitching together the overlapping segments to phase both haplotypes
 #' 
 #' @export
 #' 
@@ -9,8 +10,9 @@
 #' @param window_length Size of window (default=3000)
 #' @param overlap_denom User-input value for denominator in calculation of overlap (default = 2)
 #' @param threads User-input value for calling `pbmclapply` (default = 2)
+#' @param mcstop User-input value for continuing phasing even if mean_concordance isn't within advised bounds (default = FALSE)
 #' 
-#' @return complete_haplotypes
+#' @return complete_haplotypes phased haplotypes as a tibble with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
 #' 
 #' @example 
 #' R code here showing my function works 
