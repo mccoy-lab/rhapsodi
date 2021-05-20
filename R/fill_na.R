@@ -2,9 +2,6 @@
 #' 
 #' This function fills in missing data (NAs) on each gamete. For each gamete, it fills the NA values with the nearest haplotype.
 #' If the two adjacent haplotypes are not the same (i.e., at a recombination breakpoint), it leaves the values as NA. 
-#' It offers the option to avoid oversmoothing by superimposing initial haplotype assignments over each gamete. For example, if an 
-#' allele assigned to h1 was changed by the model to h2, this function can fill the NAs to h2, but replace the singular h1
-#' at the correct allele. This could be an example of gene conversion or non-crossover. 
 #' 
 #' @param imputed_gametes Output of `run_hmm` which assigned a parental haplotype to each segment of each gamete
 #' @param col_index Each column of `imputed_gametes`, pulled via `apply` function 

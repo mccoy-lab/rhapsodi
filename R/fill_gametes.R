@@ -1,8 +1,7 @@
 #' A function to assign the haplotypes of each allele on every gamete
 #' 
 #' This function builds and applies a hidden Markov model to categorize each allele on each gamete. 
-#' It then fills the positions missing data with the nearest haplotype assignment. It offers the option to 
-#' superimpose the original haplotype. 
+#' It then fills the positions missing data with the nearest haplotype assignment.
 #' 
 #' @param dt matrix of gametes
 #' @param complete_haplotypes Inferred parental haplotypes 
