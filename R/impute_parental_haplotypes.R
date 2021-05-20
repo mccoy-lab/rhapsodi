@@ -15,7 +15,7 @@
 #' @example 
 #' R code here showing my function works 
 #' 
-impute_parental_haplotypes <- function(dt, positions, window_length=3000, overlap_denom=2, threads=2){
+impute_parental_haplotypes <- function(dt, positions, window_length=3000, overlap_denom=2, threads=2, mcstop=TRUE){
   #Find overlapping windows
   windows <- split_with_overlap(rank(positions), window_length, overlap_denom)
   #Infer the haplotypes within the overlapping windows (a window at a time)
@@ -31,7 +31,11 @@ impute_parental_haplotypes <- function(dt, positions, window_length=3000, overla
     if (mean_concordance < 0.1) {
       olap_haps_complete$h1.y <- invert_bits(olap_haps_complete$h1.y)
     } else if (mean_concordance < 0.9) {
-      stop(paste0("Haplotypes within overlapping windows are too discordant to merge with a mean concordance of ", mean_concordance, ". rhapsodi is exiting"))
+      if (mcstop){
+        stop(paste0("Haplotypes within overlapping windows are too discordant to merge with a mean concordance of ", mean_concordance, ". rhapsodi is exiting"))
+      } else{
+        message(paste0("Haplotypes within overlapping windows are too discordant for confident merging with a mean concordance of ", mean_concordance, ", but continuing."))
+      }
     }
     initial_haplotype <- tibble(index = olap_haps_complete$index,
                                 pos = c(olap_haps_complete[is.na(olap_haps_complete$pos.y),]$pos.x,
