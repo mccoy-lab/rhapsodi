@@ -8,15 +8,25 @@ Imports:
 Suggests:
   ggplot2,
   stringr
-Title: What the Package Does (One Line, Title Case)
+Title: R Haplotype Sparse Data Inference
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
+Authors@R: c(
+    person(given = "Kathryn",
+           family = "Weaver",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "kweave23@jhu.edu"),
+    person(given = "Sara",
+           family = "Carioscia",
+           role = c("aut", "cre"),
+           email = "scarios1@jhu.edu"),
+    person(given = "Rajiv",
+           family = "McCoy",
+           role = c("aut", "cre"),
+           email = "rajiv.mccoy@jhu.edu"))
+Description: Given sparse gamete genotyping data, 'rhapsodi' 
+    imputes the phased haplotypes of the diploid donor, 
+    infers the full gamete genotypes, 
+    and discovers meiotic recombination events for each gamete.  
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8
