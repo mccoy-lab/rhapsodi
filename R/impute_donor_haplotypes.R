@@ -17,7 +17,7 @@
 #' @example 
 #' R code here showing my function works 
 #' 
-impute_parental_haplotypes <- function(dt, positions, window_length=3000, overlap_denom=2, threads=2, mcstop=TRUE){
+impute_donor_haplotypes <- function(dt, positions, window_length=3000, overlap_denom=2, threads=2, mcstop=TRUE){
   #Find overlapping windows
   windows <- split_with_overlap(rank(positions), window_length, overlap_denom)
   #Infer the haplotypes within the overlapping windows (a window at a time)
