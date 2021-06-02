@@ -41,14 +41,12 @@ sim_run_generative_model <- function(){
   tci_dt <- data.table(gam=str_split(names(unlist_ci), "_", simplify=TRUE)[,1], start =(unlist_ci-1), end=(unlist_ci))
   
   gam_mat <- sapply(sim_gam, "[[", 2)
-  gam_full_df <- data.frame(pseudo_pos = 1:nrow(gam_mat), gam_mat) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
   if (missing_genotype_rate > 0.5){
     gam_mat_with_na <- sim_add_to_na_flatten(gam_mat, num_nas, num_gametes, num_snps)
   } else if (missing_genotype_rate <= 0.5){
     gam_mat_with_na <- sim_add_na_flatten(gam_mat, num_nas, num_gametes, num_snps)
   }
-  gam_na_df <- data.frame(pseudo_pos = 1:nrow(gam_mat_with_na), gam_mat_with_na) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
-
+  
   if (add_de_novo_mut){
     dnm_out <- sim_add_de_novo_mut(de_novo_lambda, de_novo_alppha, de_novo_beta, num_snps, num_gametes, gam_haps, gam_mat, gam_mat_with_na, donor_haps, unlist_ci, missing_genotype_rate)
     #do I have to do anything fancy to get objects from this, or is it ok since it's a named list?
@@ -56,12 +54,17 @@ sim_run_generative_model <- function(){
     num_snps <- dnm_out$num_snps
     
     gam_mat_with_na <- dnm_out$gam_mat_with_na
-    gam_na_df <- data.frame(pseudo_pos = 1:nrow(gam_mat_with_na), gam_mat_with_na) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
     
     gam_mat <- dnm_out$gam_mat
-    gam_full_df <- data.frame(pseudo_pos = 1:nrow(gam_mat), gam_mat) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
     
     unlist_ci <- dnm_out$unlist_ci
     tci_dt <- data.table(gam=str_split(names(unlist_ci), "_", simplify=TRUE)[,1], start =(unlist_ci-1), end=(unlist_ci))
   }
+  if (add_seq_error){
+    gam_mat_with_na <- sim_add_seq_error(num_snps, num_gametes, seqError_add, gam_mat_with_na)
+  }
+  gam_na_df <- data.frame(pseudo_pos = 1:nrow(gam_mat_with_na), gam_mat_with_na) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
+  gam_full_df <- data.frame(pseudo_pos = 1:nrow(gam_mat), gam_mat) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
+  
+  #filtering?
 }
