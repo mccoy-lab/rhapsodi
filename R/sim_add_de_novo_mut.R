@@ -2,6 +2,7 @@
 #'
 #'
 sim_add_de_novo_mut <- function(de_novo_lambda, de_novo_alpha, de_novo_beta, num_snps, num_gametes, gam_haps, gam_mat, gam_mat_with_na, donor_haps, unlist_ci, missing_genotype_rate){
+  out <- list()
   stopifnot(de_novo_beta > 0)
   new_rows <- c()
   num_dnm <- rpois(1, de_novo_lambda) + 1 #ensure this is greater than 0 by adding 1
@@ -49,4 +50,10 @@ sim_add_de_novo_mut <- function(de_novo_lambda, de_novo_alpha, de_novo_beta, num
     bool_adj[is.na(bool_adj)] <- FALSE
     unlist_ci[bool_adj] <- unlist_ci[bool_adj] + 1
   }
+  out$unlist_ci <- unlist_ci
+  out$num_snps <- num_snps
+  out$gam_haps <- gam_haps
+  out$gam_mat <- gam_mat
+  out$gam_mat_with_na <- gam_mat_with_na
+  return(out)
 }
