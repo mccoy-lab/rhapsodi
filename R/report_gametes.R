@@ -16,12 +16,18 @@
 #' @param sampleName sample name of sample given to rhapsodi
 #' @param chrom chromosome of sample given to rhapsodi
 #' 
+#' @return out a named list which returns gamete_haps, or a data frame specifying from which donor haplotype each gamete position originates
+#'                                        gamete_genotypes, or a matrix specifying the genotype in (0's and 1's) for each gamete position
+#'                                        recomb_breaks, or a tibble specifying the predicted recombination breakpoints for each gamete
+#'                                        donor_haps, or phased haplotypes as a tibble with column names: index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
+#'                                        
 #' @export
 #' 
 #' @example
 #' R code showing how my function works
 #' 
 report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete_haplotypes, original_gamete_data, filled_gamete_data, sampleName, chrom){
+  out <- list() #want to return out$gamete_haps filled gamete data haplotypes, out$recomb_breaks, out$
   if (!smooth_crossovers){
     filled_gamete_forrecomb <- unsmooth(original_gamete_data, filled_gamete_data) #filled_gamete_forrecomb is haplotypes
     idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_forrecomb))
@@ -31,10 +37,11 @@ report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete
       right_join(., tibble(Ident = idents_for_csv), by = "Ident")
     if (!smooth_imputed_genotypes){
       filled_gamete_recode <- re_recode_gametes(filled_gamete_forrecomb, complete_haplotypes) #filled_gamete_recode is 0's and 1's
-      #want to report filled_gamete_forrecomb (the haplotypes)
+      out$gamete_haps <- filled_gamete_forrecomb #want to report filled_gamete_forrecomb (the haplotypes)
+      
     } else{ #smooth_imputed_genotypes is TRUE
       filled_gamete_recode <- re_recode_gametes(filled_gamete_data, complete_haplotypes)
-      #want to report filled_gamete_data (the haplotypes)
+      out$gamete_haps <- filled_gamete_data #want to report filled_gamete_data (the haplotypes)
     }
   } else { #smooth_crossovers is TRUE
     idents_for_csv <- paste0(paste0(samplenName, "_", chrom, "_"), colnames(filled_gamete_data))
@@ -48,7 +55,10 @@ report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete
     } else { #smooth_imputed_genotypes is TRUE
       filled_gamete_recode <- re_recode_gamtes(filled_gamete_data, complete_haplotypes) #0's and 1's
     }
-   #want to report filled_gamete_data (the haplotypes)
+   out$gamete_haps <- filled_gamete_data #want to report filled_gamete_data (the haplotypes)
   }
-  #want to report recomb_spots_all, filled_gamete_recode (the 0's and 1's)
+  out$recomb_breaks <- recomb_spots_all #want to report recomb_spots_all
+  out$donor_haps <- complete_haplotypes #want to report the diploid donor haplotypes (genotypes within each a single h1 or h2 column is a single haplotype)
+  out$gamete_genotypes <- filled_gamete_recode #want to report filled_gamete_recode (the 0's and 1's)
+  return(out)
 }
