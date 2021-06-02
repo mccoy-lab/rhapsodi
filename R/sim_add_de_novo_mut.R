@@ -2,6 +2,7 @@
 #'
 #'
 sim_add_de_novo_mut <- function(de_novo_lambda, de_novo_alpha, de_novo_beta, num_snps, num_gametes, gam_haps, gam_mat, gam_mat_with_na, donor_haps, unlist_ci, missing_genotype_rate){
+  stopifnot(de_novo_beta > 0)
   new_rows <- c()
   num_dnm <- rpois(1, de_novo_lambda) + 1 #ensure this is greater than 0 by adding 1
   num_gametes_affected_per_dnm <- ceiling(rgamma(num_dnm, de_novo_alpha, scale=de_novo_beta))
