@@ -2,12 +2,11 @@ Package: rhapsodi
 Imports:
   data.table,
   HMM,
-  pbapply,
-  pbmcapply,
   tidyverse
 Suggests:
-  ggplot2,
-  stringr
+  pbapply,
+  pbmcapply,
+  ggplot2
 Title: R Haplotype Sparse Data Inference
 Version: 0.0.0.9000
 Authors@R: c(
