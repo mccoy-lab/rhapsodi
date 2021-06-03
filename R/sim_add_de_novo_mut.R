@@ -55,5 +55,7 @@ sim_add_de_novo_mut <- function(de_novo_lambda, de_novo_alpha, de_novo_beta, num
   out$gam_haps <- gam_haps
   out$gam_mat <- gam_mat
   out$gam_mat_with_na <- gam_mat_with_na
+  out$new_rows <- new_rows
+  out$donor_haps <- donor_haps
   return(out)
 }

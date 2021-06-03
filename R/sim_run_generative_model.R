@@ -4,32 +4,21 @@
 sim_run_generative_model <- function(){
   #get argument inputs
   #input_cov a bool
-  input_cov <- TRUE
   ##coverage a float
-  coverage <- 0.693
   #input_mgr a bool
-  input_mgr <- FALSE
   ##missing_genotype_rate a float
   #random_seed an int
-  random_seed <- 42
   #num_gametes an int
-  num_gametes <- 1000
   #recomb_lambda a float
-  recomb_lambda <- 1
   #num_snps an int
-  num_snps <- 30000
   #add_de_novo_mut a bool
-  add_de_novo_mut <- TRUE
   ##de_novo_lambda an int
-  de_novo_lambda <- 5
   ##de_novo_alpha a float
-  de_novo_alpha <- 7.5
   ##de_novo_beta a float
-  de_novo_beta <- 10
   #add_seq_error a bool
-  add_seq_error <- TRUE
   ##seqError_add a float
-  seqError_add <- 0.005
+  
+  generated_data <- list()
   
   if (input_cov){
     missing_genotype_rate <- sim_find_mgr_from_cov(coverage)
@@ -64,6 +53,8 @@ sim_run_generative_model <- function(){
     dnm_out <- sim_add_de_novo_mut(de_novo_lambda, de_novo_alpha, de_novo_beta, num_snps, num_gametes, gam_haps, gam_mat, gam_mat_with_na, donor_haps, unlist_ci, missing_genotype_rate)
     num_snps <- dnm_out$num_snps
     
+    donor_haps <- dnm_out$donor_haps
+    
     gam_mat_with_na <- dnm_out$gam_mat_with_na
     
     gam_mat <- dnm_out$gam_mat
@@ -72,13 +63,24 @@ sim_run_generative_model <- function(){
     tci_dt <- data.table(gam=sapply(strsplit(names(unlist_ci), "_"), `[`, 1), start =(unlist_ci-1), end=(unlist_ci))
     
     new_dnm_rows <- dnm_out$new_rows
-  }
+  } else {new_dnm_rows <- c() }
   if (add_seq_error){
     gam_mat_with_na <- sim_add_seq_error(num_snps, num_gametes, seqError_add, gam_mat_with_na)
   }
   gam_na_df <- data.frame(pseudo_pos = 1:nrow(gam_mat_with_na), gam_mat_with_na) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
   gam_full_df <- data.frame(pseudo_pos = 1:nrow(gam_mat), gam_mat) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
   
-  #filtering?
+  #Filtering
+  filtered_out <- sim_filter_generated_data(gam_na_df, gam_full_df, donors_haps, new_dnm_rows, add_de_novo_mut)
+  gam_na_df <- filtered_out$gam_na_df
+  gam_full_df <- filtered_out$gam_full_df
+  donor_haps <- filtered_out$donor_haps
+  num_snps <- filtered_out$num_snps
   
+  generated_data$recomb_spots <- tci_dt
+  generated_data$gam_full <- gam_full_df
+  generated_data$gam_na <- gam_na_df
+  generated_data$donor_haps <- donor_haps
+  
+  return(generated_data)
 }
