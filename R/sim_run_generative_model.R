@@ -1,23 +1,28 @@
 #'
 #'
+#' @param num_gametes an integer
+#' @param num_snps an integer
+#' @param coverage a numeric, input if input_cov is TRUE, suggested NULL otherwise
+#' @param recomb_lambda a numeric, the average rate of recombination expected for the simulation
+#' @param random_seed an integer, the random seed which will be set for the simulation, default=42
+#' @param input_cov a logical, TRUE if coverage (i.e. like 0.01 (x)) will be input rather than missing genotype rate 
+#' @param input_mgr a logical, TRUE if missing genotype rate (i.e. like 80 (%) or 0.8) will be inpupt rather than coverage, default = FALSE
+#' @param missing_genotype_rate a numeric, input if input_mgr is TRUE and input_COV is FALSE, suggested NULL otherwise, default=NULL
+#' @param add_seq_error a logical, TRUE if you want to add sequencing error to the generated data, default=TRUE
+#' @param seqError_add a numeric, the sequencing error rate if adding sequencing error to the generated data, default=0.005
+#' @param add_de_novo_mut a logical, TRUE if you want to add de novo mutations to the generated data, default=FALSE
+#' @param de_novo_lambda an integer, default=5
+#' @param de_novo_alpha a numeric, default=7.5
+#' @param de_novo_beta a numeric, default=10
 #'
-sim_run_generative_model <- function(){
-  #get argument inputs
-  #input_cov a bool
-  ##coverage a float
-  #input_mgr a bool
-  ##missing_genotype_rate a float
-  #random_seed an int
-  #num_gametes an int
-  #recomb_lambda a float
-  #num_snps an int
-  #add_de_novo_mut a bool
-  ##de_novo_lambda an int
-  ##de_novo_alpha a float
-  ##de_novo_beta a float
-  #add_seq_error a bool
-  ##seqError_add a float
-  
+#'
+sim_run_generative_model <- function(num_gametes, num_snps, coverage, 
+                                     recomb_lambda, random_seed=42, 
+                                     input_cov=TRUE, input_mgr=FALSE, missing_genotype_rate=NULL,
+                                     add_seq_error=TRUE, seqError_add=0.005,
+                                     add_de_novo_mut=FALSE, de_novo_lambda=5, de_novo_alpha=7.5, de_novo_beta=10){
+  ##is it necessary to verify argument input types?
+ 
   generated_data <- list()
   
   if (input_cov){
