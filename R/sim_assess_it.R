@@ -1,7 +1,10 @@
 #'
 #'
 #'
-sim_assess_it <- function(true_donor_haps, pred_donor_haps, true_recomb, pred_recomb, true_gam, pred_gam, num_snps, num_gametes, write_out_plot, cons=FALSE){
+sim_assess_it <- function(true_donor_haps, pred_donor_haps, true_recomb, pred_recomb, true_gam, pred_gam, write_out_plot=FALSE, cons=FALSE){
+  num_snps <- nrow(true_gam)
+  num_gametes <- ncol(true_gam[,-1])
+  
   assess_phasing_out <- sim_assess_phasing(true_donor_haps, pred_donor_haps, num_snps)
   
   assess_gam_imputation_out <- sim_assess_gam_imputation(true_gam, pred_gam, num_snps, num_gametes) 
