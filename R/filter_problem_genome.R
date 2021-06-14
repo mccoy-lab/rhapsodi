@@ -11,7 +11,7 @@
 #' @param exclude_genomic_positions Bed-style file (with chr, start, end columns) showing genomic positions that should be excluded (e.g., are in a blacklisted region of the genome) 
 #' @param include_genomic_positions Bed-style file (with chr, start, end columns) showing genomic positions that should be included (e.g., are in an accessible region of the genome)
 #' 
-#' @return approved_genomic_positions Genomic positions that should be included   
+#' @return pos_not_excluded Genomic positions that should be included   
 #' 
 #' @example 
 #' R code here showing my function works 
