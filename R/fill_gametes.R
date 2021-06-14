@@ -7,19 +7,33 @@
 #' @param complete_haplotypes Inferred parental haplotypes 
 #' @param sequencing_error User-input for expected error in sequencing (default = 0.005) 
 #' @param avg_recomb User-input for average recombination rate that can be expected for a chromosome (default=1)
-#' @param threads User-input value for calling `pbmclapply` and `pblapply` (default = 2)
+#' @param threads User-input value for calling `pbmclapply` or `mclapply` (default = 2)
+#' 
+#' @export
 
 fill_gametes <- function(dt, complete_haplotypes, sequencing_error=0.005, avg_recomb = 1, threads=2){
   dt_recoded <- recode_gametes(dt, complete_haplotypes)
   #build the HMM
-  hmm <- build_hmm(dt, sequencing_error, avg_recomb)
-  imputed_gametes <- as.tibble(do.call(cbind, pbmclapply(1:ncol(dt_recoded), 
-                                                         function(x) run_hmm(dt_recoded, x, hmm),
-                                                         mc.cores = getOption("mc.cores", threads))))
+  hmm <- build_hmm(nrow(dt_recoded), sequencing_error, avg_recomb)
+  if (requireNamespace("pbmcapply", quietly = TRUE)){
+    
+    imputed_gametes <- as.tibble(do.call(cbind, pbmcapply::pbmclapply(1:ncol(dt_recoded), 
+                                                          function(x) run_hmm(dt_recoded, x, hmm),
+                                                          mc.cores = getOption("mc.cores", threads))))
+  } else {
+    imputed_gametes <- as.tibble(do.call(cbind, mclapply(1:ncol(dt_recoded),
+                                                        function(x) run_hmm(dt_recoded, x, hmm),
+                                                        mc.cores = getOption("mc.cores", threads))))
+  }
   
-  filled_gametes <- as.tibble(do.call(cbind, pblapply(1:ncol(imputed_gametes),
-                                                      function(x) fill_na(imputed_gametes, x),
-                                                      mc.cores = getOption("mc.cores", threads))))
+  if (requireNamespace("pbapply", quietly = TRUE)){
+  
+    filled_gametes <- as.tibble(do.call(cbind, pbapply::pblapply(1:ncol(imputed_gametes),
+                                                        function(x) fill_na(imputed_gametes, x))))
+  } else {
+    filled_gametes <- as.tibble(do.call(cbind, lapply(1:ncol(imputed_gametes),
+                                                      function(x) fill_na(imputed_gametes, x))))
+  }
   colnames(filled_gametes) <- colnames(dt)
   return(filled_gametes)
 

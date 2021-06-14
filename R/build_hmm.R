@@ -3,20 +3,20 @@
 #' This function builds a hidden Markov model that considers sequencing error. Uses the 
 #' HMM packages. 
 #' 
-#' @param dt Input matrix
+#' @param num_snps number of SNPs, found previously from taking the number of rows in the input data. Used to set the denominator for transition probability
 #' @param sequencing_error User-input for expected error in sequencing (default = 0.005)
-#' @param avg_recomb User-input for expected average recombination spots per chromosome (default=1)
+#' @param avg_recomb User-input for expected average recombination spots per chromosome (default=1). Used to set the numerator for transition probability
+#' 
+#' @import HMM
 #' 
 #' @return hmm The hidden Markov model with transition and emission probabilities set for use. 
 #' 
 #' @example 
-#' R code here showing my function works 
-build_hmm <- function(dt, sequencing_error, avg_recomb) {
+#' R code here showing how my function works 
+build_hmm <- function(num_snps, sequencing_error, avg_recomb) {
   # two states
   states <- c("haplotype1", "haplotype2")
   
-  # set denominator for transition probability - one recombination event per chromosome
-  num_snps <- nrow(dt)
   # probability of state at position x+1 given state at position x   
   hap1Prob <- c(1-(avg_recomb/num_snps), avg_recomb/num_snps)
   hap2Prob <- rev(hap1Prob)
@@ -33,7 +33,7 @@ build_hmm <- function(dt, sequencing_error, avg_recomb) {
   emissProb <- matrix(c(h1ProbEmiss, h2ProbEmiss), 2)
   
   #build model with the above inputs
-  hmm <- initHMM(States = states,
+  hmm <- HMM::initHMM(States = states,
                  Symbols = emissions,
                  transProbs = transProb,
                  emissionProbs = emissProb)
