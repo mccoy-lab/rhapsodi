@@ -9,7 +9,7 @@
 #' @param avg_recomb User-input for average recombination rate that can be expected for a chromosome (default=1)
 #' @param threads User-input value for calling `pbmclapply` or `mclapply` (default = 2)
 #' 
-#' @return filled_gametes a tibble resulting from the HMM and fill_NAs function which has the imputed parental haplotypes for each gamete
+#' @return filled_gametes a tibble resulting from the HMM and fill_NAs function which has the imputed donor haplotypes for each gamete
 #' 
 #' @export
 

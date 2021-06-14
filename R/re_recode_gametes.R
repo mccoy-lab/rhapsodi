@@ -1,13 +1,13 @@
 #' A function to turn a matrix of gamete haplotypes by position back to the 0/1 reads by
-#' position, using the phased parental haplotypes as a guide
+#' position, using the phased donor haplotypes as a guide
 #' 
 #' This function builds a matrix with position by row and gametes by column such that each cell
 #' is a 0 or a 1 or an NA based on whether that cell in the input gamete matrix was from haplotype1, haplotype2, 
-#' or was an NA. Then the 0 or 1 is found in the complete_haplotypes (phased parentals) input at the corresponding
+#' or was an NA. Then the 0 or 1 is found in the complete_haplotypes (phased donors) input at the corresponding
 #' positions 
 #'
 #' @param dt input gamete haplotype data in tibble form
-#' @param complete_haplotypes dataframe of phased parentals with two columns (h1 and h2) and SNP positions as rows 
+#' @param complete_haplotypes dataframe of phased donors with two columns (h1 and h2) and SNP positions as rows 
 #'
 #' @return to_return gamete data in dataframe form with read data (0's and 1's and NAs) instead of haplotype information
 #' 

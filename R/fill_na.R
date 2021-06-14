@@ -3,7 +3,7 @@
 #' This function fills in missing data (NAs) on each gamete. For each gamete, it fills the NA values with the nearest haplotype.
 #' If the two adjacent haplotypes are not the same (i.e., at a recombination breakpoint), it leaves the values as NA. 
 #' 
-#' @param imputed_gametes Output of `run_hmm` which assigned a parental haplotype to each segment of each gamete
+#' @param imputed_gametes Output of `run_hmm` which assigned a donor haplotype to each segment of each gamete
 #' @param col_index Each column of `imputed_gametes`, pulled via `apply` function 
 #' 
 #' @return gamete_sample_imputed Column with each gamete's imputed haplotypes 

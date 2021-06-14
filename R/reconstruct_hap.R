@@ -1,4 +1,4 @@
-#' A function to reconstruct the parental haplotypes using data from gametes
+#' A function to reconstruct the donor haplotypes using data from gametes
 #' 
 #' This function takes gamete data and computes and clusters a distance matrix with a binary method. It 
 #' anticipates sparse data and replaces NAs with 0.5. It clusters the tree into two groups, i.e., haplotypes. 
