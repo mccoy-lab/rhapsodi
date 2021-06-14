@@ -3,8 +3,6 @@
 #' This function infers the diploid donor haplotypes by first calling `split_with_overlap` to find the overlapping SNP segments, 
 #' then `reconstruct_hap` for majority voting within each overlapping segment, finally stitching together the overlapping segments to phase both haplotypes
 #' 
-#' @export
-#' 
 #' @param dt Matrix of gamete alleles 
 #' @param positions vector of SNP positions 
 #' @param window_length Size of window (default=3000)
@@ -16,6 +14,8 @@
 #' 
 #' @return complete_haplotypes phased haplotypes as a tibble with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
 #' 
+#' @export
+#' 
 #' @example 
 #' R code here showing my function works 
 #' 
@@ -23,9 +23,15 @@ impute_donor_haplotypes <- function(dt, positions, window_length=3000, overlap_d
   #Find overlapping windows
   windows <- split_with_overlap(rank(positions), window_length, overlap_denom)
   #Infer the haplotypes within the overlapping windows (a window at a time)
-  inferred_haplotypes <- pbmclapply(1:length(windows),
+  if (requireNamespace("pbmcapply", quietly = TRUE)){
+    inferred_haplotypes <- pbmcapply::pbmclapply(1:length(windows),
+                                      function(x) reconstruct_hap(dt, positions, windows[[x]]),
+                                      mc.cores = getOption("mc.cores", threads))
+  } else {
+    inferred_haplotypes <- mclapply(1:length(windows),
                                     function(x) reconstruct_hap(dt, positions, windows[[x]]),
                                     mc.cores = getOption("mc.cores", threads))
+  }
   #Stitch together the haplotypes
   complete_haplotypes <- stitch_haplotypes(inferred_haplotypes, windows, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min=stitch_new_min)
   return(complete_haplotypes)
