@@ -1,5 +1,14 @@
-#'
-#'
+#' A function to read in the sparse gamete sequencing data encoded in 0/1 tab-delimited format with the first column containing SNP positions in integer format
+#' 
+#' This function is called when data is already encoded in 0/1 format. The file is expected to be a tab-delimited file
+#' And to have the SNP genomic positions in the first column
+#' Finally, we subset to include only heterozygous SNPs or those that have atleast one reference )0) and one alternate allele (1)
+#' 
+#' @param input_file the path and file name for the tab-delimited 0/1 encoded file
+#' 
+#' @return input in a named list format with `dt` and `positions` where `dt` is a data frame of the heterozygous sparse gamete data and `positions` is a vector of the SNP genomic positions 
+#' 
+#' @export
 #'
 standard_input <- function(input_file){
   stopifnot(file_test("-f", input_file), paste0("The provided file ", input_file, " does not exist."))
