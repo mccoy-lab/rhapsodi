@@ -13,7 +13,7 @@
 #' @param pred_donor_haps a tibble of phased donor haplotypes from rhapsodi with column names `index`, `pos` (for SNP positions) `h1` (haplotype 1), & `h2` (haplotype 2)
 #' @param true_recomb a data.table data table containing the true recombination breakpoints from the generative model with columns `gam`, `start`, `end` 
 #' @param pred_recomb a tibble containing the predicted recombination breakpoints from rhapsodi with columns `Ident`, `Genomic_start`, `Genomic_end`
-#' @param true_gam a matrix, from the output of the generative model, the true/full gamete genotypes where the rows are the SNPs and the columns are the gametes
+#' @param true_gam a matrix, from the output of the generative model, the true/full gamete genotypes where the rows are the SNPs and the columns are the gametes (except for the first column which is the SNP genomic positions)
 #' @param pred_gam a matrix, from the output of rhapsodi, the predicted/filled gamete genotypes where the rows are the SNPs and the columns are the gametes
 #' @param write_out_plot a bool; default=FALSE, might not be applicable
 #' @param cons a bool; default=FALSE, If TRUE, compares recombination breakpoints in a conservative manner such that if two or more true breakpoints intersect a single predicted breakpoint, we only consider one intersection to be a tp and the rest to be fn.  
