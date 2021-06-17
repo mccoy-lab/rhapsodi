@@ -2,6 +2,7 @@
 #' 
 #' This function is called when data is already encoded in 0/1 format. The file is expected to be a tab-delimited file
 #' And to have the SNP genomic positions in the first column
+#' We assume that a single file originates from a single sample and chromosome
 #' Finally, we subset to include only heterozygous SNPs or those that have atleast one reference )0) and one alternate allele (1)
 #' 
 #' @param input_file the path and file name for the tab-delimited 0/1 encoded file

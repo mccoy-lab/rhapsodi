@@ -8,7 +8,7 @@
 #' @param window_length Size of window (default=3000)
 #' @param overlap_denom User-input value for denominator in calculation of overlap (default = 2)
 #' @param threads User-input value for calling `pbmclapply` (default = 2)
-#' @param mcstop User-input value for continuing phasing even if mean_concordance isn't within advised bounds (default = FALSE)
+#' @param mcstop User-input value for continuing phasing even if mean_concordance isn't within advised bounds (default = TRUE)
 #' @param stringent_stitch Boolean, whether or not to use the original bounds (0.1, 0.9 cutoff)
 #' @param stitch_new_min Numeric/float, if `stringent_stitch` == FALSE, the new minimum value to use as a cutoff. If concordance is below this value, we assume the windows are opposite haplotypes, if greater than or equal, we assume the same haplotypes
 #' 
