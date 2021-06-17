@@ -10,7 +10,9 @@
 #' `gamete_genotypes` which is the filled gametes specifying the genotype in (0's and 1's) for each gamete position 
 #' `recomb_breaks`which is a tibble specifying the recombination breakpoints for each gamete
 #' 
-#' @param input_file a string; the path plus filename for the input sparse gamete genotype data in tabular form. Note the form is different depending on the value of `acgt`
+#' @param input_file a string; the path plus filename for the input sparse gamete genotype data in tabular form. Note the form is different depending on the value of `acgt`. Use NULL if `use_dt` is TRUE
+#' @param use_dt a bool; default is FALSE, whether to input a pre-loaded data frame/table rather than using an input file
+#' @param input_dt a data frame/table; only necessary if use_dt is TRUE. User-pre-loaded data frame/table. Note the format is different depending on the value of `acgt` 
 #' @param acgt a bool; default is FALSE; If TRUE, assumes that the data is not 0/1 encoded
 #' @param threads an integer; default is 2, number of threads to utilize when we use `mclapply`
 #' @param sampleName a string; default is "sampleT", fill in with whatever the sample name is. We assume a single input file is from a single file
@@ -30,11 +32,11 @@
 #'
 #' @export
 #'
-rhapsodi_autorun <- function(input_file, acgt = FALSE, threads=2, sampleName="sampleT", chrom = "chrT", outdir = "tmp/", seqError_model = 0.005, avg_recomb_model = 1, 
+rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt = FALSE, threads=2, sampleName="sampleT", chrom = "chrT", outdir = "tmp/", seqError_model = 0.005, avg_recomb_model = 1, 
                              window_length=3000, overlap_denom = 2, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5,
                              smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE){
   if (!acgt){
-    input_data <- standard_input(input_file)
+    input_data <- standard_input(input_file, use_dt, input_dt)
     dt <- input_data$dt
     positions <- input_data$positions
   } else{
