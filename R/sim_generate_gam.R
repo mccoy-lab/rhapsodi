@@ -1,5 +1,18 @@
+#' This function is used to generate the fully known gamete genotype data given the diploid donor haplotypes. It also records gamete specific crossover exchange points
 #'
-#'
+#' This function generates a single gamete given a diploid donor's two haplotypes and the number of crossovers that should occur for a given gamete
+#' First the function picks which donor haplotype corresponds to the beginning of the gamete's chromosome, using a uniform distribution
+#' Then the function assigns the genotypes from this corresponding donor hapltoype to the whole gamete
+#' When tracking the originating haplotype, we assign the 1 or 2 to the whole gamete. However, we then re-code this to 0 or 1 (by subtracting 1)
+#' and at the end re-recode these back to 1's and 2's by adding 1
+#' For each crossover index, i, we assume between index i-1 and index i the recombination breakpoint occurs 
+#' and switch the bits for the rest of the chromosome genotypes to the opposite donor haplotype or genotype compared to the one just previous by inverting the bits
+#' We repeat this when tracking the originating haplotypes, which is why we recoded them.
+#' 
+#' @param donor_haplotypes a data frame with the diploid donor haplotypes in two columns
+#' @param n_crossovers an integer for the number of crossovers that should occur for this gamete
+#' 
+#' @return list with generated crossover indices by gamete (a vector of integers such taht each integer without loss of generality, i, represents an index location of a crossover exchange point, such that the crossover occured somewhere between SNP index location i-1 and i), the 0/1 encoded genotypes for each SNP position in each genotype,the haplotypes from which each SNP in each gamete originates (encoded as 0s and 1s) 
 #'
 sim_generate_gam <- function(donor_haplotypes, n_crossovers){
   init_hap_index <- sample(1:2, 1)
