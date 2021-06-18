@@ -1,7 +1,18 @@
+#' This function assesses the effectiveness of rhapsodi's meiotic recombination discovery
+#' 
+#' This function compares the simulated truth gamete specific recombination breakpoints to the rhapsodi predicted gamete specific breakpoints,
+#' producing a named list with values for `precision`, `recall`, `accuracy`, `specificity`, `fdr` (false discovery rate), `fpr` (false positive rate), `f1` (f1 score),
+#' `true_n` (number of true recombination breakpoints), `pred_n` (number of predicted recombination breakpoints), `tn` (# of true negatives), `fn` (# of false negatives), `tp` (# of true positives), `fp` (# of false positives)
+#' 
+#' @param true_recomb a data.table data table containing the true recombination breakpoints from the generative model with columns `gam`, `start`, `end`
+#' @param pred_recomb a tibble containing the predicted recombination breakpoints from rhapsodi with columns `Ident` `Genomic_start`, `Genomic_end`
+#' @param cons a bool; default = FALSE, If TRUE, compares recombination breakpoints in a conservative manner such that if two or more true breakpoints intersect a single predicted breakpoint, we only consider one intersection to be a tp and the rest to be fn. If FALSE, all are tp.
 #'
+#' @return metrics_out a named list with values for `precision`, `recall`, `accuracy`, `specificity`, `fdr`, `fpr`, `true_n`,`pred_n`, `tn`, `fn`, `tp`, `fp`
 #'
+#' @export
 #'
-sim_assess_recomb <- function(true_recomb, pred_recomb, cons){
+sim_assess_recomb <- function(true_recomb, pred_recomb, cons=FALSE){
   ##Recombination Discovery assessment
   true_recomb_nona <- true_recomb[!is.na(true_recomb$start),] %>% setkey()
   true_recomb_na <- true_recomb[is.na(true_recomb$start),]
