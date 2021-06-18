@@ -13,7 +13,7 @@
 #' @param input_file a string; the path plus filename for the input sparse gamete genotype data in tabular form. Note the form is different depending on the value of `acgt`. Use NULL if `use_dt` is TRUE
 #' @param use_dt a bool; default is FALSE, whether to input a pre-loaded data frame/table rather than using an input file
 #' @param input_dt a data frame/table; only necessary if use_dt is TRUE. User-pre-loaded data frame/table. Note the format is different depending on the value of `acgt` 
-#' @param acgt a bool; default is FALSE; If TRUE, assumes that the data is not 0/1 encoded
+#' @param acgt a bool; default is FALSE; If TRUE, assumes that the data is not 0/1 encoded and is available in pre-loaded data frame format passed with `input_dt`
 #' @param threads an integer; default is 2, number of threads to utilize when we use `mclapply`
 #' @param sampleName a string; default is "sampleT", fill in with whatever the sample name is. We assume a single input file is from a single file
 #' @param chrom a string; default is "chrT", fill in with whatever the chromosome is. We assume a single input file is from a single chromosome
@@ -40,8 +40,9 @@ rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt =
     dt <- input_data$dt
     positions <- input_data$positions
   } else{
-    #will be filled in later
-    input_data <- 0
+    input_data <- nucleotide_input(input_dt)
+    dt <- input_data$gametes_het
+    positions <- input_data$positions
   }
   complete_haplotypes <- impute_donor_haplotypes(dt, positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min)
   filled_gametes <- fill_gametes(dt, complete_haplotypes, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, threads = threads)
