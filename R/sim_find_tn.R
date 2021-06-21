@@ -1,6 +1,6 @@
 #' This function finds the number of true negatives when comparing two sets of recombination breakpoints
 #' 
-#' This function find the number of true negatives by finding the gametes for which both truth and prediction say there are no 
+#' This function find sthe number of true negatives by finding the gametes for which both truth and prediction say there are no 
 #' recombination breakpoints (NA in start and stop columns)
 #' 
 #' @param truth_dt_na a data table for the truth or generated data in which the `start` and `stop` columns have NA, meaning no recombination breakpoints
