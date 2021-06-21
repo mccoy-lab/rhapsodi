@@ -13,6 +13,9 @@
 #' 
 #' @return pos_not_excluded Genomic positions that should be included   
 #' 
+#' @import data.table
+#' @import tidyverse
+#' 
 #' @example 
 #' R code here showing my function works 
 #' to_include_output <- filter_problem_genome(positions_nc26chr21, 21, blacklist, giab_union)
@@ -30,7 +33,7 @@ filter_problem_genome <- function(input_data_positions, chrom, exclude_genomic_p
   if(!missing(exclude_genomic_positions)) {
     exclude_genomic_positions <- exclude_genomic_positions[exclude_genomic_positions$chr == col_chr_name] 
     # Set key for use in foverlaps
-    setkey(exclude_genomic_positions, start, end)
+    data.table::setkey(exclude_genomic_positions, start, end)
     # Get filtered set of points in the raw data that should be excluded  
     blacklisted <- data.table::foverlaps(new_positions, exclude_genomic_positions, type="any", nomatch=NULL)
     
@@ -42,7 +45,7 @@ filter_problem_genome <- function(input_data_positions, chrom, exclude_genomic_p
     include_genomic_positions <- include_genomic_positions[include_genomic_positions$chr == col_chr_name,] %>% as.data.table()
     
     # Find overlaps between giab and our data table (excluding the blacklisted sites) 
-    setkey(include_genomic_positions, start, end)
+    data.table::setkey(include_genomic_positions, start, end)
     pos_included <- data.table::foverlaps(pos_not_excluded, include_genomic_positions, type="any", nomatch=NULL)
     
     # Then, remove those rows (i.e., genomic positions) from the list of positions that will be returned

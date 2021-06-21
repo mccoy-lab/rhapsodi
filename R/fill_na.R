@@ -8,6 +8,8 @@
 #' 
 #' @return gamete_sample_imputed Column with each gamete's imputed haplotypes 
 #' 
+#' @import tidyverse
+#' 
 #' @example 
 #' R code here showing my function works 
 #' 

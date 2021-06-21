@@ -10,15 +10,18 @@
 #'
 #' @return metrics_out a named list with values for `precision`, `recall`, `accuracy`, `specificity`, `fdr`, `fpr`, `true_n`,`pred_n`, `tn`, `fn`, `tp`, `fp`
 #'
+#' @import tidyverse
+#' @import data.table
+#'
 #' @export
 #'
 sim_assess_recomb <- function(true_recomb, pred_recomb, cons=FALSE){
   ##Recombination Discovery assessment
-  true_recomb_nona <- true_recomb[!is.na(true_recomb$start),] %>% setkey()
+  true_recomb_nona <- true_recomb[!is.na(true_recomb$start),] %>% data.table::setkey()
   true_recomb_na <- true_recomb[is.na(true_recomb$start),]
   
   pred_recomb_dt <- data.table(gam=sapply(strsplit(pred_recomb$Ident, "_"), `[`, 3), start=pred_recomb$Genomic_start, end=pred_recomb$Genomic_end)
-  pred_recomb_nona <- pred_recomb_dt[!is.na(pred_recomb_dt$start),] %>% setkey()
+  pred_recomb_nona <- pred_recomb_dt[!is.na(pred_recomb_dt$start),] %>% data.table::setkey()
   pred_recomb_na <- pred_recomb_dt[is.na(pred_recomb_dt$start),]
   
   if (nrow(truth_recomb_nona) > 0){
@@ -29,8 +32,8 @@ sim_assess_recomb <- function(true_recomb, pred_recomb, cons=FALSE){
   } else {no_preds = TRUE}
   
   if (!no_truths & !no_preds){
-    truth_intersect <- foverlaps(true_recomb_nona, pred_recomb_nona) %>% `colnames<-`(c("gam", "Predicted_Start", "Predicted_End", "True_Start", "True_End"))
-    pred_intersect <- foverlaps(pred_recomb_nona, true_recomb_nona) %>% `colnames<-`(c("gam", "True_Start", "True_End", "Predicted_Start", "Predicted_End"))
+    truth_intersect <- data.table::foverlaps(true_recomb_nona, pred_recomb_nona) %>% `colnames<-`(c("gam", "Predicted_Start", "Predicted_End", "True_Start", "True_End"))
+    pred_intersect <- data.table::foverlaps(pred_recomb_nona, true_recomb_nona) %>% `colnames<-`(c("gam", "True_Start", "True_End", "Predicted_Start", "Predicted_End"))
   } else{
     truth_intersect <- NULL
     pred_intersect <- NULL

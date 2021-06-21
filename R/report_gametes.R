@@ -23,6 +23,8 @@
 #'                                        
 #' @export
 #' 
+#' @import tidyverse
+#' 
 #' @example
 #' R code showing how my function works
 #' 

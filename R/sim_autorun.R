@@ -14,7 +14,7 @@
 #' @param num_gametes an integer, the number of gametes, used within `sim_run_generative_model`, or the number of columns for the sparse gamete data you want generated
 #' @param num_snps an integer, the number of SNPs, used within `sim_run_generative_model`,or the number of rows for the sparse gamete data you want generated. Note: not all of these will be heterozygous due to the coverage and therefore this number won't necessarily equal the number of SNPs following filtering at the end of the generation
 #' @param coverage a numeric, input if `input_cov` is TRUE, suggested NULL otherwise, used within `sim_run_generative_model`
-#' @param threads an integer, the number of threads to use when we use `mclapply` throughout the rhapsodi pipeline
+#' @param threads an integer, default = 2, the number of cores to use when we use `mclapply` throughout the rhapsodi pipeline
 #' @param recomb_lambda a numeric, the average rate of recombination expected for the simulation, used by `sim_find_num_crossovers` within `sim_run_generative_model`
 #' @param random_seed an integer, default = 42, the random seed which will be set for the simulation, used within `sim_run_generative_model`
 #' @param input_cov a bool, TRUE if coverage (i.e. like 0.01 (x)) will be input rather than missing genotype rate, default = TRUE, used within `sim_run_generative_model`

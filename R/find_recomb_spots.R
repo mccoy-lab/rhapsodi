@@ -13,6 +13,8 @@
 #' 
 #' @return recomb_spots tibble of the recombination spots for gamete x
 #' 
+#' @import tidyverse
+#' 
 #' @example 
 #' R code here explaining what my function does
 #' 
