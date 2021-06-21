@@ -12,7 +12,7 @@
 #' @param donor_haplotypes a data frame with the diploid donor haplotypes in two columns
 #' @param n_crossovers an integer for the number of crossovers that should occur for this gamete
 #' 
-#' @return list with generated crossover indices by gamete (a vector of integers such taht each integer without loss of generality, i, represents an index location of a crossover exchange point, such that the crossover occured somewhere between SNP index location i-1 and i), the 0/1 encoded genotypes for each SNP position in each genotype,the haplotypes from which each SNP in each gamete originates (encoded as 0s and 1s) 
+#' @return list with generated crossover indices by gamete (a vector of integers such taht each integer without loss of generality, i, represents an index location of a crossover exchange point, such that the crossover occured somewhere between SNP index location i-1 and i), the 0/1 encoded genotypes for each SNP position in each genotype,the haplotypes from which each SNP in each gamete originates (encoded as 1s and 2s) 
 #'
 sim_generate_gam <- function(donor_haplotypes, n_crossovers){
   init_hap_index <- sample(1:2, 1)
