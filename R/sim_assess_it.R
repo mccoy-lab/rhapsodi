@@ -15,14 +15,13 @@
 #' @param pred_recomb a tibble containing the predicted recombination breakpoints from rhapsodi with columns `Ident`, `Genomic_start`, `Genomic_end`
 #' @param true_gam a matrix, from the output of the generative model, the true/full gamete genotypes where the rows are the SNPs and the columns are the gametes (except for the first column which is the SNP genomic positions)
 #' @param pred_gam a matrix, from the output of rhapsodi, the predicted/filled gamete genotypes where the rows are the SNPs and the columns are the gametes
-#' @param write_out_plot a bool; default=FALSE, might not be applicable
 #' @param cons a bool; default=FALSE, If TRUE, compares recombination breakpoints in a conservative manner such that if two or more true breakpoints intersect a single predicted breakpoint, we only consider one intersection to be a tp and the rest to be fn.  
 #' 
 #' @return all_metrics a named list of named lists with all the assessment metric values or vectors
 #' 
 #' @export
 #'
-sim_assess_it <- function(true_donor_haps, pred_donor_haps, true_recomb, pred_recomb, true_gam, pred_gam, write_out_plot=FALSE, cons=FALSE){
+sim_assess_it <- function(true_donor_haps, pred_donor_haps, true_recomb, pred_recomb, true_gam, pred_gam, cons=FALSE){
   num_snps <- nrow(true_gam)
   num_gametes <- ncol(true_gam[,-1])
   
