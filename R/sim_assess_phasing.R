@@ -1,7 +1,7 @@
 #' This function assesses the effectiveness of rhapsodi's diploid donor haplotype phasing
 #' 
 #' This function compares the simulated truth diploid donor haplotypes to the rhapsodi predicted phased data,
-#' producing a named list of values for lhs (longest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
+#' producing a named list of values for lhs (largest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
 #' 
 #' @param true_donor_haps a data frame of phased donor haplotypes from the generative model with column names of `donor1` and `donor2`
 #' @param pred_donor_haps a tibble of phased donor haplotypes from rhapsodi with column names `index`, `pos` (for SNP positions), `h1` (haplotype 1) & `h2` (haplotype 2)

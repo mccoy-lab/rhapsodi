@@ -1,8 +1,8 @@
 #' This function drives the assessment of all 3 parts of rhapsodi: phasing, gamete imputation, recombination discovery
 #' 
 #' This function drives all 3 steps of assessment in comparing the simulated full truth data with the rhapsodi predicted data
-#' First it assesses donor haplotypte phasing, producing a named list with single values for lhs (longest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
-#' Then it assesses gamete genotype imputation, producing a named list with vectors for lhs (longest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
+#' First it assesses donor haplotypte phasing, producing a named list with single values for lhs (largest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
+#' Then it assesses gamete genotype imputation, producing a named list with vectors for lhs (largest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
 #' Then it assesses recombination discovery producing a named list with single values for precision, recall, accuracy, specificity, fdr (false discovery rate), fpr (false positive rate) f1 (f1 score), 
 #' true_n (number of true recombination breakpoints), pred_n (number of predicted recombination breakpoints), tn (true negative), fn (false negative), tp (true positive), fp (false positive)
 #' Finally, it returns a list of named lists where `phasing` contains the phasing assessment named list

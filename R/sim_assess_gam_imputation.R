@@ -1,7 +1,7 @@
 #' This function assesses the effectiveness of rhapsodi's gamete imputation 
 #' 
 #' This function compares the simulated full truth gamete data to the rhapsodi predicted filled gamete data,
-#' producing a named list with vectors for lhs (longest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
+#' producing a named list with vectors for lhs (largest haplotype segment), ser (switch error rate), acc (accuracy), com (completeness)
 #' 
 #' @param true_gam a matrix, from the output of the generative model, the true/full gamete genotypes where the rows are the SNPs and the columns are the gametes (except for the first column which is the SNP genomic positions)
 #' @param pred_gam a matrix, from the output of rhapsodi, with the predicted/filled gamete genotypes where the rows are the SNPs and the columns are the gametes
