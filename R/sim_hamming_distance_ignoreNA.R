@@ -7,8 +7,8 @@
 #' multiple haplotypes. In the first case, we return a single value. 
 #' In the latter case, we return a vector of values.
 #'
-#' @param truth either a vector of true genotypes or a matrix with multiple vectors of true genotypes 
-#' @param predicted either a vector of rhapsodi precited genotyptes or a matrix with multiple vectors of rhapsodi predicted genotypes, dimension matching that of `truth`
+#' @param truth either a vector of true genotypes or a matrix with multiple vectors of true genotypes, where genotypes are encoded as 0/1
+#' @param predicted either a vector of rhapsodi precited genotyptes or a matrix with multiple vectors of rhapsodi predicted genotypes, dimension matching that of `truth`, and genotypes are encoded as 0/1
 #' @param num_snps an integer, the number of SNPs, or the number of genotypes/length of the haplotype(s)
 #' 
 #' @return to_return numeric(s), in percentage format, if `truth` & `predicted` are vectors, to_return is a single value; else if the inputs are matrices, to_return is a vector where the value of to_return is the hamming distance

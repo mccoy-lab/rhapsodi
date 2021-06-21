@@ -7,7 +7,7 @@
 #' multiple haplotypes. In the first case, we return a single value. 
 #' In the latter case, we return a vector of values.
 #' 
-#' @param predicted the rhapsodi predicted haplotype vector or haplotypes matrix/data frame
+#' @param predicted the rhapsodi predicted haplotype vector or haplotypes matrix/data frame where genotypes are 0/1 encoded
 #' @param num_snps an integer, the number of SNPs or the length of the haplotype
 #' 
 #' @return to_return the completeness of the input. If `predicted` is a vector, `to_return` is a numeric. else if `predicted` is 2-dimensional, `to_return` is a vector of numerics 
