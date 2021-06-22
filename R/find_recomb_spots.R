@@ -17,6 +17,7 @@
 #' @importFrom tibble tibble
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
+#' @importFrom stats complete.cases
 #' 
 find_recomb_spots <- function(input_gamete_data, x, identities, genomic_positions) {
   ident <- identities[x]
@@ -29,7 +30,7 @@ find_recomb_spots <- function(input_gamete_data, x, identities, genomic_position
   switch_indices_input <- complete_cases_tibble[switch_indices,]$index
   crossover_start <- input_tibble[switch_indices_input,]$positions
   rev_input_tibble <- dplyr::arrange(input_tibble, -index) %>%
-   dplyr:: mutate(.data, index = tidyverse::row_number())
+   dplyr:: mutate(.data, index = dplyr::row_number())
   complete_cases_rev_tibble <- rev_input_tibble[complete.cases(rev_input_tibble),]
   rev_input_vec <- as.factor(complete_cases_rev_tibble[[1]])
   rev_switch_indices <- which(rev_input_vec[-1] != rev_input_vec[-length(rev_input_vec)])

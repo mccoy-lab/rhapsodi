@@ -34,7 +34,7 @@ Description: Given sparse gamete genotyping data, 'rhapsodi'
     imputes the phased haplotypes of the diploid donor, 
     infers the full gamete genotypes, 
     and discovers meiotic recombination events for each gamete.  
-License: `use_mit_license()`
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

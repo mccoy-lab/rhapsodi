@@ -15,6 +15,7 @@
 #' 
 #' @import data.table
 #' @importFrom magrittr %>%
+#' @importFrom stats start end
 #' 
 filter_problem_genome <- function(input_data_positions, chrom, exclude_genomic_positions, include_genomic_positions) {
   col_chr_name <- paste0("chr", chrom)

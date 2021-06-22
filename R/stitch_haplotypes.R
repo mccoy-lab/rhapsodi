@@ -23,6 +23,7 @@
 #' 
 #' @importFrom dplyr mutate
 #' @importFrom magrittr %>%
+#' @importFrom tibble tibble
 #' 
 stitch_haplotypes <- function(inferred_haplotypes, windows, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5){
   if (stringent_stitch){
@@ -54,7 +55,7 @@ stitch_haplotypes <- function(inferred_haplotypes, windows, mcstop=TRUE, stringe
         }
       }
     }
-    initial_haplotype <- tidyverse::tibble(index = olap_haps_complete$index,
+    initial_haplotype <- tibble(index = olap_haps_complete$index,
                                 pos=c(olap_haps_complete[is.na(olap_haps_complete$pos.y),]$pos.x,
                                       olap_haps_complete[!is.na(olap_haps_complete$pos.x) &
                                                            !is.na(olap_haps_complete$pos.y),]$pos.x,
