@@ -26,8 +26,9 @@ standard_input <- function(input_file, use_dt=FALSE, input_dt=NULL){
     dt <- input_dt
   }
   
-  dt <- dt[((rowSums(dt[,2:ncol(dt)] == 0, na.rm = TRUE) > 0) & (rowSums(dt[, 2:ncol(dt)] == 1, na.rm=TRUE) > 0)),]
-  
   positions <- dt[,1]
+  
+  dt <- dt[((rowSums(dt[,2:ncol(dt)] == 0, na.rm = TRUE) > 0) & (rowSums(dt[, 2:ncol(dt)] == 1, na.rm=TRUE) > 0)), 2:ncol(dt)]
+  
   return(list(dt=dt, positions=positions)) 
 }
