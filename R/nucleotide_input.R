@@ -20,6 +20,6 @@ nucleotide_input <- function(info_and_gametes) {
   gametes <- apply(gametes, 2, function(x) x == alt)
   gametes[gametes==TRUE] <- 1
   # Keep only SNPs that are heterozygous in input data
-  gametes_het <- gametes[((rowSums(gametes[,2:ncol(gametes)] == 0, na.rm = TRUE) > 0) & (rowSums(gametes[, 2:ncol(gametes)] == 1, na.rm=TRUE) > 0)),]
+  gametes_het <- gametes[((rowSums(gametes[,2:ncol(gametes)] == 0, na.rm = TRUE) > 0) & (rowSums(gametes[, 2:ncol(gametes)] == 1, na.rm=TRUE) > 0)),-1]
   return(list(gametes_het = gametes_het, positions = positions, ref=ref, alt=alt))
 }
