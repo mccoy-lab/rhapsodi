@@ -9,8 +9,7 @@ Imports:
   parallel,
   readr,
   utils,
-  magrittr,
-  rlang
+  magrittr
 Suggests:
   pbapply,
   pbmcapply,

@@ -66,6 +66,6 @@ stitch_haplotypes <- function(inferred_haplotypes, windows, mcstop=TRUE, stringe
                                        olap_haps_complete[is.na(olap_haps_complete$pos.x),]$h1.y))
   }
   complete_haplotypes <- initial_haplotype %>% 
-    dplyr::mutate(h2 = invert_bits(initial_haplotype$h1))
+    dplyr::mutate(h2 = invert_bits(h1))
   return (complete_haplotypes)
 }

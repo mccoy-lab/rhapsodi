@@ -29,7 +29,6 @@
 #' @importFrom tibble tibble
 #' @importFrom parallel mclapply
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
 #' 
 report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete_haplotypes, original_gamete_data, filled_gamete_data, positions, sampleName, chrom, threads=2){
   out <- list() #want to return out$gamete_haps filled gamete data haplotypes, out$recomb_breaks, out$
@@ -40,12 +39,12 @@ report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete
       recomb_spots_all <- do.call(rbind, pbmcapply::pbmclapply(1:ncol(filled_gamete_forrecomb),
                                                               function(x) find_recomb_spots(filled_gamete_forrecomb, x, idents_for_csv, positions),
                                                               mc.cores=getOption("mc.cores", threads))) %>% 
-        dplyr::right_join(.data, tibble(Ident = idents_for_csv), by = "Ident")
+        dplyr::right_join(tibble(Ident = idents_for_csv), by = "Ident")
     } else {
       recomb_spots_all <- do.call(rbind, mclapply(1:ncol(filled_gamete_forrecomb),
                                                   function(x) find_recomb_spots(filled_gamete_forrecomb, x, idents_for_csv, positions),
                                                   mc.cores=getOption("mc.cores", threads))) %>% 
-        dplyr::right_join(.data, tibble(Ident = idents_for_csv), by = "Ident")
+        dplyr::right_join(tibble(Ident = idents_for_csv), by = "Ident")
     }
     if (!smooth_imputed_genotypes){
       filled_gamete_recode <- re_recode_gametes(filled_gamete_forrecomb, complete_haplotypes) #filled_gamete_recode is 0's and 1's
@@ -61,12 +60,12 @@ report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete
       recomb_spots_all <- do.call(rbind, pbmcapply::pbmclapply(1:ncol(filled_gamete_data),
                                                               function(x) find_recomb_spots(filled_gamete_data, x, idents_for_csv, positions),
                                                               mc.cores=getOption("mc.cores", threads))) %>%
-      dplyr::right_join(.data, tibble(Ident = idents_for_csv), by = "Ident")
+        dplyr::right_join(tibble(Ident = idents_for_csv), by = "Ident")
     } else {
       recomb_spots_all <- do.call(rbind, mclapply(1:ncol(filled_gamete_data),
                                                                function(x) find_recomb_spots(filled_gamete_data, x, idents_for_csv, positions),
                                                                mc.cores=getOption("mc.cores", threads))) %>%
-        dplyr::right_join(.data, tibble(Ident = idents_for_csv), by = "Ident")  
+        dplyr::right_join(tibble(Ident = idents_for_csv), by = "Ident")  
     }
     if (!smooth_imputed_genotypes){
       filled_gamete_data <- unsmooth(original_gamete_data, filled_gamete_data) #haplotypes
