@@ -16,11 +16,11 @@
 fill_na <- function(imputed_gametes, col_index) {
   gamete_sample <- imputed_gametes[,col_index] %>%
     dplyr::rename(gamete = colnames(.data)[1]) %>%
-    dplyr::mutate(gamete_up = gamete) %>%
-    dplyr::mutate(gamete_down = gamete) %>%
-    tidyr::fill(gamete_up, .direction = "up") %>%
-    tidyr::fill(gamete_down, .direction = "down") %>%
-    dplyr::mutate(is_match = (gamete_up == gamete_down)) %>%
+    dplyr::mutate(gamete_up = gamete_sample$gamete) %>%
+    dplyr::mutate(gamete_down = gamete_sample$gamete) %>%
+    tidyr::fill(gamete_sample$gamete_up, .direction = "up") %>%
+    tidyr::fill(gamete_sample$gamete_down, .direction = "down") %>%
+    dplyr::mutate(is_match = (gamete_sample$gamete_up == gamete_sample$gamete_down)) %>%
     tidyr::replace_na(list(is_match = FALSE))
   gamete_sample$gamete_imputed <- as.character(NA)
   gamete_sample[gamete_sample$is_match == TRUE,]$gamete_imputed <- gamete_sample[gamete_sample$is_match == TRUE,]$gamete_up
