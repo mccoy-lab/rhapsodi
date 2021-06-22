@@ -28,7 +28,11 @@ Authors@R: c(
     person(given = "Rajiv",
            family = "McCoy",
            role = "aut",
-           email = "rajiv.mccoy@jhu.edu"))
+           email = "rajiv.mccoy@jhu.edu"),
+    person(given = "Daniel",
+           family = "Ariad",
+           role = "ctb",
+           email = "daniel.ariad.org"))
 Description: Given sparse gamete genotyping data, 'rhapsodi' 
     imputes the phased haplotypes of the diploid donor, 
     infers the full gamete genotypes, 
