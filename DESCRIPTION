@@ -2,7 +2,7 @@ Package: rhapsodi
 Imports:
   data.table,
   HMM,
-  dpylr,
+  dplyr,
   tidyr,
   tibble,
   stats,

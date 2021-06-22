@@ -12,8 +12,6 @@
 #'    
 #' @return original_obs Replaced observed haplotype with that assigned by the model
 #' 
-#' @import stats
-#' 
 run_hmm <- function(dt, column_index, hmm) {
   original_obs <- dt[,column_index]
   inferred_state <- viterbi(hmm, na.omit(dt[, column_index]))

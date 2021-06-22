@@ -13,7 +13,8 @@
 #' 
 #' @return recomb_spots tibble of the recombination spots for gamete x
 #' 
-#' @importFrom tidyverse dplyr tibble
+#' @importFrom dplyr mutate row_number arrange
+#' @importFrom tibble tibble
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' 
@@ -34,6 +35,6 @@ find_recomb_spots <- function(input_gamete_data, x, identities, genomic_position
   rev_switch_indices <- which(rev_input_vec[-1] != rev_input_vec[-length(rev_input_vec)])
   rev_switch_indices_input <- complete_cases_rev_tibble[rev_switch_indices,]$index
   crossover_end <- rev(rev_input_tibble[rev_switch_indices_input,]$positions)
-  recomb_spots <- tibble::tibble(Ident = ident, Genomic_start = crossover_start, Genomic_end = crossover_end)
+  recomb_spots <- tibble(Ident = ident, Genomic_start = crossover_start, Genomic_end = crossover_end)
   return (recomb_spots)
 }

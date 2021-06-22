@@ -8,7 +8,8 @@
 #' 
 #' @return gamete_sample_imputed Column with each gamete's imputed haplotypes 
 #' 
-#' @importFrom tidyverse dplyr tidyr
+#' @importFrom dplyr rename mutate 
+#' @importFrom tidyr fill replace_na
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' 

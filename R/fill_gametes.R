@@ -11,7 +11,7 @@
 #' 
 #' @return filled_gametes a tibble resulting from the HMM and fill_NAs function which has the imputed donor haplotypes for each gamete
 #' 
-#' @importFrom tidyverse tibble
+#' @importFrom tibble as_tibble
 #' @importFrom parallel mclapply
 #' @importFrom magrittr %>%
 #' 
@@ -23,21 +23,21 @@ fill_gametes <- function(dt, complete_haplotypes, sequencing_error=0.005, avg_re
   hmm <- build_hmm(nrow(dt_recoded), sequencing_error, avg_recomb)
   if (requireNamespace("pbmcapply", quietly = TRUE)){
     
-    imputed_gametes <- tibble::as_tibble(do.call(cbind, pbmcapply::pbmclapply(1:ncol(dt_recoded), 
+    imputed_gametes <- as_tibble(do.call(cbind, pbmcapply::pbmclapply(1:ncol(dt_recoded), 
                                                           function(x) run_hmm(dt_recoded, x, hmm),
                                                           mc.cores = getOption("mc.cores", threads))))
   } else {
-    imputed_gametes <- tibble::as_tibble(do.call(cbind, mclapply(1:ncol(dt_recoded),
+    imputed_gametes <- as_tibble(do.call(cbind, mclapply(1:ncol(dt_recoded),
                                                         function(x) run_hmm(dt_recoded, x, hmm),
                                                         mc.cores = getOption("mc.cores", threads))))
   }
   
   if (requireNamespace("pbapply", quietly = TRUE)){
   
-    filled_gametes <- tibble::as_tibble(do.call(cbind, pbapply::pblapply(1:ncol(imputed_gametes),
+    filled_gametes <- as_tibble(do.call(cbind, pbapply::pblapply(1:ncol(imputed_gametes),
                                                         function(x) fill_na(imputed_gametes, x))))
   } else {
-    filled_gametes <- tibble::as_tibble(do.call(cbind, lapply(1:ncol(imputed_gametes),
+    filled_gametes <- as_tibble(do.call(cbind, lapply(1:ncol(imputed_gametes),
                                                       function(x) fill_na(imputed_gametes, x))))
   }
   colnames(filled_gametes) <- colnames(dt)

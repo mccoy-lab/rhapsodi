@@ -12,7 +12,7 @@
 #' @return inferred_output A tibble with the inferred haplotype sorted by position and window
 #' 
 #' @importFrom stats dist hclust cutree 
-#' @importFrom tidyverse tibble
+#' @importFrom tibble tibble
 #' 
 reconstruct_hap <- function(input_dt, input_positions, window_indices) {
   window_start <- min(window_indices)
@@ -33,6 +33,6 @@ reconstruct_hap <- function(input_dt, input_positions, window_indices) {
   h1_inferred <- unname(apply(cbind(input_dt[window_start:window_end, h1_gamete],
                                     invert_bits(input_dt[window_start:window_end, h2_gamete])),
                               1, function(x) get_mode(x)))
-  inferred_output <- tibble::tibble(index = window_indices, pos = positions_for_window, h1 = h1_inferred)
+  inferred_output <- tibble(index = window_indices, pos = positions_for_window, h1 = h1_inferred)
   return(inferred_output)
 }

@@ -21,7 +21,7 @@
 #' 
 #' @return complete_haplotypes a tibble with two columns, h1 and h2, containing the inferred haplotypes from each window stitched together in a single non-overlapping segment 
 #' 
-#' @importFrom tidyverse dplyr
+#' @importFrom dplyr mutate
 #' @importFrom magrittr %>%
 #' 
 stitch_haplotypes <- function(inferred_haplotypes, windows, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5){

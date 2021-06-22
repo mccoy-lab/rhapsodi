@@ -8,7 +8,7 @@
 #'
 #' @return filled_gamete_data filled gamete data in tibble form with replaced original reads 
 #' 
-#' @importFrom tidyverse tibble
+#' @importFrom tibble as_tibble
 #' 
 unsmooth <- function(original_gamete_df, filled_gamete_data) {
   original_gamete_df[original_gamete_df == "h1"] <- "haplotype1"
@@ -16,6 +16,6 @@ unsmooth <- function(original_gamete_df, filled_gamete_data) {
   original_dt <- as.data.frame(original_gamete_df)
   filled_gamete_data <- as.data.frame(filled_gamete_data)
   filled_gamete_data[!is.na(original_dt)] <- original_dt[!is.na(original_dt)]
-  filled_gamete_data <- tibble::as_tibble(filled_gamete_data)
+  filled_gamete_data <- as_tibble(filled_gamete_data)
   return (filled_gamete_data)
 }
