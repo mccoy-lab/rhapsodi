@@ -45,6 +45,6 @@ rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt =
   }
   complete_haplotypes <- impute_donor_haplotypes(dt, positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min)
   filled_gametes <- fill_gametes(dt, complete_haplotypes, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, threads = threads)
-  rhapsodi_out <- report_gametes(smooth_crossovers, smooth_imputed_genotypes, complete_haplotypes, dt, filled_gametes, sampleName, chrom)
+  rhapsodi_out <- report_gametes(smooth_crossovers, smooth_imputed_genotypes, complete_haplotypes, dt, filled_gametes, positions, sampleName, chrom, threads = threads)
   return (rhapsodi_out)
 }

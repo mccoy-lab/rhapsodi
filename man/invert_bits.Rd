@@ -15,7 +15,3 @@ input_data inverted from the actual input
 \description{
 This function replaces 0s with 1s and 1s with 0s in a dataframe or matrix
 }
-\examples{
-R code here showing how my function works
-
-}

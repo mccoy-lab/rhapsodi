@@ -14,10 +14,9 @@
 #' 
 #' @return complete_haplotypes phased haplotypes as a tibble with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
 #' 
-#' @export
+#' @importFrom parallel mclapply
 #' 
-#' @example 
-#' R code here showing my function works 
+#' @export
 #' 
 impute_donor_haplotypes <- function(dt, positions, window_length=3000, overlap_denom=2, threads=2, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5){
   #Find overlapping windows

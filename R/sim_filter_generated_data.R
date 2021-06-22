@@ -9,7 +9,7 @@
 #' @param gam_full_df the generated full gamete data with SNP indices in the first column
 #' @param donor_haps the generated diploid donor phased haplotypes
 #' @param new_rows a vector of the integer SNP indices for where de novo mutation were added if DNMs were simulated, this should be NULL otherwise
-#' @param add_de_novo_mt a bool, if TRUE de novo mutations were simulated in the generative model and then `new_rows` is also filtered
+#' @param add_de_novo_mut a bool, if TRUE de novo mutations were simulated in the generative model and then `new_rows` is also filtered
 #'
 #' @return out a named list with the filtered `gam_na_df`, filtered `gam_full_df`, filtered `donor_haps`, new number of snps after filtering `num_snps`
 #' 

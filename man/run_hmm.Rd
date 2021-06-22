@@ -7,11 +7,11 @@
 run_hmm(dt, column_index, hmm)
 }
 \arguments{
+\item{dt}{Matrix of gametes with 0 and 1}
+
 \item{column_index}{\code{apply} function cycles through gamete_dt to act on each column (i.e., each gamete)}
 
 \item{hmm}{the HMM that viterbi will be applied on}
-
-\item{gamete_dt}{Matrix of gametes with 0 and 1}
 }
 \value{
 original_obs Replaced observed haplotype with that assigned by the model

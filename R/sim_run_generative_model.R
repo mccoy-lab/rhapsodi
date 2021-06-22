@@ -26,7 +26,8 @@
 #'
 #' @return generated_data a named list returning the generated input and full truth data, specifically `gam_na` for the sparse rhapsodi input, `gam_full` for the fully known gamete data input equivalent, `recomb_spots` for the true recombination spots for each gamete, and `donor_haps` for the diploid donor phased haplotypes
 #'
-#' @import tidyverse
+#' @importFrom magrittr %>%
+#' @import data.table
 #'
 #' @export
 sim_run_generative_model <- function(num_gametes, num_snps, coverage, 
@@ -58,7 +59,7 @@ sim_run_generative_model <- function(num_gametes, num_snps, coverage,
   crossover_indices <- sapply(sim_gam, "[[", 1)
   names(crossover_indices) <- paste0(rep("gam", num_gametes), 1:num_gametes, "_")
   unlist_ci <- unlist(crossover_indices, use.names=TRUE)
-  tci_dt <- data.table(gam=sapply(strsplit(names(unlist_ci), "_"), `[`, 1), start =(unlist_ci-1), end=(unlist_ci))
+  tci_dt <- data.table::data.table(gam=sapply(strsplit(names(unlist_ci), "_"), `[`, 1), start =(unlist_ci-1), end=(unlist_ci))
   
   gam_mat <- sapply(sim_gam, "[[", 2)
   if (missing_genotype_rate > 0.5){
@@ -78,7 +79,7 @@ sim_run_generative_model <- function(num_gametes, num_snps, coverage,
     gam_mat <- dnm_out$gam_mat
     
     unlist_ci <- dnm_out$unlist_ci
-    tci_dt <- data.table(gam=sapply(strsplit(names(unlist_ci), "_"), `[`, 1), start =(unlist_ci-1), end=(unlist_ci))
+    tci_dt <- data.table::data.table(gam=sapply(strsplit(names(unlist_ci), "_"), `[`, 1), start =(unlist_ci-1), end=(unlist_ci))
     
     new_dnm_rows <- dnm_out$new_rows
   } else {new_dnm_rows <- c() }
@@ -89,7 +90,7 @@ sim_run_generative_model <- function(num_gametes, num_snps, coverage,
   gam_full_df <- data.frame(pseudo_pos = 1:nrow(gam_mat), gam_mat) %>% `colnames<-`(c("positions", paste0("gam", 1:num_gametes, "_")))
   
   #Filtering
-  filtered_out <- sim_filter_generated_data(gam_na_df, gam_full_df, donors_haps, new_dnm_rows, add_de_novo_mut)
+  filtered_out <- sim_filter_generated_data(gam_na_df, gam_full_df, donor_haps, new_dnm_rows, add_de_novo_mut)
   gam_na_df <- filtered_out$gam_na_df
   gam_full_df <- filtered_out$gam_full_df
   donor_haps <- filtered_out$donor_haps

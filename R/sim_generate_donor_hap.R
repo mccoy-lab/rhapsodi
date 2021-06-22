@@ -10,7 +10,7 @@
 #'
 #' @return donor_haps a data frame with the truth phased diploid donor haplotypes with two columns `donor1` and `donor2`
 #'
-#' @import tidyverse
+#' @importFrom magrittr %>%
 #'
 sim_generate_donor_hap <- function(num_snps){
   hap1 <- data.frame(V1 = sample(c(0,1), size=num_snps, replace=TRUE)) #simulate first donor chromosome

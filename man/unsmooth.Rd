@@ -7,9 +7,9 @@
 unsmooth(original_gamete_df, filled_gamete_data)
 }
 \arguments{
-\item{filled_gamete_data}{filled gamete data from \code{fill_gametes}}
+\item{original_gamete_df}{original gamete data with haplotype by position}
 
-\item{original_gamete_data}{original gamete data with haplotype by position}
+\item{filled_gamete_data}{filled gamete data from \code{fill_gametes}}
 }
 \value{
 filled_gamete_data filled gamete data in tibble form with replaced original reads

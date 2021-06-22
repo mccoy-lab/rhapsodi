@@ -23,7 +23,3 @@ overlaps are an input to the distance matrix constructed in \code{reconstruct_ha
 \details{
 Adapated from https://stackoverflow.com/questions/8872376/split-vector-with-overlapping-samples-in-r
 }
-\examples{
-R code here showing my function works 
-
-}

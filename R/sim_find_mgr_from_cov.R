@@ -9,6 +9,8 @@
 #' 
 #' @return missing_genotype_rate a numeric, the corresponding missing genotype rate for the given coverage, < 1
 #' 
+#' @importFrom stats dpois
+#' 
 sim_find_mgr_from_cov <- function(coverage){
   stopifnot(coverage > 0)
   message(paste0("The coverage of this simulation is: ", coverage))

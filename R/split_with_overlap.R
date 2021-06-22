@@ -10,9 +10,6 @@
 #' @param overlap_denom User-input value for denominator in calculation of overlap, or the degree of overlap between segments (default = 2)
 #'
 #' @return windows list of lists with the number of lists equal to the number of windows and each inner list containing the SNP positions in that overlapping segment
-#' 
-#' @examples 
-#' R code here showing my function works 
 #'
 split_with_overlap <- function(vector_of_positions, window_size, overlap_denom) {
   overlap <- window_size %/% overlap_denom #Degree of overlap between segments

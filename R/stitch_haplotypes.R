@@ -21,7 +21,8 @@
 #' 
 #' @return complete_haplotypes a tibble with two columns, h1 and h2, containing the inferred haplotypes from each window stitched together in a single non-overlapping segment 
 #' 
-#' @import tidyverse
+#' @importFrom tidyverse dplyr
+#' @importFrom magrittr %>%
 #' 
 stitch_haplotypes <- function(inferred_haplotypes, windows, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5){
   if (stringent_stitch){
@@ -53,7 +54,7 @@ stitch_haplotypes <- function(inferred_haplotypes, windows, mcstop=TRUE, stringe
         }
       }
     }
-    initial_haplotype <- tibble(index = olap_haps_complete$index,
+    initial_haplotype <- tidyverse::tibble(index = olap_haps_complete$index,
                                 pos=c(olap_haps_complete[is.na(olap_haps_complete$pos.y),]$pos.x,
                                       olap_haps_complete[!is.na(olap_haps_complete$pos.x) &
                                                            !is.na(olap_haps_complete$pos.y),]$pos.x,
@@ -64,6 +65,6 @@ stitch_haplotypes <- function(inferred_haplotypes, windows, mcstop=TRUE, stringe
                                        olap_haps_complete[is.na(olap_haps_complete$pos.x),]$h1.y))
   }
   complete_haplotypes <- initial_haplotype %>% 
-    mutate(h2 = invert_bits(h1))
+    dplyr::mutate(h2 = invert_bits(initial_haplotype$h1))
   return (complete_haplotypes)
 }

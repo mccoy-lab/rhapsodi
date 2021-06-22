@@ -6,9 +6,6 @@
 #' 
 #' @return input_data inverted from the actual input
 #' 
-#' @examples
-#' R code here showing how my function works
-#' 
 invert_bits <- function(input_data) {
   return(abs(input_data-1))
 }

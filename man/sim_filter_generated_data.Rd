@@ -21,7 +21,7 @@ sim_filter_generated_data(
 
 \item{new_rows}{a vector of the integer SNP indices for where de novo mutation were added if DNMs were simulated, this should be NULL otherwise}
 
-\item{add_de_novo_mt}{a bool, if TRUE de novo mutations were simulated in the generative model and then \code{new_rows} is also filtered}
+\item{add_de_novo_mut}{a bool, if TRUE de novo mutations were simulated in the generative model and then \code{new_rows} is also filtered}
 }
 \value{
 out a named list with the filtered \code{gam_na_df}, filtered \code{gam_full_df}, filtered \code{donor_haps}, new number of snps after filtering \code{num_snps}

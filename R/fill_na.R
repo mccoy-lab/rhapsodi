@@ -8,20 +8,19 @@
 #' 
 #' @return gamete_sample_imputed Column with each gamete's imputed haplotypes 
 #' 
-#' @import tidyverse
-#' 
-#' @example 
-#' R code here showing my function works 
+#' @importFrom tidyverse dplyr tidyr
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' 
 fill_na <- function(imputed_gametes, col_index) {
   gamete_sample <- imputed_gametes[,col_index] %>%
-    rename(gamete = colnames(.)[1]) %>%
-    mutate(gamete_up = gamete) %>%
-    mutate(gamete_down = gamete) %>%
-    fill(gamete_up, .direction = "up") %>%
-    fill(gamete_down, .direction = "down") %>%
-    mutate(is_match = (gamete_up == gamete_down)) %>%
-    replace_na(list(is_match = FALSE))
+    dplyr::rename(gamete = colnames(.data)[1]) %>%
+    dplyr::mutate(gamete_up = gamete) %>%
+    dplyr::mutate(gamete_down = gamete) %>%
+    tidyr::fill(gamete_up, .direction = "up") %>%
+    tidyr::fill(gamete_down, .direction = "down") %>%
+    dplyr::mutate(is_match = (gamete_up == gamete_down)) %>%
+    tidyr::replace_na(list(is_match = FALSE))
   gamete_sample$gamete_imputed <- as.character(NA)
   gamete_sample[gamete_sample$is_match == TRUE,]$gamete_imputed <- gamete_sample[gamete_sample$is_match == TRUE,]$gamete_up
   #fill beginning of chromosome NAs

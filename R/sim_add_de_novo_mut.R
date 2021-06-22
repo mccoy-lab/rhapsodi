@@ -24,6 +24,8 @@
 #' 
 #' @return out a named list with the adjusted `unlist_ci`, `num_snps`, `gam_haps`, `gam_mat`, `gam_mat_with_na`, `donor_haps`, as well as the new `new_rows` which tracks where the new DNMs are
 #'
+#' @importFrom stats rpois rgamma
+#'
 sim_add_de_novo_mut <- function(de_novo_lambda, de_novo_alpha, de_novo_beta, num_snps, num_gametes, gam_haps, gam_mat, gam_mat_with_na, donor_haps, unlist_ci, missing_genotype_rate){
   out <- list()
   stopifnot(de_novo_beta > 0)

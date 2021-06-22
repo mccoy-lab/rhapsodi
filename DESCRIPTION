@@ -2,7 +2,15 @@ Package: rhapsodi
 Imports:
   data.table,
   HMM,
-  tidyverse
+  dpylr,
+  tidyr,
+  tibble,
+  stats,
+  parallel,
+  readr,
+  utils,
+  magrittr,
+  rlang
 Suggests:
   pbapply,
   pbmcapply,
@@ -16,18 +24,17 @@ Authors@R: c(
            email = "kweave23@jhu.edu"),
     person(given = "Sara",
            family = "Carioscia",
-           role = c("aut", "cre"),
+           role = "aut",
            email = "scarios1@jhu.edu"),
     person(given = "Rajiv",
            family = "McCoy",
-           role = c("aut", "cre"),
+           role = "aut",
            email = "rajiv.mccoy@jhu.edu"))
 Description: Given sparse gamete genotyping data, 'rhapsodi' 
     imputes the phased haplotypes of the diploid donor, 
     infers the full gamete genotypes, 
     and discovers meiotic recombination events for each gamete.  
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+License: `use_mit_license()`
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

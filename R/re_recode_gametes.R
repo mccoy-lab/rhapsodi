@@ -11,9 +11,6 @@
 #'
 #' @return to_return gamete data in dataframe form with read data (0's and 1's and NAs) instead of haplotype information
 #' 
-#' @example
-#' R code here explaining what my function does
-#'
 re_recode_gametes <- function(dt, complete_haplotypes) {
   to_return <- data.frame(matrix(NA_real_, nrow=nrow(dt), ncol=ncol(dt)))
   for (i in 1:ncol(dt)) {

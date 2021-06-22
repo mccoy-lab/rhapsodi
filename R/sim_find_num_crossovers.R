@@ -8,6 +8,8 @@
 #' 
 #' @return num_recomb_sites a vector of length `num_gametes` containing integers for the number of crossovers for each gamete
 #'
+#' @importFrom stats rpois
+#'
 sim_find_num_crossovers <- function(num_gametes, recomb_lambda){
   stopifnot(recomb_lambda > 0)
   num_recomb_sites <- rpois(num_gametes, recomb_lambda)

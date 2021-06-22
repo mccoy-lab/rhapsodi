@@ -14,12 +14,7 @@
 #' @return pos_not_excluded Genomic positions that should be included   
 #' 
 #' @import data.table
-#' @import tidyverse
-#' 
-#' @example 
-#' R code here showing my function works 
-#' to_include_output <- filter_problem_genome(positions_nc26chr21, 21, blacklist, giab_union)
-#' new_dt <- input_dt_nc26chr21[input_dt_nc26chr21$positions %in% to_include_output$positions,]
+#' @importFrom magrittr %>%
 #' 
 filter_problem_genome <- function(input_data_positions, chrom, exclude_genomic_positions, include_genomic_positions) {
   col_chr_name <- paste0("chr", chrom)
@@ -35,10 +30,10 @@ filter_problem_genome <- function(input_data_positions, chrom, exclude_genomic_p
     # Set key for use in foverlaps
     data.table::setkey(exclude_genomic_positions, start, end)
     # Get filtered set of points in the raw data that should be excluded  
-    blacklisted <- data.table::foverlaps(new_positions, exclude_genomic_positions, type="any", nomatch=NULL)
+    blacklisted <- data.table::foverlaps(input_data_positions, exclude_genomic_positions, type="any", nomatch=NULL)
     
     # Then, remove those rows (i.e., genomic positions) from the list of positions that will be returned
-    pos_not_excluded <- new_positions[new_positions$positions %!in% blacklisted$positions,]
+    pos_not_excluded <- input_data_positions[input_data_positions$positions %!in% blacklisted$positions,]
   }
   # Find regions in the raw data that are usable 
   if(!missing(include_genomic_positions)) {

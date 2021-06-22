@@ -9,9 +9,6 @@
 #' 
 #' @return dt matrix of gametes coded by haplotype at each position 
 #' 
-#' @example
-#' R code here showing how my function works
-#' 
 recode_gametes <- function(dt, complete_haplotypes) {
   for (i in 1:ncol(dt)) {
     dt[i][dt[i] == complete_haplotypes$h1] <- "h1"

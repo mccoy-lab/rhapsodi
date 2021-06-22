@@ -10,8 +10,10 @@ report_gametes(
   complete_haplotypes,
   original_gamete_data,
   filled_gamete_data,
+  positions,
   sampleName,
-  chrom
+  chrom,
+  threads = 2
 )
 }
 \arguments{
@@ -25,9 +27,13 @@ report_gametes(
 
 \item{filled_gamete_data}{gamete data matrix from the HMM and \code{fill_NA} function}
 
+\item{positions}{the genomic positions corresponding to SNP indices}
+
 \item{sampleName}{sample name of sample given to rhapsodi}
 
 \item{chrom}{chromosome of sample given to rhapsodi}
+
+\item{threads}{an integer, default = 2, the number of cores to use when we use mclapply or the like}
 }
 \value{
 out a named list which returns gamete_haps, or a data frame specifying from which donor haplotype each gamete position originates

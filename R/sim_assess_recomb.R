@@ -10,8 +10,8 @@
 #'
 #' @return metrics_out a named list with values for `precision`, `recall`, `accuracy`, `specificity`, `fdr`, `fpr`, `true_n`,`pred_n`, `tn`, `fn`, `tp`, `fp`
 #'
-#' @import tidyverse
 #' @import data.table
+#' @importFrom magrittr %>%
 #'
 #' @export
 #'
@@ -24,7 +24,7 @@ sim_assess_recomb <- function(true_recomb, pred_recomb, cons=FALSE){
   pred_recomb_nona <- pred_recomb_dt[!is.na(pred_recomb_dt$start),] %>% data.table::setkey()
   pred_recomb_na <- pred_recomb_dt[is.na(pred_recomb_dt$start),]
   
-  if (nrow(truth_recomb_nona) > 0){
+  if (nrow(true_recomb_nona) > 0){
     no_truths = FALSE
   } else {no_truths = TRUE}
   if (nrow(pred_recomb_nona) > 0){
@@ -39,7 +39,7 @@ sim_assess_recomb <- function(true_recomb, pred_recomb, cons=FALSE){
     pred_intersect <- NULL
   }
   
-  tn <- sim_find_tn(truth_recomb_na, pred_recomb_na)
+  tn <- sim_find_tn(true_recomb_na, pred_recomb_na)
   fn <- sim_find_fn(truth_intersect, true_recomb_nona, cons=cons, no_truths=no_truths, no_preds=no_preds)
   tp <- sim_find_tp(truth_intersect, cons=cons, no_truths=no_truths, no_preds=no_preds)
   fp <- sim_find_fp(pred_intersect, pred_recomb_nona, no_truths=no_truths, no_preds=no_preds)

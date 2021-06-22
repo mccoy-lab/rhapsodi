@@ -8,8 +8,7 @@
 #' 
 #' @return mode The most frequent value or NA at a position
 #' 
-#' @example 
-#' R code here showing how my function works
+#' @importFrom stats na.omit
 #' 
 get_mode <- function(vector){
   uniqv <- unique(na.omit(vector))

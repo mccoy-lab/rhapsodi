@@ -7,12 +7,10 @@
 #' @param sequencing_error User-input for expected error in sequencing (default = 0.005)
 #' @param avg_recomb User-input for expected average recombination spots per chromosome (default=1). Used to set the numerator for transition probability
 #' 
-#' @import HMM
+#' @importFrom HMM initHMM
 #' 
 #' @return hmm The hidden Markov model with transition and emission probabilities set for use. 
 #' 
-#' @example 
-#' R code here showing how my function works 
 build_hmm <- function(num_snps, sequencing_error, avg_recomb) {
   # two states
   states <- c("haplotype1", "haplotype2")
@@ -33,7 +31,7 @@ build_hmm <- function(num_snps, sequencing_error, avg_recomb) {
   emissProb <- matrix(c(h1ProbEmiss, h2ProbEmiss), 2)
   
   #build model with the above inputs
-  hmm <- HMM::initHMM(States = states,
+  hmm <- initHMM(States = states,
                  Symbols = emissions,
                  transProbs = transProb,
                  emissionProbs = emissProb)
