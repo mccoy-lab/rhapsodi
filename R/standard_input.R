@@ -19,7 +19,7 @@
 #'
 standard_input <- function(input_file, use_dt=FALSE, input_dt=NULL){
   if (!use_dt){
-    stopifnot(file_test("-f", input_file), paste0("The provided file ", input_file, " does not exist."))
+    stopifnot(file_test("-f", input_file), message(paste0("The provided file ", input_file, " does not exist.")))
     dt <- read_delim(input_file, delim = "\t", col_names = TRUE, col_types = cols(.default = "d")) %>% 
       as.data.frame()
   } else {
