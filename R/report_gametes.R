@@ -31,10 +31,10 @@
 #' @importFrom magrittr %>%
 #' 
 report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete_haplotypes, original_gamete_data, filled_gamete_data, positions, sampleName, chrom, threads=2){
-  out <- list() #want to return out$gamete_haps filled gamete data haplotypes, out$recomb_breaks, out$
+  out <- list()
+  idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_data))
   if (!smooth_crossovers){
     filled_gamete_forrecomb <- unsmooth(original_gamete_data, filled_gamete_data) #filled_gamete_forrecomb is haplotypes
-    idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_forrecomb))
     if (requireNamespace("pbmcapply", quietly = TRUE)){
       recomb_spots_all <- do.call(rbind, pbmcapply::pbmclapply(1:ncol(filled_gamete_forrecomb),
                                                               function(x) find_recomb_spots(filled_gamete_forrecomb, x, idents_for_csv, positions),
@@ -55,7 +55,6 @@ report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete
       out$gamete_haps <- filled_gamete_data #want to report filled_gamete_data (the haplotypes)
     }
   } else { #smooth_crossovers is TRUE
-    idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_data))
     if (requireNamespace("pbmcapply", quietly = TRUE)){
       recomb_spots_all <- do.call(rbind, pbmcapply::pbmclapply(1:ncol(filled_gamete_data),
                                                               function(x) find_recomb_spots(filled_gamete_data, x, idents_for_csv, positions),

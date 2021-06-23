@@ -18,5 +18,8 @@ original_obs Replaced observed haplotype with that assigned by the model
 }
 \description{
 This function walks along each gamete and replaces the original observation with the inferred state.
+If the number of original observations is 0 or 1, the viterbi algorithm is not called, as there is no "path" to evaluate.
+If only one observation, we assign the one observation as the inferred state
+If no observations, we assign an inferred state of NA, such that the inferred state (NA) simply matches the original observations (which were also NA in this situation)
 This replaces any incorrect haplotype assignments (e.g., due to sequencing error).
 }

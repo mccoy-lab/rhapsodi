@@ -19,12 +19,12 @@ run_hmm <- function(dt, column_index, hmm) {
   dict_list <- list("h1" = "haplotype1", "h2" = "haplotype2")
   original_obs <- dt[,column_index]
   na_omit_oo <- na.omit(original_obs)
-  if (length(na_omit_oo == 1)){
+  if (length(na_omit_oo) > 1){
+    inferred_state <- viterbi(hmm, na_omit_oo)
+  } else if (length(na_omit_oo) ==1){
     inferred_state <- dict_list[[na_omit_oo[1]]]
-  } else if (length(na_omit_oo) == 0){
-    inferred_state <- NA
   } else {
-    inferred_state <- viterbi(hmm, na_omit_00)
+    inferred_state <- NA
   }
   original_obs[!is.na(original_obs)] <- inferred_state
   return(original_obs)
