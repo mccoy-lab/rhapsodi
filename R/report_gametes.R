@@ -34,7 +34,7 @@ report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete
   out <- list()
   idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_data))
   if (!smooth_crossovers){
-    filled_gamete_forrecomb <- unsmooth(original_gamete_data, filled_gamete_data) #filled_gamete_forrecomb is haplotypes
+    filled_gamete_forrecomb <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), filled_gamete_data) #filled_gamete_forrecomb is haplotypes
     if (requireNamespace("pbmcapply", quietly = TRUE)){
       recomb_spots_all <- do.call(rbind, pbmcapply::pbmclapply(1:ncol(filled_gamete_forrecomb),
                                                               function(x) find_recomb_spots(filled_gamete_forrecomb, x, idents_for_csv, positions),
@@ -67,7 +67,7 @@ report_gametes <- function(smooth_crossovers, smooth_imputed_genotypes, complete
         dplyr::right_join(tibble(Ident = idents_for_csv), by = "Ident")  
     }
     if (!smooth_imputed_genotypes){
-      filled_gamete_data <- unsmooth(original_gamete_data, filled_gamete_data) #haplotypes
+      filled_gamete_data <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), filled_gamete_data) #haplotypes
       filled_gamete_recode <- re_recode_gametes(filled_gamete_data, complete_haplotypes) #0's and 1's
     } else { #smooth_imputed_genotypes is TRUE
       filled_gamete_recode <- re_recode_gametes(filled_gamete_data, complete_haplotypes) #0's and 1's

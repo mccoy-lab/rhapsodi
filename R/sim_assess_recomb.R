@@ -17,6 +17,7 @@
 #'
 sim_assess_recomb <- function(true_recomb, pred_recomb, cons=FALSE){
   ##Recombination Discovery assessment
+  true_recomb <- data.table::data.table(true_recomb)
   true_recomb_nona <- true_recomb[!is.na(true_recomb$start),] %>% data.table::setkey()
   true_recomb_na <- true_recomb[is.na(true_recomb$start),]
   
