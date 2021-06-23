@@ -20,6 +20,7 @@ re_recode_gametes <- function(dt, complete_haplotypes) {
     locs_h2[which(is.na(locs_h2))] <- FALSE
     to_return[locs_h1, i] <- complete_haplotypes$h1[locs_h1]
     to_return[locs_h2, i] <- complete_haplotypes$h2[locs_h2]
+    colnames(to_return) <- colnames(dt)
   }
   return (to_return)
 }
