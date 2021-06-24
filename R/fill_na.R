@@ -25,11 +25,15 @@ fill_na <- function(imputed_gametes, col_index) {
   gamete_sample[gamete_sample$is_match == TRUE,]$gamete_imputed <- gamete_sample[gamete_sample$is_match == TRUE,]$gamete_up
   #fill beginning of chromosome NAs
   first <- which(!is.na(gamete_sample$gamete_imputed))[1]
-  gamete_sample$gamete_imputed[1:(first-1)] <- gamete_sample$gamete_imputed[first]
+  if (!is.na(first)){
+    gamete_sample$gamete_imputed[1:(first-1)] <- gamete_sample$gamete_imputed[first]
+  }
   #fill end of chromosome NAs
   gamete_sample$gamete_imputed <- rev(gamete_sample$gamete_imputed)
   first <- which(!is.na(gamete_sample$gamete_imputed))[1]
-  gamete_sample$gamete_imputed[1:(first-1)] <- gamete_sample$gamete_imputed[first]
+  if (!is.na(first)){
+    gamete_sample$gamete_imputed[1:(first-1)] <- gamete_sample$gamete_imputed[first]
+  }
   #reverse chromosome imputation back so it faces the right way
   gamete_sample$gamete_imputed <- rev(gamete_sample$gamete_imputed)
   gamete_sample_imputed <- gamete_sample$gamete_imputed
