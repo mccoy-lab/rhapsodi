@@ -5,12 +5,9 @@
 #' We then find all locations that are mismatch. 
 #' For switch error rate, however, we only want to find standalone mismatches as well as the first mismatch in a stretch of mismatches.
 #' Therefore, we use the diff function to find the difference between adjacent elements in the match 0/1/-1 encoding
-#' Then from this diff result, we pick only the locations before the mismatch locations and save this as comp_with_before. 
-#' Knowing that mismatches are 1 or -1, we expect continuations of mismatches in comp_with_before to be | -1 - -1 | = 0, | -1 - 1 | 2, | 1 - 1 | = 0, | 1 - -1 | = 2. 
-#' And since matches are 0, a new mismatch would be |0 - 1| = 1, or |0 - - 1| = 1.
-#' The values in this vector will be 0, 1, or 2. If 0 | 2, then the value is a continuation of a mismatch stretch. If the value is 1, it's a new switch error 
-#' Finally, we find the number that are equal to 1 in comp_with_before and this is the number of switch errors
-#' We divide by num_snps to find the switch error rate
+#' We sum those for which the difference is not 1, suggesting that it is a new standalone, or start of a stretch, 
+#' We also add one to this sum for the very first mismatch
+#' We finally divide by num_snps to find the switch error rate
 #' 
 #' @param truth a vector of genotypes in 0/1 encoding, the truth
 #' @param predicted a vector of genotyptes in 0/1 encoding, predicted from rhapsodi
@@ -21,8 +18,7 @@
 sim_ser <- function(truth, predicted, num_snps){
   match01_encoding <- predicted - truth #match is a 0, mismatch is a 1 | -1
   which_mismatch <- which(match01_encoding != 0)
-  comp_with_before <- abs(diff(match01_encoding))[which_mismatch - 1]
-  switch_errors <- sum(comp_with_before == 1, na.rm=TRUE) #if comp_with_before values are 0 | 2, then the value is a continuation following another error; if 1, it's a new switch error
+  switch_errors <- sum(diff(which_mismatch) != 1) + 1 #adding one for the first mismatch
   to_return <- switch_errors / num_snps
   return (to_return)
 }
