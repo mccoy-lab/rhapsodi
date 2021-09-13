@@ -41,8 +41,10 @@ sim_assess_recomb <- function(true_recomb, pred_recomb, cons=FALSE){
   }
   
   tn <- sim_find_tn(true_recomb_na, pred_recomb_na)
+  message(tn)
   fn <- sim_find_fn(truth_intersect, true_recomb_nona, cons=cons, no_truths=no_truths, no_preds=no_preds)
   tp <- sim_find_tp(truth_intersect, cons=cons, no_truths=no_truths, no_preds=no_preds)
+  message(tp)
   fp <- sim_find_fp(pred_intersect, pred_recomb_nona, no_truths=no_truths, no_preds=no_preds)
   
   metrics_out <- sim_metrics(tp, fp, tn, fn)
