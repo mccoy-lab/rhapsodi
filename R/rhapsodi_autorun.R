@@ -1,14 +1,14 @@
 #' This function can be used to run all steps of rhapsodi
 #' 
 #' This function runs all steps of rhapsodi by first inputting the data
-#' Then calling `impute_donor_haplotypes` to run donor phasing
-#' Then calling `fill_gametes` to run gamete genotype imputation through the HMM
-#' And finally calling `report_gametes` to run meiotic recombination discovery and return all 3 main types of rhapsodi outputs
+#' Then calling `phase_donor_haplotypes` to run donor phasing
+#' Then calling `impute_gamete_genotypes` to run gamete genotype imputation through the HMM
+#' And finally calling `discover_meiotic_recombination` to run meiotic recombination discovery
 #' The named list which is returned has 
-#' `donor_haps` which is the phased haplotypes as a tibble with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
+#' `donor_haps` which is the phased haplotypes as a data frame with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
 #' `gamete_haps` which is the filled gametes specifying from which donor haplotype each gamete position originates in data frame form
-#' `gamete_genotypes` which is the filled gametes specifying the genotype in (0's and 1's) for each gamete position 
-#' `recomb_breaks`which is a tibble specifying the recombination breakpoints for each gamete
+#' `gamete_genotypes` which is the filled gametes specifying the genotype in (0's and 1's) for each gamete position as a data frame
+#' `recomb_breaks`which is a data frame specifying the recombination breakpoints for each gamete
 #' 
 #' @param input_file a string; the path plus filename for the input sparse gamete genotype data in tabular form. Note the form is different depending on the value of `acgt`. Use NULL if `use_dt` is TRUE
 #' @param use_dt a bool; default is FALSE, whether to input a pre-loaded data frame/table rather than using an input file
@@ -34,17 +34,13 @@
 rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt = FALSE, threads=2, sampleName="sampleT", chrom = "chrT", seqError_model = 0.005, avg_recomb_model = 1, 
                              window_length=3000, overlap_denom = 2, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5,
                              smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE){
-  if (!acgt){
-    input_data <- standard_input(input_file, use_dt, input_dt)
-    dt <- input_data$dt
-    positions <- input_data$positions
-  } else{
-    input_data <- nucleotide_input(input_dt)
-    dt <- input_data$gametes_het
-    positions <- input_data$positions
+  input_data <- read_data(input_file, use_dt = use_dt, input_dt = input_dt, acgt = acgt)
+  complete_haplotypes <- phase_donor_haplotypes(input_data$dt, input_data$positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min)
+  filled_gametes <- impute_gamete_genotypes(input_data$dt, complete_haplotypes, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, smooth_imputed_genotypes = smooth_imputed_genotypes, threads = threads)
+  recomb_breaks <- discover_meiotic_recombination(input_data$dt, complete_haplotypes, filled_gametes, input_data$positions, smooth_crossovers = smooth_crossovers, smooth_imputed_genotypes = smooth_imputed_genotypes, sampleName = sampleName, chrom=chrom, threads = threads)
+  if (acgt){
+    #recode 0/1s back to the true REF and ALT alleles
   }
-  complete_haplotypes <- impute_donor_haplotypes(dt, positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min)
-  filled_gametes <- fill_gametes(dt, complete_haplotypes, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, threads = threads)
-  rhapsodi_out <- report_gametes(smooth_crossovers, smooth_imputed_genotypes, complete_haplotypes, dt, filled_gametes, positions, sampleName, chrom, threads = threads)
+  rhapsodi_out <- list(donor_haps = complete_haplotypes, gamete_haps = , gamete_genotypes = filled_gametes$ , recomb_breaks = recomb_breaks)
   return (rhapsodi_out)
 }
