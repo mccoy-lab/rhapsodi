@@ -27,7 +27,7 @@
 #' @param smooth_imputed_genotypes a bool; default is FALSE; used in `report_gametes` whether to use smoothed data from the HMM or original reads for ending filled gamete genotypes. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch
 #' @param smooth_crossovers a bool; default is TRUE; used in `report_gametes` whether to use smoothed data from the HMM or original reads for recombination finding. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch
 #'
-#' @return rhapsodi_out a named list from `report_gametes` with `donor_haps`, `gamete_haps`, `gamete_genotypes`, and `recomb_breaks`
+#' @return rhapsodi_out a named list with `donor_haps`, `gamete_haps`, `gamete_genotypes`, `unsmoothed_gamete_haps`,  `unsmoothed_gamete_genotypes`, and `recomb_breaks`
 #'
 #' @export
 #'
@@ -41,6 +41,6 @@ rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt =
   if (acgt){
     #recode 0/1s back to the true REF and ALT alleles
   }
-  rhapsodi_out <- list(donor_haps = complete_haplotypes, gamete_haps = , gamete_genotypes = filled_gametes$ , recomb_breaks = recomb_breaks)
+  rhapsodi_out <- list(donor_haps = complete_haplotypes, gamete_haps = filled_gametes$filled_gametes_haps , gamete_genotypes = filled_gametes$filled_gametes , unsmoothed_gamete_haps = filled_gametes$unsmoothed_gametes_haps, unsmoothed_gamete_genotypes = filled_gametes$unsmoothed_gametes, recomb_breaks = recomb_breaks)
   return (rhapsodi_out)
 }
