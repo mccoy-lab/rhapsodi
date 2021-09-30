@@ -57,16 +57,16 @@ rhapsodi_autorun(
 \item{smooth_crossovers}{a bool; default is TRUE; used in \code{report_gametes} whether to use smoothed data from the HMM or original reads for recombination finding. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
 }
 \value{
-rhapsodi_out a named list from \code{report_gametes} with \code{donor_haps}, \code{gamete_haps}, \code{gamete_genotypes}, and \code{recomb_breaks}
+rhapsodi_out a named list with \code{donor_haps}, \code{gamete_haps}, \code{gamete_genotypes}, \code{unsmoothed_gamete_haps},  \code{unsmoothed_gamete_genotypes}, and \code{recomb_breaks}
 }
 \description{
 This function runs all steps of rhapsodi by first inputting the data
-Then calling \code{impute_donor_haplotypes} to run donor phasing
-Then calling \code{fill_gametes} to run gamete genotype imputation through the HMM
-And finally calling \code{report_gametes} to run meiotic recombination discovery and return all 3 main types of rhapsodi outputs
+Then calling \code{phase_donor_haplotypes} to run donor phasing
+Then calling \code{impute_gamete_genotypes} to run gamete genotype imputation through the HMM
+And finally calling \code{discover_meiotic_recombination} to run meiotic recombination discovery
 The named list which is returned has
-\code{donor_haps} which is the phased haplotypes as a tibble with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
+\code{donor_haps} which is the phased haplotypes as a data frame with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
 \code{gamete_haps} which is the filled gametes specifying from which donor haplotype each gamete position originates in data frame form
-\code{gamete_genotypes} which is the filled gametes specifying the genotype in (0's and 1's) for each gamete position
-\code{recomb_breaks}which is a tibble specifying the recombination breakpoints for each gamete
+\code{gamete_genotypes} which is the filled gametes specifying the genotype in (0's and 1's) for each gamete position as a data frame
+\code{recomb_breaks}which is a data frame specifying the recombination breakpoints for each gamete
 }
