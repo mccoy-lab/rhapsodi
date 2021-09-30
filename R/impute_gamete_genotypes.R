@@ -50,7 +50,7 @@ impute_gamete_genoyptes <- function(original_gamete_data, complete_haplotypes, s
     filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gamete_data)) %>% as.data.frame() %>% `colnames<-`(colnames(original_gamete_data))
     filled_gametes_unsmooth_01 <- re_recode(filled_gametes_unsmooth, complete_haplotypes)
   } else{ 
-    filled_gametes_unsmooth <- NULL,
+    filled_gametes_unsmooth <- NULL
     filled_gametes_unsmooth_01 <- NULL}
   gamete_data <- list(filled_gametes = filled_gametes_01,
                       filled_gametes_haps = filled_gametes,
