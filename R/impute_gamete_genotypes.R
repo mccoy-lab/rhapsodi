@@ -45,10 +45,10 @@ impute_gamete_genoyptes <- function(original_gamete_data, complete_haplotypes, s
                                                       function(x) fill_na(imputed_gametes, x))))
   }
   colnames(filled_gametes) <- colnames(original_gamete_data)
-  filled_gametes_01 <- re_recode(filled_gametes, complete_haplotypes)
+  filled_gametes_01 <- re_recode_gametes(filled_gametes, complete_haplotypes)
   if (!smooth_imputed_genotypes){
     filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gamete_data)) %>% as.data.frame() %>% `colnames<-`(colnames(original_gamete_data))
-    filled_gametes_unsmooth_01 <- re_recode(filled_gametes_unsmooth, complete_haplotypes)
+    filled_gametes_unsmooth_01 <- re_recode_gametes(filled_gametes_unsmooth, complete_haplotypes)
   } else{ 
     filled_gametes_unsmooth <- NULL
     filled_gametes_unsmooth_01 <- NULL}
