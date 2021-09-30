@@ -47,7 +47,7 @@ impute_gamete_genoyptes <- function(original_gamete_data, complete_haplotypes, s
   colnames(filled_gametes) <- colnames(original_gamete_data)
   filled_gametes_01 <- re_recode_gametes(filled_gametes, complete_haplotypes)
   if (!smooth_imputed_genotypes){
-    filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gamete_data)) %>% as.data.frame() %>% `colnames<-`(colnames(original_gamete_data))
+    filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gametes)) %>% as.data.frame() %>% `colnames<-`(colnames(original_gamete_data))
     filled_gametes_unsmooth_01 <- re_recode_gametes(filled_gametes_unsmooth, complete_haplotypes)
   } else{ 
     filled_gametes_unsmooth <- NULL
