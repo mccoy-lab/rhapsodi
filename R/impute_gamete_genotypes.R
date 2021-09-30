@@ -20,7 +20,7 @@
 #' 
 #' @export
 
-impute_gamete_genoyptes <- function(original_gamete_data, complete_haplotypes, sequencing_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, threads=2){
+impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, sequencing_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, threads=2){
   complete_haplotypes <- as_tibble(complete_haplotypes)
   dt_recoded <- recode_gametes(original_gamete_data, complete_haplotypes)
   #build the HMM
