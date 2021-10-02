@@ -13,7 +13,7 @@
 #' 
 build_hmm <- function(num_snps, sequencing_error, avg_recomb) {
   # two states
-  states <- c("haplotype1", "haplotype2")
+  states <- c("h1", "h2")
   
   # probability of state at position x+1 given state at position x   
   hap1Prob <- c(1-(avg_recomb/num_snps), avg_recomb/num_snps)
@@ -22,7 +22,7 @@ build_hmm <- function(num_snps, sequencing_error, avg_recomb) {
   transProb <- matrix(c(hap1Prob, hap2Prob), 2)
   
   # Two emissions (observations): an allele from h1 or an allele from h2
-  emissions <- c("h1","h2")
+  emissions <- c("hap1", "hap2")
   
   # Prob of emitting an h1 allele, prob of emitting an h2 allele in state `haplotype1`
   h1ProbEmiss <- c((1-sequencing_error), sequencing_error)

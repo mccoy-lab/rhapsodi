@@ -27,13 +27,13 @@
 #' @importFrom magrittr %>%
 #' 
 discover_meiotic_recombination <- function(original_gamete_data, complete_haplotypes, filled_gamete_data_list, positions, smooth_crossovers = TRUE, smooth_imputed_genotypes = FALSE, sampleName = "sampleT", chrom = "chrT", threads=2){
-  idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_data_list$filled_gametes_haps))
+  idents_for_csv <- paste0(paste0(sampleName, "_", chrom, "_"), colnames(filled_gamete_data_list$filled_gametes_haps[,3:ncol(filled_gamete_data_list$filled_gametes_haps)]))
   if (smooth_crossovers){
-    filled_gamete_forrecomb <- as_tibble(filled_gamete_data_list$filled_gametes_haps)
+    filled_gamete_forrecomb <- as_tibble(filled_gamete_data_list$filled_gametes_haps[,3:ncol(filled_gamete_data_list$filled_gametes_haps)])
   } else {
     if(smooth_imputed_genotypes){
-      filled_gamete_forrecomb <- as_tibble(unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), filled_gamete_data_list$filled_gametes_haps))
-    } else{ filled_gamete_forrecomb <- as_tibble(filled_gamete_data_list$unsmoothed_gametes_haps)}
+      filled_gamete_forrecomb <- as_tibble(unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), filled_gamete_data_list$filled_gametes_haps[,3:ncol(filled_gamete_data_list$filled_gametes_haps)]))
+    } else{ filled_gamete_forrecomb <- as_tibble(filled_gamete_data_list$unsmoothed_gametes_haps[,3:ncol(filled_gamete_data_list$unsmoothed_gametes_haps)])}
   }
   if (requireNamespace("pbmcapply", quietly = TRUE)){
     recomb_breaks <- do.call(rbind, pbmcapply::pbmclapply(1:ncol(filled_gamete_forrecomb),

@@ -11,8 +11,8 @@
 #' @importFrom tibble as_tibble
 #' 
 unsmooth <- function(original_gamete_df, filled_gamete_data) {
-  original_gamete_df[original_gamete_df == "h1"] <- "haplotype1"
-  original_gamete_df[original_gamete_df == "h2"] <- "haplotype2"
+  original_gamete_df[original_gamete_df == "hap1"] <- "h1"
+  original_gamete_df[original_gamete_df == "hap2"] <- "h2"
   original_dt <- as.data.frame(original_gamete_df)
   filled_gamete_data <- as.data.frame(filled_gamete_data)
   filled_gamete_data[!is.na(original_dt)] <- original_dt[!is.na(original_dt)]

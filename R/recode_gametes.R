@@ -11,8 +11,8 @@
 #' 
 recode_gametes <- function(dt, complete_haplotypes) {
   for (i in 1:ncol(dt)) {
-    dt[i][dt[i] == complete_haplotypes$h1] <- "h1"
-    dt[i][dt[i] == complete_haplotypes$h2] <- "h2"
+    dt[i][dt[i] == complete_haplotypes$h1] <- "hap1"
+    dt[i][dt[i] == complete_haplotypes$h2] <- "hap2"
     dt[c(which(dt[,i] == 0 | dt[,i] == 1)),i] <- NA
   }
   return(dt)

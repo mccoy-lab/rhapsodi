@@ -16,7 +16,7 @@
 #' @return original_obs Replaced observed haplotype with that assigned by the model
 #' 
 run_hmm <- function(dt, column_index, hmm) {
-  dict_list <- list("h1" = "haplotype1", "h2" = "haplotype2")
+  dict_list <- list("hap1" = "h1", "hap2" = "h2")
   original_obs <- dt[,column_index]
   na_omit_oo <- na.omit(original_obs)
   if (length(na_omit_oo) > 1){

@@ -35,15 +35,17 @@ rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt =
                              window_length=3000, overlap_denom = 2, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5,
                              smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE){
   input_data <- read_data(input_file, use_dt = use_dt, input_dt = input_dt, acgt = acgt)
-  message("input done")
+  message("Data Input Completed")
   complete_haplotypes <- phase_donor_haplotypes(input_data$dt, input_data$positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min)
-  message("phasing complete")
-  filled_gametes <- impute_gamete_genotypes(input_data$dt, complete_haplotypes, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, smooth_imputed_genotypes = smooth_imputed_genotypes, threads = threads)
-  message("imputation complete")
+  message("Phasing Completed")
+  filled_gametes <- impute_gamete_genotypes(input_data$dt, complete_haplotypes, input_data$positions, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, smooth_imputed_genotypes = smooth_imputed_genotypes, threads = threads)
+  message("Imputation Completed")
   recomb_breaks <- discover_meiotic_recombination(input_data$dt, complete_haplotypes, filled_gametes, input_data$positions, smooth_crossovers = smooth_crossovers, smooth_imputed_genotypes = smooth_imputed_genotypes, sampleName = sampleName, chrom=chrom, threads = threads)
-  message("discovery complete")
+  message("Discovery Completed")
   if (acgt){
-    #recode 0/1s back to the true REF and ALT alleles
+    complete_haplotypes <- record_ref_alt(complete_haplotypes, input_data$ref, input_data$alt)
+    filled_gametes$filled_gametes <- record_ref_alt(filled_gametes$filled_gametes, input_data$ref, input_data$alt)
+    filed_gametes$unsmoothed_gametes <- record_ref_alt(filled_gametes$unsmoothed_gametes, input_data$ref, input_data$alt)
   }
   rhapsodi_out <- list(donor_haps = complete_haplotypes, gamete_haps = filled_gametes$filled_gametes_haps , gamete_genotypes = filled_gametes$filled_gametes , unsmoothed_gamete_haps = filled_gametes$unsmoothed_gametes_haps, unsmoothed_gamete_genotypes = filled_gametes$unsmoothed_gametes, recomb_breaks = recomb_breaks)
   return (rhapsodi_out)

@@ -7,8 +7,9 @@
 #' 
 #' @param original_gamete_data original matrix of gametes
 #' @param complete_haplotypes Inferred parental haplotypes 
+#' @param positions vector of SNP position
 #' @param sequencing_error User-input for expected error in sequencing (default = 0.005) 
-#' @param avg_recomb User-input for average recombination rate that can be expected for a chromosome (default=1)
+#' @param avg_recomb User-input for average recombination rate that can be expected for a chromosome (default=1)s
 #' @param smooth_imputed_genotypes a bool, default is FALSE, whether to use smoothed data for ending genotypes. If `TRUE`, doesn't replace with original reads, returning smoothed data only. If `FALSE`, will return both smoothed and unsmoothed
 #' @param threads User-input value for calling `pbmclapply` or `mclapply` (default = 2)
 #' 
@@ -20,7 +21,7 @@
 #' 
 #' @export
 
-impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, sequencing_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, threads=2){
+impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, positions, sequencing_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, threads=2){
   complete_haplotypes <- as_tibble(complete_haplotypes)
   dt_recoded <- recode_gametes(original_gamete_data, complete_haplotypes)
   #build the HMM
@@ -35,7 +36,6 @@ impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, s
                                                         function(x) run_hmm(dt_recoded, x, hmm),
                                                         mc.cores = getOption("mc.cores", threads))))
   }
-  
   if (requireNamespace("pbapply", quietly = TRUE)){
   
     filled_gametes <- as.data.frame(do.call(cbind, pbapply::pblapply(1:ncol(imputed_gametes),
@@ -44,14 +44,18 @@ impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, s
     filled_gametes <- as.data.frame(do.call(cbind, lapply(1:ncol(imputed_gametes),
                                                       function(x) fill_na(imputed_gametes, x))))
   }
-  colnames(filled_gametes) <- colnames(original_gamete_data)
   filled_gametes_01 <- re_recode_gametes(filled_gametes, complete_haplotypes)
+  
   if (!smooth_imputed_genotypes){
-    filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gametes)) %>% as.data.frame() %>% `colnames<-`(colnames(original_gamete_data))
+    filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gametes)) %>% as.data.frame()
     filled_gametes_unsmooth_01 <- re_recode_gametes(filled_gametes_unsmooth, complete_haplotypes)
-  } else{ 
+    filled_gametes_unsmooth <- cbind(1:length(positions), positions, filled_gametes_unsmooth) %>% `colnames<-`(c(c("index", "pos"), colnames(original_gamete_data)))
+    filled_gametes_unsmooth_01 <- cbind(1:length(positions), positions, filled_gametes_unsmooth_01) %>% `colnames<-`(c(c("index", "pos"), colnames(original_gamete_data)))
+   } else{ 
     filled_gametes_unsmooth <- NULL
     filled_gametes_unsmooth_01 <- NULL}
+  filled_gametes <- cbind(1:length(positions), positions, filled_gametes) %>% `colnames<-`(c(c("index", "pos"),colnames(original_gamete_data)))
+  filled_gametes_01 <- cbind(1:length(positions), positions, filled_gametes_01) %>% `colnames<-`(c(c("index", "pos"),colnames(original_gamete_data)))
   gamete_data <- list(filled_gametes = filled_gametes_01,
                       filled_gametes_haps = filled_gametes,
                       unsmoothed_gametes = filled_gametes_unsmooth_01,
