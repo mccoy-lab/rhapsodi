@@ -1,4 +1,4 @@
-#' A function to assign the haplotypes of each allele on every gamete
+#' A function to drive the assignment and reporting of the genotypes of each allele on every gamete
 #' 
 #' This function builds and applies a hidden Markov model to categorize each allele on each gamete. 
 #' It then fills the positions missing data with the nearest haplotype assignment.
@@ -39,23 +39,20 @@ impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, p
   if (requireNamespace("pbapply", quietly = TRUE)){
   
     filled_gametes <- as.data.frame(do.call(cbind, pbapply::pblapply(1:ncol(imputed_gametes),
-                                                        function(x) fill_na(imputed_gametes, x))))
+                                                        function(x) fill_na(imputed_gametes, x)))) %>% `colnames<-`(colnames(original_gamete_data))
   } else {
     filled_gametes <- as.data.frame(do.call(cbind, lapply(1:ncol(imputed_gametes),
-                                                      function(x) fill_na(imputed_gametes, x))))
+                                                      function(x) fill_na(imputed_gametes, x)))) %>% `colnames<-`(colnames(original_gamete_data))
   }
-  filled_gametes_01 <- re_recode_gametes(filled_gametes, complete_haplotypes)
+  filled_gametes_01 <- re_recode_gametes(filled_gametes, complete_haplotypes) %>% `colnames<-`(colnames(original_gamete_data))
   
   if (!smooth_imputed_genotypes){
-    filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gametes)) %>% as.data.frame()
-    filled_gametes_unsmooth_01 <- re_recode_gametes(filled_gametes_unsmooth, complete_haplotypes)
-    filled_gametes_unsmooth <- cbind(1:length(positions), positions, filled_gametes_unsmooth) %>% `colnames<-`(c(c("index", "pos"), colnames(original_gamete_data)))
-    filled_gametes_unsmooth_01 <- cbind(1:length(positions), positions, filled_gametes_unsmooth_01) %>% `colnames<-`(c(c("index", "pos"), colnames(original_gamete_data)))
+    filled_gametes_unsmooth <- unsmooth(recode_gametes(original_gamete_data, complete_haplotypes), as_tibble(filled_gametes)) %>% as.data.frame() %>% `colnames<-`(colnames(original_gamete_data))
+    filled_gametes_unsmooth_01 <- re_recode_gametes(filled_gametes_unsmooth, complete_haplotypes) %>% `colnames<-`(colnames(original_gamete_data))
    } else{ 
     filled_gametes_unsmooth <- NULL
     filled_gametes_unsmooth_01 <- NULL}
-  filled_gametes <- cbind(1:length(positions), positions, filled_gametes) %>% `colnames<-`(c(c("index", "pos"),colnames(original_gamete_data)))
-  filled_gametes_01 <- cbind(1:length(positions), positions, filled_gametes_01) %>% `colnames<-`(c(c("index", "pos"),colnames(original_gamete_data)))
+  
   gamete_data <- list(filled_gametes = filled_gametes_01,
                       filled_gametes_haps = filled_gametes,
                       unsmoothed_gametes = filled_gametes_unsmooth_01,

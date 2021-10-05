@@ -2,7 +2,7 @@
 % Please edit documentation in R/phase_donor_haplotypes.R
 \name{phase_donor_haplotypes}
 \alias{phase_donor_haplotypes}
-\title{A function to impute haplotypes from diploid donor}
+\title{A function to drive the phasing and reporting of the two haplotypes from a single diploid donor}
 \usage{
 phase_donor_haplotypes(
   dt,
@@ -16,26 +16,27 @@ phase_donor_haplotypes(
 )
 }
 \arguments{
-\item{dt}{Matrix of gamete alleles}
+\item{dt}{Matrix or dataframe of gamete alleles in 0/1/NA encoding}
 
 \item{positions}{vector of SNP positions}
 
-\item{window_length}{Size of window (default=3000)}
+\item{window_length}{An integer; size of window for \code{split_with_overlap} (default=3000)}
 
-\item{overlap_denom}{User-input value for denominator in calculation of overlap (default = 2)}
+\item{overlap_denom}{An integer; value for denominator in calculation of overlap for \code{split_with_overlap} (default = 2)}
 
-\item{threads}{User-input value for calling \code{pbmclapply} (default = 2)}
+\item{threads}{An integer; Number of threads to use when calling \code{pbmclapply} or the like (default = 2)}
 
-\item{mcstop}{User-input value for continuing phasing even if mean_concordance isn't within advised bounds (default = TRUE)}
+\item{mcstop}{A bool; whether to stop phasing if mean_concordance isn't within advised bounds during stitching in \code{stitch_haplotypes} (default = TRUE ). TRUE stops phasing, FALSE allows it to continue, finding the minimum linear distance between the concordance and the thresholds.}
 
-\item{stringent_stitch}{Boolean, whether or not to use the original bounds (0.1, 0.9 cutoff)}
+\item{stringent_stitch}{A bool; whether or not to use the original bounds (0.1, 0.9 cutoff) in \code{stitch_haplotypes}, or a user specified threshold value \code{stitch_new_min}.}
 
-\item{stitch_new_min}{Numeric/float, if \code{stringent_stitch} == FALSE, the new minimum value to use as a cutoff. If concordance is below this value, we assume the windows are opposite haplotypes, if greater than or equal, we assume the same haplotypes}
+\item{stitch_new_min}{A numeric/float, if \code{stringent_stitch} == FALSE, the new minimum value to use as a cutoff in \code{stitch_haplotypes}. If concordance is below this value, we assume the windows are opposite haplotypes, if greater than or equal, we assume the same haplotypes}
 }
 \value{
-complete_haplotypes phased haplotypes as a tibble with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
+complete_haplotypes phased haplotypes as a data frame with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
 }
 \description{
-This function infers the diploid donor haplotypes by first calling \code{split_with_overlap} to find the overlapping SNP segments,
-then \code{reconstruct_hap} for majority voting within each overlapping segment, finally stitching together the overlapping segments to phase both haplotypes
+This function infers the diploid donor haplotypes by first calling \code{split_with_overlap} to construct the overlapping SNP segments,
+then \code{reconstruct_hap} for majority voting within each overlapping segment,
+finally stitching together the overlapping segments to phase both haplotypes using \code{stitch_haplotypes}
 }

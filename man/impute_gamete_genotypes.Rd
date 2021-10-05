@@ -2,7 +2,7 @@
 % Please edit documentation in R/impute_gamete_genotypes.R
 \name{impute_gamete_genotypes}
 \alias{impute_gamete_genotypes}
-\title{A function to assign the haplotypes of each allele on every gamete}
+\title{A function to drive the assignment and reporting of the genotypes of each allele on every gamete}
 \usage{
 impute_gamete_genotypes(
   original_gamete_data,

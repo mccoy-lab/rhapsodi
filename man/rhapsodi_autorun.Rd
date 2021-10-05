@@ -30,31 +30,31 @@ rhapsodi_autorun(
 
 \item{input_dt}{a data frame/table; only necessary if use_dt is TRUE. User-pre-loaded data frame/table. Note the format is different depending on the value of \code{acgt}}
 
-\item{acgt}{a bool; default is FALSE; If TRUE, assumes that the data is not 0/1 encoded and is available in pre-loaded data frame format passed with \code{input_dt}}
+\item{acgt}{a bool; default is FALSE; If TRUE, assumes that the data is not 0/1/NA encoded, rather gamete genotypes are A/C/G/T/NA encoded and the dataframe has ref and alt columns.}
 
-\item{threads}{an integer; default is 2, number of threads to utilize when we use \code{mclapply}}
+\item{threads}{an integer; default is 2, number of threads to utilize when we use \code{mclapply}like functions}
 
-\item{sampleName}{a string; default is "sampleT", fill in with whatever the sample name is. We assume a single input file is from a single file}
+\item{sampleName}{a string; default is "sampleT", fill in with whatever the sample name is. We assume a single input file is from a single sample/donor}
 
 \item{chrom}{a string; default is "chrT", fill in with whatever the chromosome is. We assume a single input file is from a single chromosome}
 
-\item{seqError_model}{a numeric; default is 0.005, used in \code{build_hmm} within \code{fill_gametes}, the exppected error in sequencing}
+\item{seqError_model}{a numeric; default is 0.005, used in \code{build_hmm} within \code{impute_gamete_genotypes}, the expected error rate in sequencing}
 
-\item{avg_recomb_model}{a numeric; default is 1, used in \code{build_hmm} within \code{fill_gametes}, the expected number of average recombination spots per chromosome}
+\item{avg_recomb_model}{a numeric; default is 1, used in \code{build_hmm} within \code{impute_gamete_genotypes}, the expected number of average recombination events per chromosome}
 
-\item{window_length}{an integer; default is 3000, used in \code{split_with_overlap} within \code{impute_donor_haplotypes}, the segment length to use in constructing overlapping windows for phasing}
+\item{window_length}{an integer; default is 3000, used in \code{split_with_overlap} within \code{phase_donor_haplotypes}, the segment length to use in constructing overlapping windows for phasing}
 
-\item{overlap_denom}{an integer; default is 2, used in \code{split_with_overlap} within \code{impute_donor_haplotypes}, User-input value for denominator in calculation of overlap, or the degree of overlap between segments}
+\item{overlap_denom}{an integer; default is 2, used in \code{split_with_overlap} within \code{phase_donor_haplotypes}, User-input value for denominator in calculation of overlap, or the degree of overlap between segments}
 
-\item{mcstop}{a bool; used in \code{stitch_haplotypes} within \code{impute_donor_haplotypes}, only considered if \code{stringent_stitch} is TRUE; default is TRUE; this parameter is used to determine whether phasing continues or exits if the mean concordance between two windows is between 0.1 and 0.9. If TRUE, rhapsodi exits. If FALSE, rhapsodi and phasing continues, asking which threshold the concordance is closer to and acting accordingly}
+\item{mcstop}{a bool; used in \code{stitch_haplotypes} within \code{phase_donor_haplotypes}, only considered if \code{stringent_stitch} is TRUE; default is TRUE; this parameter is used to determine whether phasing continues or exits if the mean concordance between two windows is between 0.1 and 0.9. If TRUE, rhapsodi exits. If FALSE, rhapsodi and phasing continues, asking which threshold the concordance is closer to and acting accordingly}
 
-\item{stringent_stitch}{a bool; used in \code{stitch_haplotypes} within \code{impute_donor_haplotypes}, default is TRUE, this parameter is used to determine the threshold values used in determining whether two windows originate from the same donor. If TRUE, the preset thresholds of 0.1 and 0.9 are used.}
+\item{stringent_stitch}{a bool; used in \code{stitch_haplotypes} within \code{phase_donor_haplotypes}, default is TRUE, this parameter is used to determine the threshold values used in determining whether two windows originate from the same donor. If TRUE, the preset thresholds of 0.1 and 0.9 are used.}
 
-\item{stitch_new_min}{a numeric >0, but <1; default is 0.5; used in \code{stitch_haplotypes} within \code{impute_donor_haplotypes}, this parameter is only evaluated if \code{stringent_stitch} is FALSE and is dually assigned as the \code{different_max} and \code{same_min} threshold values when considering the concordance between two windows and therefore which donors they originate from (same or different).}
+\item{stitch_new_min}{a numeric >0, but <1; default is 0.5; used in \code{stitch_haplotypes} within \code{phase_donor_haplotypes}, this parameter is only evaluated if \code{stringent_stitch} is FALSE and is dually assigned as the \code{different_max} and \code{same_min} threshold values when considering the concordance between two windows and therefore which donors they originate from (same or different).}
 
-\item{smooth_imputed_genotypes}{a bool; default is FALSE; used in \code{report_gametes} whether to use smoothed data from the HMM or original reads for ending filled gamete genotypes. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
+\item{smooth_imputed_genotypes}{a bool; default is FALSE; used in \code{impute_gamete_genotypes} whether to use smoothed data from the HMM or original reads for the ending filled gamete genotypes, whenever there is disagreement between the two. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
 
-\item{smooth_crossovers}{a bool; default is TRUE; used in \code{report_gametes} whether to use smoothed data from the HMM or original reads for recombination finding. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
+\item{smooth_crossovers}{a bool; default is TRUE; used in \code{discover_meiotic_recombination} whether to use smoothed data from the HMM or original reads for recombination finding. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
 }
 \value{
 rhapsodi_out a named list with \code{donor_haps}, \code{gamete_haps}, \code{gamete_genotypes}, \code{unsmoothed_gamete_haps},  \code{unsmoothed_gamete_genotypes}, and \code{recomb_breaks}
@@ -62,11 +62,17 @@ rhapsodi_out a named list with \code{donor_haps}, \code{gamete_haps}, \code{game
 \description{
 This function runs all steps of rhapsodi by first inputting the data
 Then calling \code{phase_donor_haplotypes} to run donor phasing
-Then calling \code{impute_gamete_genotypes} to run gamete genotype imputation through the HMM
+Then calling \code{impute_gamete_genotypes} to run gamete genotype imputation
 And finally calling \code{discover_meiotic_recombination} to run meiotic recombination discovery
-The named list which is returned has
-\code{donor_haps} which is the phased haplotypes as a data frame with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)
-\code{gamete_haps} which is the filled gametes specifying from which donor haplotype each gamete position originates in data frame form
-\code{gamete_genotypes} which is the filled gametes specifying the genotype in (0's and 1's) for each gamete position as a data frame
-\code{recomb_breaks}which is a data frame specifying the recombination breakpoints for each gamete
+Input data should be sparse gamete sequencing data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA. The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
+For both input types, the first column should contain SNP positions in integer format.
+For ACGT input type, specifically (acgt = TRUE), the second column should be the REF allele and the third column should be the ALT allele. All following columns should be gamete data, with each gamete having its own column. Within these columns, data should be A/C/G/T/NA
+For 0/1/NA input type, specifically (acgt = FALSE), gamete data starts in the second column and continues for the rest of the columns.
+After rhapsodi has completed all three tasks, it returns a named list which has
+\code{donor_haps} which is the phased haplotypes as a data frame with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2) if acgt = FALSE. Otherwise: index, pos, a0, a1, h1, h2
+\code{gamete_haps} which is the filled gamete data frame specifying from which donor haplotype each gamete position originates. Column names: index, pos, gamete_names.
+\code{gamete_genotypes} which is the filled gamete dataf rame specifying the genotype (in 0's and 1's) for each gamete position. If acgt = FALSE, column names: index, pos, gamete_names. Otherwise: index, pos, a0, a1, gamete_names
+\code{unsmoothed_gamete_haps} which is the filled gamete data frame specifying from which donor haplotype each gamete position originates in data frame form, after unsmoothing the data by replacing imputed values with original sequencing reads when there's disagreement between observations and imputation. Column names: index, pos, gamete_names.
+\code{unsmoothed_gamete_genotypes} which is the filled gamete data frame specifying the genotype (in 0's and 1's) for each gamete position, after unsmoothing the the data by replacing imputed values with original sequencing reads when there's disagreement between observations and imputation. If acgt = FALSE, column names: index, pos, gamete_names. Otherwise: index, pos, a0, a1, gamete_names
+\code{recomb_breaks}which is a data frame specifying the recombination breakpoints for each gamete. Column names: Ident, Genomic_start, Genomic_end
 }

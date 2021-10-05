@@ -14,9 +14,9 @@
 re_recode_gametes <- function(dt, complete_haplotypes) {
   to_return <- data.frame(matrix(NA_real_, nrow=nrow(dt), ncol=ncol(dt)))
   for (i in 1:ncol(dt)) {
-    locs_h1 <- dt[,i] == "haplotype1"
+    locs_h1 <- dt[,i] == "h1"
     locs_h1[which(is.na(locs_h1))] <- FALSE
-    locs_h2 <- dt[,i] == "haplotype2"
+    locs_h2 <- dt[,i] == "h2"
     locs_h2[which(is.na(locs_h2))] <- FALSE
     to_return[locs_h1, i] <- complete_haplotypes$h1[locs_h1]
     to_return[locs_h2, i] <- complete_haplotypes$h2[locs_h2]

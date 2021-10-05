@@ -3,8 +3,9 @@
 \name{read_data}
 \alias{read_data}
 \title{A function to read in the sparse gamete sequencing data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA. The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
-For both input types, the first column should contain SNP positions in integer format. For ACGT input type, the second column should be the REF allele and the third column should be the ALT allele.
-For 0/1/NA gamete data in the rest of the columns}
+For both input types, the first column should contain SNP positions in integer format.
+For ACGT input type, specifically, the second column should be the REF allele and the third column should be the ALT allele.
+For 0/1/NA input type, specifically, gamete data starts in the second column and continues for the rest of the columns.}
 \usage{
 read_data(input_file, use_dt = FALSE, input_dt = NULL, acgt = FALSE)
 }
@@ -13,9 +14,9 @@ read_data(input_file, use_dt = FALSE, input_dt = NULL, acgt = FALSE)
 
 \item{use_dt}{a bool; default is FALSE, whether to input a pre-loaded data frame/table rather than using an input file}
 
-\item{input_dt}{a data frame/table; only necessary if use_dt is TRUE. User-pre-loaded data frame/table with the first column being SNP positions (integers) and all the other columns being 0/1/NA encoded values for gametes if acgt = FALSE.}
+\item{input_dt}{a data frame/table; only necessary if use_dt is TRUE. User-pre-loaded data frame/table with column order/specifications given earlier according to whether data is 0/1/NA or A/C/G/T/NA encoded.}
 
-\item{acgt}{a bool; default is FALSE, whether the input data is in ACGT vcf-like format with columns position (int), REF (character), ALT (character), and then gametes (characters), with gamete data stored as A/C/G/T}
+\item{acgt}{a bool; default is FALSE, whether the input data is in ACGT vcf-like format with columns position (int), REF (character), ALT (character), and then gametes (characters), with gamete data stored as A/C/G/T/NA}
 }
 \value{
 input in a named list format with \code{dt}, \code{positions}, \code{ref}, and \code{alt} where \code{dt} is a data frame of the heterozygous sparse gamete data encoded as 0/1/NA and \code{positions} is a vector of the SNP genomic positions, \code{ref} and \code{alt} are NULL if \code{acgt} is FALSE, otherwise, they are character vectors of the REF and ALT alleles for each hetSNP
@@ -23,9 +24,10 @@ input in a named list format with \code{dt}, \code{positions}, \code{ref}, and \
 \description{
 This function is called to process input data for rhapsodi. If using a file, the file is expected to be a tab-delimited file with a header
 For both input types (ACGT and 01), the first column should contain SNP positions in integer format.
-For ACGT input type, the second column should be the REF allele and the third column should be the ALT allele. All following columns should be gamete data, with each gamete having its own column
-For 01 input type, each gamete has its own column for the second and following columns
-We assume that a single file originates from a single sample and chromosome
+For ACGT input type, the second column should be the REF allele and the third column should be the ALT allele. All following columns should be gamete data, with each gamete having its own column. Within these columns, data should be A/C/G/T/NA
+For 01 input type, each gamete has its own column for the second and following columns. Within these columns, data should be 0/1/NA.
+We assume that a single file originates from a single sample/donor and chromosome
 We subset to include only heterozygous SNPs or those that have atleast one reference (0) and one alternate allele (1)
+If not heterozygous SNPs remain after this step, rhapsodi exits
 Then, if the data is ACGT encoded, we recode it to be 01 encoded
 }
