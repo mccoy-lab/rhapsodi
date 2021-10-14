@@ -13,8 +13,10 @@ Imports:
 Suggests:
   pbapply,
   pbmcapply,
-  ggplot2
-Title: R Haplotype Sparse Data Inference
+  ggplot2,
+  knitr,
+  BiocStyle
+Title: R Haplotype Sparse Data Imputation
 Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Kathryn",
@@ -25,6 +27,10 @@ Authors@R: c(
            family = "Carioscia",
            role = "aut",
            email = "scarios1@jhu.edu"),
+    person(given = "Andrew",
+           family = "Bortvin",
+           role = "aut",
+           email = "abortvi2@jhu.edu"),       
     person(given = "Rajiv",
            family = "McCoy",
            role = "aut",
@@ -34,11 +40,12 @@ Authors@R: c(
            role = "ctb",
            email = "daniel@ariad.org"))
 Description: Given sparse gamete genotyping data, 'rhapsodi' 
-    imputes the phased haplotypes of the diploid donor, 
-    infers the full gamete genotypes, 
+    phases the haplotypes of the diploid donor, 
+    imputes the full gamete genotypes, 
     and discovers meiotic recombination events for each gamete.  
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr
