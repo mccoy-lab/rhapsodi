@@ -3,7 +3,7 @@
 #' This function builds and applies a hidden Markov model to categorize each allele on each gamete. 
 #' It then fills the positions missing data with the nearest haplotype assignment.
 #' If the user asks for unsmoothed genotypes (i.e. replacing original sequencing reads where HMM imputation disagrees with these original reads) by setting `smooth_imputed_genotypes` to FALSE
-#' then the unsmooth function is called to replace imputed genotypes with original sequencing reads
+#' then the unsmooth function is called to replace imputed genotypes with original sequencing reads, but both unsmoothed and smoothed are reported.
 #' 
 #' @param original_gamete_data original matrix of gametes
 #' @param complete_haplotypes Inferred parental haplotypes 
@@ -13,7 +13,7 @@
 #' @param smooth_imputed_genotypes a bool, default is FALSE, whether to use smoothed data for ending genotypes. If `TRUE`, doesn't replace with original reads, returning smoothed data only. If `FALSE`, will return both smoothed and unsmoothed
 #' @param threads User-input value for calling `pbmclapply` or `mclapply` (default = 2)
 #' 
-#' @return gamete_data a named list with two data frames (names filled_gametes and unsmoothed_gametes) resulting from the HMM, fill_NAs, and potentially the unsmooth function, returning the imputed donor haplotypes for each gamete. In the filled_gametes output, the dataframe represents the direct output. In the unsmoothed_gametes output, if `smooth_imputed_genotypes` is TRUE, this is NULL; if FALSE, original sequencing reads replace imputed genotypes if they disagree
+#' @return gamete_data a named list with four data frames (names filled_gametes, unsmoothed_gametes, filled_gametes_haps, and unsmoothed_gametes_haps) resulting from the HMM, fill_NAs, and potentially the unsmooth functions, returning the imputed donor 0/1 encoded genotypes (outputs without _haps in the name) and haplotypes (outputs with _haps in the name) for each gamete. In the filled_gametes outputs, the dataframe represents the direct output. In the unsmoothed_gametes outputs, if `smooth_imputed_genotypes` is TRUE, these are NULL; if FALSE, original sequencing reads replace imputed genotypes if they disagree
 #' 
 #' @importFrom tibble as_tibble
 #' @importFrom parallel mclapply

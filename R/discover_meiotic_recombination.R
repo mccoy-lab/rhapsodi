@@ -17,7 +17,7 @@
 #' @param chrom chromosome of sample given to rhapsodi, default is "chromT"
 #' @param threads an integer, default = 2, the number of cores to use when we use mclapply or the like
 #' 
-#' @return out a dataframe recomb_breaks, specifying the predicted recombination breakpoints for each gamete
+#' @return recomb_breaks a dataframe, specifying the predicted recombination breakpoints for each gamete
 #'                                        
 #' @export
 #' 

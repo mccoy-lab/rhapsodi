@@ -36,7 +36,7 @@ discover_meiotic_recombination(
 \item{threads}{an integer, default = 2, the number of cores to use when we use mclapply or the like}
 }
 \value{
-out a dataframe recomb_breaks, specifying the predicted recombination breakpoints for each gamete
+recomb_breaks a dataframe, specifying the predicted recombination breakpoints for each gamete
 }
 \description{
 This function takes as input two booleans controlling whether the gamete haplotypes and genotypes remain smoothed before crossover discovery (directly from HMM)
