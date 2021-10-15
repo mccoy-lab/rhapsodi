@@ -15,7 +15,8 @@ Suggests:
   pbmcapply,
   ggplot2,
   knitr,
-  BiocStyle
+  BiocStyle,
+  rmarkdown
 Title: R Haplotype Sparse Data Imputation
 Version: 0.0.0.9000
 Authors@R: c(

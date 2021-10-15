@@ -1,0 +1,30 @@
+---
+title: "Introduction to rhapsodi"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to rhapsodi}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+library(rhapsodi)
+set.seed(42)
+```
+
+## Data: 0/1/NA encoded
+
+To explore the stages of the rhapsodi pipeline, we'll use a simulated dataset that was generated to reflect Sperm-seq data from a single donor with 
+  * 50 gametes
+  * 5000 SNPs
+  * a coverage of 0.1
+  * an average recombination rate of 1
+  * a sequencing error rate of 0.005
+  
+This is the `sim01NA42` data.
+
+## Data A/C/G/T/NA encoded
+
+This is the `simACGTNA42` data.
