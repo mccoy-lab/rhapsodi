@@ -21,13 +21,13 @@ alt <- alt_alleles_matched[allele_locs]
 acgt_recode_gametes <- function(dt_col, num_snps, ref, alt){
   locs_ref <- which(dt_col == 0)
   locs_alt <- which(dt_col == 1)
-  to_return <- rep(NA, num_snps)
+  to_return <- rep(NA_real_, num_snps)
   to_return[locs_ref] <-  ref[locs_ref]
   to_return[locs_alt] <- alt[locs_alt]
   return (to_return)
 }
 
-dataACGT <- cbind(positions, ref, alt, do.call(cbind, 
+dataACGT <- cbind(as.integer(positions), ref, alt, do.call(cbind, 
                                        pbmcapply::pbmclapply(1:ncol(data01), function(x) acgt_recode_gametes(data01[,x], num_snps, ref, alt),
                                        mc.cores = getOption("mc.cores", threads)))) %>%  as.data.frame() %>% `colnames<-`(c("positions", "ref", "alt", colnames(data01)))
 
