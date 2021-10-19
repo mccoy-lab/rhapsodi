@@ -142,8 +142,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="TOC">
 <ul>
-<li><a href="#stages-of-rhapsodi-pipeline">Stages of rhapsodi pipeline</a></li>
+<li><a href="#goal-and-applications-of-rhapsodi">Goal and applications of rhapsodi</a></li>
 <li><a href="#input-data">Input data</a></li>
+<li><a href="#stages-of-rhapsodi-pipeline">Stages of rhapsodi pipeline</a></li>
 <li><a href="#reading-in-data">Reading in data</a>
 <ul>
 <li><a href="#arguments">Arguments</a></li>
@@ -190,6 +191,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </div>
 
+<div id="goal-and-applications-of-rhapsodi" class="section level2">
+<h2>Goal and applications of rhapsodi</h2>
+</div>
+<div id="input-data" class="section level2">
+<h2>Input data</h2>
+<p>In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a <em>tab delimited file, with header</em> which rhapsodi will load, or (B) a <em>user pre-loaded dataframe</em>.</p>
+<p>In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; then the rest of the following columns are the gamete data.</p>
+</div>
 <div id="stages-of-rhapsodi-pipeline" class="section level2">
 <h2>Stages of rhapsodi pipeline</h2>
 <p>There are 5 total steps in the rhapsodi pipeline with 3 main algorithmic steps and 2 bookend data steps (reading in and exporting data). The steps are as follows.</p>
@@ -203,11 +212,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>These steps can be performed individually by the user or all together with the <code>rhappsodi_autorun</code> function. Later in this example, we’ll walkthrough both of these run options. Note that the 3 algorithmic steps must be performed in order as the output of one is used as input for the next step.</p>
 <p>To explore the stages of the rhapsodi pipeline, we’ll later use a simulated dataset that was generated to reflect Sperm-seq data from a single donor with the following profile: * 50 gametes * 5000 SNPs * a coverage of 0.1 * an average recombination rate of 1 * a sequencing error rate of 0.005</p>
 <p>The data has been both 0/1/NA encoded and A/C/G/T/NA encoded. We’ll walk through the steps of rhapsodi with both of these cases.</p>
-</div>
-<div id="input-data" class="section level2">
-<h2>Input data</h2>
-<p>In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a <em>tab delimited file, with header</em> which rhapsodi will load, or (B) a <em>user pre-loaded dataframe</em>.</p>
-<p>In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; then the rest of the following columns are the gamete data.</p>
 </div>
 <div id="reading-in-data" class="section level2">
 <h2>Reading in data</h2>

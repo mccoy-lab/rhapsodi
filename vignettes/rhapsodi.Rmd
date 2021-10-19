@@ -15,6 +15,14 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 library(rhapsodi)
 ```
 
+## Goal and applications of rhapsodi
+
+## Input data
+
+In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a *tab delimited file, with header* which rhapsodi will load, or (B) a *user pre-loaded dataframe*. 
+
+In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; then the rest of the following columns are the gamete data.
+
 ## Stages of rhapsodi pipeline
 
 There are 5 total steps in the rhapsodi pipeline with 3 main algorithmic steps and 2 bookend data steps (reading in and exporting data). The steps are as follows.
@@ -35,12 +43,6 @@ To explore the stages of the rhapsodi pipeline, we'll later use a simulated data
   * a sequencing error rate of 0.005
 
 The data has been both 0/1/NA encoded and A/C/G/T/NA encoded. We'll walk through the steps of rhapsodi with both of these cases. 
-
-## Input data
-
-In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a *tab delimited file, with header* which rhapsodi will load, or (B) a *user pre-loaded dataframe*. 
-
-In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; then the rest of the following columns are the gamete data.
 
 ## Reading in data
 
