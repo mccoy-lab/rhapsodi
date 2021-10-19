@@ -228,7 +228,7 @@ head(dataACGT)
 dim(dataACGT)
 ```
 
-The dataframe has 4136 rows or hetSNPs and 53 columns. The frist column is the `positions` or the SNP index for this simulated data. For real data, this first column should be the genomic position. The second column is the `ref` or reference allele, specifying the reference allele for each SNP/genomic position. The third columns is the `alt` or alternate allele, specifying the alternate allele for each SNP/genomic position. The rest of the 50 columns are the gamete genotypes.
+The dataframe has 4136 rows or hetSNPs and 53 columns. The first column is the `positions` or the SNP index for this simulated data. For real data, this first column should be the genomic position. The second column is the `ref` or reference allele, specifying the reference allele for each SNP/genomic position. The third columns is the `alt` or alternate allele, specifying the alternate allele for each SNP/genomic position. The rest of the 50 columns are the gamete genotypes.
 
 ### step-by-step running A/C/G/T/NA encoded data
 
