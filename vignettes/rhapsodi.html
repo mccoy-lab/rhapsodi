@@ -231,7 +231,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The output from this function is a named list with 4 elements.</p>
 <ol style="list-style-type: decimal">
 <li><code>positions</code>: a vector of the genomic positions of the heterozygous SNPs</li>
-<li><code>dt</code>: a dataframe of the heterozygous SNPs only, 0/1/NA encoded</li>
+<li><code>dt</code>: a dataframe of the heterozygous SNPs only, 0/1/NA encoded. Number of rows is equal to number of hetSNPs. Number of columns is equal to number of gametes.</li>
 <li><code>ref</code>: a vector of the nucleotide(s) for each heterozygous SNP reference allele</li>
 <li><code>alt</code>: a vector of the nucleotide(s) for each heterozygous SNP alternate allele</li>
 </ol>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="output-1" class="section level3">
 <h3>Output</h3>
-<p>The output of this function is a data frame with column names <code>index</code>, <code>pos</code>, <code>h1</code> and <code>h2</code> where <code>index</code> is the SNP index, <code>pos</code> is the genomic SNP positions, <code>h1</code> is haplotype1, and <code>h2</code> is haplotype2.</p>
+<p>The output of this function is a data frame with column names <code>index</code>, <code>pos</code>, <code>h1</code> and <code>h2</code> where <code>index</code> is the SNP index, <code>pos</code> is the genomic SNP positions, <code>h1</code> is haplotype1, and <code>h2</code> is haplotype2. The number of rows is equal to the number of hetSNPs.</p>
 </div>
 <div id="example-calls-1" class="section level3">
 <h3>Example calls</h3>
@@ -291,13 +291,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="imputing-gamete-genotypes" class="section level2">
 <h2>Imputing gamete genotypes</h2>
-<p>The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function <code>impute_gamete_genoyptes</code> is used to drive imputation.</p>
+<p>The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function <code>impute_gamete_genoyptes</code> is used to drive imputation. The function first builds a Hidden Markov Model (HMM) with emission probabilities controlled by the expected sequencing error rate and the transition probabilities controlled by the expected average recombination rate (or the number of expected meiotic recombination events per chromosome per gamete). Then the HMM is applied to the sparse gamete data, tracing the most likely path along the phased donor haplotypes for each gamete. NAs are filled if bordering the same haplotypes or based upop nthe first non-NA SNP for chromosome ends. Finally, by default, if original sequencing observations disagree with imputed genontypes, the imputation is overwritten by the original sequencing read in a process termed unsmoothing. All of these steps together recover the dense gamete geontype matrix.</p>
 <div id="arguments-2" class="section level3">
 <h3>Arguments</h3>
 <p>The main arguments for this function are</p>
+<ul>
+<li><code>original_gamete_data</code>: The <code>dt</code> output from the function <code>read_data</code></li>
+<li><code>complete_haplotypes</code>: The output from the function <code>phase_donor_haplotypes</code></li>
+<li><code>positions</code>: The <code>positions</code> output from the function <code>read_data</code></li>
+<li><code>sequencing_error</code>: Default is 0.005. The expected sequencing error rate which controls emission probabilities.</li>
+<li><code>avg_recomb</code>: Default is 1. The expected average number of recombination events per chromosome per gamete, which controls transition probabilities.</li>
+<li><code>smooth_imputed_genotypes</code>: A boolean, default is FALSE. If TRUE, when true unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.</li>
+<li><code>threads</code>: Default is 2. The number of threads to utilize for multi-threading</li>
+</ul>
 </div>
 <div id="output-2" class="section level3">
 <h3>Output</h3>
+<p>The output of this function is a named list with 4 elements</p>
+<ol style="list-style-type: decimal">
+<li><code>filled_gametes</code>: Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded 0/1/NA. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes.</li>
+<li><code>filled_gametes_haps</code>: Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded as “h1”/“h2”/NA, specifying specifically which donor haplotype that genotype originates from for each SNP and gamete. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes.</li>
+<li><code>unsmoothed_gametes</code>: Unsmoothed version of <code>filled_gametes</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE.</li>
+<li><code>unsmoothed_gametes_haps</code>: Unsmoothed version of <code>filled_gametes_haps</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE.</li>
+</ol>
 </div>
 <div id="example-calls-2" class="section level3">
 <h3>Example calls</h3>
@@ -448,7 +464,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(filled_gametes)</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;filled_gametes&quot;          &quot;filled_gametes_haps&quot;    </span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;unsmoothed_gametes&quot;      &quot;unsmoothed_gametes_haps&quot;</span></span></code></pre></div>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;unsmoothed_gametes&quot;      &quot;unsmoothed_gametes_haps&quot;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(filled_gametes<span class="sc">$</span>filled_gametes)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4136   50</span></span></code></pre></div>
 </div>
 <div id="rhapsodi_autorun-with-acgtna-encoded-data" class="section level3">
 <h3>rhapsodi_autorun with A/C/G/T/NA encoded data</h3>
