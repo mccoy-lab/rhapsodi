@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to rhapsodi</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to rhapsodi</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#stages-of-rhapsodi-pipeline">Stages of rhapsodi pipeline</a></li>
+<li><a href="#input-data">Input data</a></li>
+<li><a href="#reading-in-data">Reading in data</a>
+<ul>
+<li><a href="#arguments">Arguments</a></li>
+<li><a href="#output">Output</a></li>
+<li><a href="#example-calls">Example calls</a></li>
+</ul></li>
+<li><a href="#phasing-donor-haplotypes">Phasing donor haplotypes</a>
+<ul>
+<li><a href="#arguments-1">Arguments</a></li>
+<li><a href="#output-1">Output</a></li>
+<li><a href="#example-calls-1">Example calls</a></li>
+</ul></li>
+<li><a href="#imputing-gamete-genotypes">Imputing gamete genotypes</a>
+<ul>
+<li><a href="#arguments-2">Arguments</a></li>
+<li><a href="#output-2">Output</a></li>
+<li><a href="#example-calls-2">Example calls</a></li>
+</ul></li>
+<li><a href="#discovering-meiotic-recombination">Discovering Meiotic Recombination</a>
+<ul>
+<li><a href="#arguments-3">Arguments</a></li>
+<li><a href="#output-3">Output</a></li>
+<li><a href="#example-calls-3">Example calls</a></li>
+</ul></li>
+<li><a href="#exporting-data">Exporting data</a>
+<ul>
+<li><a href="#arguments-4">Arguments</a></li>
+<li><a href="#output-4">Output</a></li>
+<li><a href="#example-calls-4">Example calls</a></li>
+</ul></li>
+<li><a href="#autorun-of-all-5-rhapsodi-steps">Autorun of all 5 rhapsodi steps</a></li>
+<li><a href="#example-data-01na-encoded">Example Data: 0/1/NA encoded</a>
+<ul>
+<li><a href="#step-by-step-running-01na-encoded-data">step-by-step running 0/1/NA encoded data</a></li>
+<li><a href="#rhapsodi_autorun-with-01na-encoded-data">rhapsodi_autorun with 0/1/NA encoded data</a></li>
+<li><a href="#output-from-rhapsodi-with-01na-encoded-data">Output from rhapsodi with 0/1/NA encoded data</a></li>
+</ul></li>
+<li><a href="#example-data-acgtna-encoded">Example Data: A/C/G/T/NA encoded</a>
+<ul>
+<li><a href="#step-by-step-running-acgtna-encoded-data">step-by-step running A/C/G/T/NA encoded data</a></li>
+<li><a href="#rhapsodi_autorun-with-acgtna-encoded-data">rhapsodi_autorun with A/C/G/T/NA encoded data</a></li>
+<li><a href="#output-from-rhapsodi-with-acgtna-encoded-data">Output from rhapsodi with A/C/G/T/NA encoded data</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="stages-of-rhapsodi-pipeline" class="section level2">
+<h2>Stages of rhapsodi pipeline</h2>
+<p>There are 5 total steps in the rhapsodi pipeline with 3 main algorithmic steps and 2 bookend data steps (reading in and exporting data). The steps are as follows.</p>
+<ol style="list-style-type: decimal">
+<li><strong>Read in data</strong> (the sparse gamete genotypes and the SNP genomic positions)</li>
+<li><strong>Phase diploid donor haplotypes</strong> from sparse gamete genotypes</li>
+<li><strong>Impute missing gamete genotypes</strong> using phased donor haplotypes</li>
+<li><strong>Discovery meitotic recombination</strong> from imputed gamete genotypes</li>
+<li><strong>Export data</strong> from the 3 tasks.</li>
+</ol>
+<p>These steps can be performed individually by the user or all together with the <code>rhappsodi_autorun</code> function. Later in this example, we’ll walkthrough both of these run options. Note that the 3 algorithmic steps must be performed in order as the output of one is used as input for the next step.</p>
+<p>To explore the stages of the rhapsodi pipeline, we’ll later use a simulated dataset that was generated to reflect Sperm-seq data from a single donor with the following profile: * 50 gametes * 5000 SNPs * a coverage of 0.1 * an average recombination rate of 1 * a sequencing error rate of 0.005</p>
+<p>The data has been both 0/1/NA encoded and A/C/G/T/NA encoded. We’ll walk through the steps of rhapsodi with both of these cases.</p>
+</div>
+<div id="input-data" class="section level2">
+<h2>Input data</h2>
+<p>In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a <em>tab delimited file, with header</em> which rhapsodi will load, or (B) a <em>user pre-loaded dataframe</em>.</p>
+<p>In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; then the rest of the following columns are the gamete data.</p>
+</div>
+<div id="reading-in-data" class="section level2">
+<h2>Reading in data</h2>
+<p>The first of the two data bookend steps is reading in the sparse gamete DNA sequencing data. The function <code>read_data</code> is used to read in and prepare data for rhapsodi. The preparation steps involve separating the input data frame into individual vector(s) for the genomic positions (and the reference and alternate alleles if applicable) and a dataframe of just the gamete genotypes. Further, all vectors and the dataframe are subset to just heterozygous SNPs (hetSNPs), or SNPs for which there is at least one reference observation and one alternate observation. If no hetSNPs remain after filtering, rhapsodi will exit with the following message</p>
+<blockquote>
+<p>no hetSNPs so rhapsodi is exiting</p>
+</blockquote>
+<p>Such an event as no hetSNPs remaining is unlikely unless a dataset is extremely low coverage (&lt;=0.001 (x) in simulations) or there are very few gametes (&lt;= 3 in simulations). However, it is very possible that the number of input SNPs will differ from the number of SNPs that are retained following filtering; but as the number of gametes or the coverage increases, the umber of filtered SNPs decreases.</p>
+<div id="arguments" class="section level3">
+<h3>Arguments</h3>
+<p>The main arguments for this function are</p>
+<ul>
+<li><code>input_file</code>: the path to and name of the tab-delimited file with header and the sparse gamete genotypes. Pass <code>NULL</code> if instead using a <em>user pre-loaded dataframe</em></li>
+<li><code>use_dt</code>: A boolean, default is FALSE. Pass TRUE if you want to input a <em>user pre-loaded dataframe</em></li>
+<li><code>input_dt</code>: If <code>use_dt</code> is true, pass the name of the <em>user pre-loaded data frame</em>.</li>
+<li><code>acgt</code>: A boolean, default is FALSE. When FALSE, data is assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes.</li>
+</ul>
+</div>
+<div id="output" class="section level3">
+<h3>Output</h3>
+<p>The output from this function is a named list with 4 elements.</p>
+<ol style="list-style-type: decimal">
+<li><code>positions</code>: a vector of the genomic positions of the heterozygous SNPs</li>
+<li><code>dt</code>: a dataframe of the heterozygous SNPs only, 0/1/NA encoded</li>
+<li><code>ref</code>: a vector of the nucleotide(s) for each heterozygous SNP reference allele</li>
+<li><code>alt</code>: a vector of the nucleotide(s) for each heterozygous SNP alternate allele</li>
+</ol>
+</div>
+<div id="example-calls" class="section level3">
+<h3>Example calls</h3>
+<p>For example, if wanting to use a tab-delimited file (with a header), which was 0/1/NA encoded, with path and name <code>&quot;rhapsodi_input/donor1_chr2_01.txt&quot;</code> the function would be called as</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="st">&quot;rhapsodi_input/donor1_chr2_01.txt&quot;</span>)</span></code></pre></div>
+<p>However, if the file was preloaded into a dataframe, <code>rhapsodi_dt</code>, the function would be called as</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="cn">NULL</span>, <span class="at">use_dt =</span> <span class="cn">TRUE</span>, <span class="at">input_dt =</span> rhapsodi_dt)</span></code></pre></div>
+<p>As another example, if wanting to use a tab-delimited file (with a header), which was A/C/G/T/NA encoded with positions, ref, and alt columns in addition to the gamete columns, with path annd name <code>&quot;rhapsodi_input/donor1_chr2_acgt.txt&quot;</code>, the function would be called as</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="st">&quot;rhapsodi_input/donor1_chr2_acgt.txt&quot;</span>, <span class="at">acgt=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p>And if the file was preloaded into a dataframe, <code>rhapsodi_dt_acgt</code>, the function would be called as</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="cn">NULL</span>, <span class="at">use_dt =</span> <span class="cn">TRUE</span>, <span class="at">input_dt =</span> rhapsodi_dt_acgt, <span class="at">acgt =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="phasing-donor-haplotypes" class="section level2">
+<h2>Phasing donor haplotypes</h2>
+<p>The first of the three main algorithmic steps is phasing the diploid donor haplotypes from which the gametes originated. The function <code>phase_donor_haplotypes</code> is used to run phasing. First, the SNP positions are split into windows of length <code>window_length</code> with overlap of <code>window_length</code> // <code>overlap_denom</code>. Then, within each of these windows, binary clustering of the gamete data across SNPs and majority voting are utilized to reconstruct hapltoypes within each window. Finally, adjacent windows are stitched together based on the amount of consensus of genotypes within the overlapping regions to build the two haplotypes of the donor.</p>
+<div id="arguments-1" class="section level3">
+<h3>Arguments</h3>
+<p>The main arguments for this function are</p>
+<ul>
+<li><code>dt</code>: This should be the <code>dt</code> within the named list output from <code>read_data</code>.</li>
+<li><code>positions</code>: This should be the <code>positions</code> within the named list output from <code>read_data</code>.</li>
+<li><code>window_length</code>: Default is 3000. This is the size (in SNP indices) of the windows that will be used for clustering</li>
+<li><code>overlap_denom</code>: Default is 2. This is the denominator used in calculating the amount of overlap between windows, which will be the number of SNP indices which are considered when looking for amount of consensus in genotypes and stitching together haplotypes. Specifically, the overlap is <code>window_length</code> // <code>overlap_denom</code>.<br />
+</li>
+<li><code>threads</code>: Default is 2. The number of threads to utilize for multi-threading</li>
+<li><code>mcstop</code>: Default is TRUE. If TRUE, rhapsodi exits if confident stitching of haplotypes isn’t possible because the consensus between overlapping windows is &lt;0.9 but &gt;0.1. If FALSE, rhapsodi continues and considers to which threshold the consensus is closer.</li>
+<li><code>stringent_stitch</code>: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, <code>stitch_new_min</code></li>
+<li><code>stitch_new_min</code>: If <code>stringent_stitch</code> is TRUE, this value becomes the bifurcating threshold for stitching such that if the consensus is greater than this value, the windows are merged as the same haplotype. If consensus, is less than this value, the windows are treated as originating from different haplotypes.</li>
+</ul>
+</div>
+<div id="output-1" class="section level3">
+<h3>Output</h3>
+<p>The output of this function is a data frame with column names <code>index</code>, <code>pos</code>, <code>h1</code> and <code>h2</code> where <code>index</code> is the SNP index, <code>pos</code> is the genomic SNP positions, <code>h1</code> is haplotype1, and <code>h2</code> is haplotype2.</p>
+</div>
+<div id="example-calls-1" class="section level3">
+<h3>Example calls</h3>
+<p>The recommended usage of this function is to pass the output from <code>read_data</code> and keep the defaults for the rest of the arguments.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>complete_haplotypes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">phase_donor_haplotypes</span>(read_data_out<span class="sc">$</span>dt, read_data_out<span class="sc">$</span>positions)</span></code></pre></div>
+<p>However, if rhapsodi exits with a message similar to the following, then the recommended usage is to additionally pass the argument <code>mcstop = FALSE</code>.</p>
+<blockquote>
+<p>Haplotypes within overlapping windows are too discordant to merge with a mean concordance of [some number &lt; 0.1 but &gt; 0.9]. rhapsodi is exiting.</p>
+</blockquote>
+<p>By changing <code>mcstop</code> to FALSE, rhapsodi will continue stitching the overlapping haplotype windows together, considering whether the concordance between two overlapping windows is closer to 0.1 or 0.9.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>complete_haplotypes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">phase_donor_haplotypes</span>(read_data_out<span class="sc">$</span>dt, read_data_out<span class="sc">$</span>positions, <span class="at">mcstop =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Note that rhapsodi will still display a message similar to the one below, but it will not exit.</p>
+<blockquote>
+<p>Haplotypes within overlapping windows are too discordant for confident merging with a mean concordance of [some number &lt; 0.1 but &gt; 0.9], but continuing and [merging as the same haplotype | stitching windows as opposite haplotypes].</p>
+</blockquote>
+<p>Alternatively, the user can set a different bifurcating threshold value by setting <code>stringent_stitch</code> to FALSE, and passing the new threshold value to <code>stitch_new_min</code>, like in the following example. Because <code>stitch_new_min = 0.6</code>, windows with a concordance greater than 0.6 will be merged as originating from the same haplotype, but windows with a concordance less than 0.6 will be separated, assumed to originate from different haplotypes.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>complete_haplotypes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">phase_donor_haplotypes</span>(read_data_out<span class="sc">$</span>dt, read_data_out<span class="sc">$</span>positions, <span class="at">stringent_stitch =</span> <span class="cn">FALSE</span>, <span class="at">stitch_new_min =</span> <span class="fl">0.6</span>)</span></code></pre></div>
+<p>Setting <code>mcstop</code> to FALSE, theoretically should be equivalent to <code>stringent_stitch = FALSE</code> and setting <code>stitch_new_min</code> to 0.5.</p>
+</div>
+</div>
+<div id="imputing-gamete-genotypes" class="section level2">
+<h2>Imputing gamete genotypes</h2>
+<p>The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function <code>impute_gamete_genoyptes</code> is used to drive imputation.</p>
+<div id="arguments-2" class="section level3">
+<h3>Arguments</h3>
+<p>The main arguments for this function are</p>
+</div>
+<div id="output-2" class="section level3">
+<h3>Output</h3>
+</div>
+<div id="example-calls-2" class="section level3">
+<h3>Example calls</h3>
+</div>
+</div>
+<div id="discovering-meiotic-recombination" class="section level2">
+<h2>Discovering Meiotic Recombination</h2>
+<p>The third and final of the three main algorithmic steps is discovering gamete-specific meitoitic recombination events from the imputed gamete genotypes. The fuction <code>discover_meiotic_recombination</code> is used for the discovery process.</p>
+<div id="arguments-3" class="section level3">
+<h3>Arguments</h3>
+<p>The main arguments for this function are</p>
+</div>
+<div id="output-3" class="section level3">
+<h3>Output</h3>
+</div>
+<div id="example-calls-3" class="section level3">
+<h3>Example calls</h3>
+</div>
+</div>
+<div id="exporting-data" class="section level2">
+<h2>Exporting data</h2>
+<p>The last of the two data bookend steps is exporting the output from rhapsodi. The function <code>export_data</code> is used to ornament and export the rhapsodi output.</p>
+<div id="arguments-4" class="section level3">
+<h3>Arguments</h3>
+<p>The main arguments for this function are</p>
+</div>
+<div id="output-4" class="section level3">
+<h3>Output</h3>
+</div>
+<div id="example-calls-4" class="section level3">
+<h3>Example calls</h3>
+</div>
+</div>
+<div id="autorun-of-all-5-rhapsodi-steps" class="section level2">
+<h2>Autorun of all 5 rhapsodi steps</h2>
+<p>All 5 of the previous steps can be run by calling a single function <code>rhapsodi_autorun</code>.</p>
+</div>
+<div id="example-data-01na-encoded" class="section level2">
+<h2>Example Data: 0/1/NA encoded</h2>
+<p>The 0/1/NA encoded data we’ll be using for this is the <code>sim01NA42</code> data.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim01NA42)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   positions gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_ gam10_ gam11_</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         3    NA    NA    NA     0    NA    NA    NA    NA     1     NA     NA</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2         4    NA    NA    NA    NA     1    NA    NA    NA    NA     NA     NA</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3         5    NA    NA    NA    NA    NA    NA     0    NA    NA     NA     NA</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4         8    NA    NA     0    NA    NA    NA    NA    NA    NA     NA     NA</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5         9     1    NA    NA    NA    NA    NA    NA     0     0     NA     NA</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6        10    NA    NA    NA    NA    NA    NA    NA    NA    NA     NA     NA</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam12_ gam13_ gam14_ gam15_ gam16_ gam17_ gam18_ gam19_ gam20_ gam21_ gam22_</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0     NA     NA      1     NA     NA     NA      0     NA      1     NA</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     NA      0     NA     NA     NA     NA     NA     NA     NA      1     NA</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     NA     NA      1     NA     NA     NA     NA     NA      1     NA     NA</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     NA     NA     NA     NA      0     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam23_ gam24_ gam25_ gam26_ gam27_ gam28_ gam29_ gam30_ gam31_ gam32_ gam33_</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     NA      0     NA     NA      0     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     NA     NA     NA     NA     NA     NA      1     NA     NA      1     NA</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     NA     NA     NA      0     NA     NA      1     NA     NA      1     NA</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     NA     NA     NA     NA     NA     NA     NA     NA     NA      0     NA</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     NA     NA     NA     NA      1     NA      0     NA     NA     NA     NA</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam34_ gam35_ gam36_ gam37_ gam38_ gam39_ gam40_ gam41_ gam42_ gam43_ gam44_</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     NA      0     NA      1     NA      0     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     NA     NA     NA     NA     NA     NA     NA     NA     NA      1     NA</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam45_ gam46_ gam47_ gam48_ gam49_ gam50_</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     NA     NA      1     NA     NA     NA</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     NA     NA     NA     NA     NA     NA</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     NA     NA     NA     NA     NA      1</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     NA     NA     NA     NA     NA     NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sim01NA42)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4136   51</span></span></code></pre></div>
+<p>The dataframe has 4136 rows or heterozygous SNPs (hetSNPs) and 51 columns. The first column is the <code>positions</code> or the SNP index for this simulated data. For real data, this first column should be the genomic position. The rest of the 50 columns are the gamete genotypes.</p>
+<div id="step-by-step-running-01na-encoded-data" class="section level3">
+<h3>step-by-step running 0/1/NA encoded data</h3>
+</div>
+<div id="rhapsodi_autorun-with-01na-encoded-data" class="section level3">
+<h3>rhapsodi_autorun with 0/1/NA encoded data</h3>
+</div>
+<div id="output-from-rhapsodi-with-01na-encoded-data" class="section level3">
+<h3>Output from rhapsodi with 0/1/NA encoded data</h3>
+</div>
+</div>
+<div id="example-data-acgtna-encoded" class="section level2">
+<h2>Example Data: A/C/G/T/NA encoded</h2>
+<p>The A/C/G/T/NA encoded data we’ll be using for this is the <code>dataACGT</code> data.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dataACGT)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   positions  ref  alt gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         3    A    G  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     A  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     G</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2         4   AC   GT  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;    GT  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3         5    A    G  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     A  &lt;NA&gt;  &lt;NA&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4         8 CCCC GAGT  &lt;NA&gt;  &lt;NA&gt;  CCCC  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5         9    T    C     C  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     T     T</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6        10    C    T  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam10_ gam11_ gam12_ gam13_ gam14_ gam15_ gam16_ gam17_ gam18_ gam19_ gam20_</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   &lt;NA&gt;   &lt;NA&gt;      A   &lt;NA&gt;   &lt;NA&gt;      G   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      A   &lt;NA&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      A   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   GAGT   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   GAGT</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      T   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam21_ gam22_ gam23_ gam24_ gam25_ gam26_ gam27_ gam28_ gam29_ gam30_ gam31_</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      G   &lt;NA&gt;   &lt;NA&gt;      A   &lt;NA&gt;   &lt;NA&gt;      A   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     GT   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      G   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   CCCC   &lt;NA&gt;   &lt;NA&gt;   GAGT   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      T   &lt;NA&gt;      C   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam32_ gam33_ gam34_ gam35_ gam36_ gam37_ gam38_ gam39_ gam40_ gam41_ gam42_</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     GT   &lt;NA&gt;   &lt;NA&gt;     AC   &lt;NA&gt;     GT   &lt;NA&gt;     AC   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   GAGT   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      T   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   gam43_ gam44_ gam45_ gam46_ gam47_ gam48_ gam49_ gam50_</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     GT   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;      C</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      T   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dataACGT)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4136   53</span></span></code></pre></div>
+<p>The dataframe has 4136 rows or hetSNPs and 53 columns. The frist column is the <code>positions</code> or the SNP index for this simulated data. For real data, this first column should be the genomic position. The second column is the <code>ref</code> or reference allele, specifying the reference allele for each SNP/genomic position. The third columns is the <code>alt</code> or alternate allele, specifying the alternate allele for each SNP/genomic position. The rest of the 50 columns are the gamete genotypes.</p>
+<div id="step-by-step-running-acgtna-encoded-data" class="section level3">
+<h3>step-by-step running A/C/G/T/NA encoded data</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="cn">NULL</span>, <span class="at">use_dt =</span> <span class="cn">TRUE</span>, <span class="at">input_dt =</span> sim01NA42)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>complete_haplotypes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">phase_donor_haplotypes</span>(read_data_out<span class="sc">$</span>dt, read_data_out<span class="sc">$</span>positions)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(complete_haplotypes)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   index pos h1 h2</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1   3  0  1</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     2   4  1  0</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     3   5  1  0</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     4   8  1  0</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     5   9  0  1</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     6  10  0  1</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>filled_gametes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">impute_gamete_genotypes</span>(read_data_out<span class="sc">$</span>dt, complete_haplotypes, read_data_out<span class="sc">$</span>positions)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if `.name_repair` is omitted as of tibble 2.0.0.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Using compatibility `.name_repair`.</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; This warning is displayed once every 8 hours.</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(filled_gametes)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;filled_gametes&quot;          &quot;filled_gametes_haps&quot;    </span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] &quot;unsmoothed_gametes&quot;      &quot;unsmoothed_gametes_haps&quot;</span></span></code></pre></div>
+</div>
+<div id="rhapsodi_autorun-with-acgtna-encoded-data" class="section level3">
+<h3>rhapsodi_autorun with A/C/G/T/NA encoded data</h3>
+</div>
+<div id="output-from-rhapsodi-with-acgtna-encoded-data" class="section level3">
+<h3>Output from rhapsodi with A/C/G/T/NA encoded data</h3>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

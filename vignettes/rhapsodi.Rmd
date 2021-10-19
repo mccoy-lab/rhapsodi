@@ -1,6 +1,8 @@
 ---
 title: "Introduction to rhapsodi"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Introduction to rhapsodi}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,20 +13,224 @@ vignette: >
 ```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(collapse = T, comment = "#>")
 library(rhapsodi)
-set.seed(42)
 ```
 
-## Data: 0/1/NA encoded
+## Stages of rhapsodi pipeline
 
-To explore the stages of the rhapsodi pipeline, we'll use a simulated dataset that was generated to reflect Sperm-seq data from a single donor with 
+There are 5 total steps in the rhapsodi pipeline with 3 main algorithmic steps and 2 bookend data steps (reading in and exporting data). The steps are as follows.
+
+1. **Read in data** (the sparse gamete genotypes and the SNP genomic positions)
+2. **Phase diploid donor haplotypes** from sparse gamete genotypes
+3. **Impute missing gamete genotypes** using phased donor haplotypes
+4. **Discovery meitotic recombination** from imputed gamete genotypes
+5. **Export data** from the 3 tasks.
+
+These steps can be performed individually by the user or all together with the `rhappsodi_autorun` function. Later in this example, we'll walkthrough both of these run options. Note that the 3 algorithmic steps must be performed in order as the output of one is used as input for the next step. 
+
+To explore the stages of the rhapsodi pipeline, we'll later use a simulated dataset that was generated to reflect Sperm-seq data from a single donor with the following profile: 
   * 50 gametes
   * 5000 SNPs
   * a coverage of 0.1
   * an average recombination rate of 1
   * a sequencing error rate of 0.005
-  
-This is the `sim01NA42` data.
 
-## Data A/C/G/T/NA encoded
+The data has been both 0/1/NA encoded and A/C/G/T/NA encoded. We'll walk through the steps of rhapsodi with both of these cases. 
 
-This is the `simACGTNA42` data.
+## Input data
+
+In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a *tab delimited file, with header* which rhapsodi will load, or (B) a *user pre-loaded dataframe*. 
+
+In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; then the rest of the following columns are the gamete data.
+
+## Reading in data
+
+The first of the two data bookend steps is reading in the sparse gamete DNA sequencing data. The function `read_data` is used to read in and prepare data for rhapsodi. The preparation steps involve separating the input data frame into individual vector(s) for the genomic positions (and the reference and alternate alleles if applicable) and a dataframe of just the gamete genotypes. Further, all vectors and the dataframe are subset to just heterozygous SNPs (hetSNPs), or SNPs for which there is at least one reference observation and one alternate observation. If no hetSNPs remain after filtering, rhapsodi will exit with the following message
+
+> no hetSNPs so rhapsodi is exiting
+
+Such an event as no hetSNPs remaining is unlikely unless a dataset is extremely low coverage (<=0.001 (x) in simulations) or there are very few gametes (<= 3 in simulations). However, it is very possible that the number of input SNPs will differ from the number of SNPs that are retained following filtering; but as the number of gametes or the coverage increases, the umber of filtered SNPs decreases.
+
+### Arguments
+The main arguments for this function are
+
+* `input_file`: the path to and name of the tab-delimited file with header and the sparse gamete genotypes. Pass `NULL` if instead using a *user pre-loaded dataframe*
+* `use_dt`: A boolean, default is FALSE. Pass TRUE if you want to input a *user pre-loaded dataframe*
+* `input_dt`: If `use_dt` is true, pass the name of the *user pre-loaded data frame*. 
+* `acgt`: A boolean, default is FALSE. When FALSE, data is assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes. 
+
+
+### Output
+
+The output from this function is a named list with 4 elements.
+
+1. `positions`: a vector of the genomic positions of the heterozygous SNPs
+1. `dt`: a dataframe of the heterozygous SNPs only, 0/1/NA encoded
+1. `ref`: a vector of the nucleotide(s) for each heterozygous SNP reference allele
+1. `alt`: a vector of the nucleotide(s) for each heterozygous SNP alternate allele
+
+### Example calls
+For example, if wanting to use a tab-delimited file (with a header), which was 0/1/NA encoded, with path and name `"rhapsodi_input/donor1_chr2_01.txt"` the function would be called as 
+
+```{r, eval = FALSE}
+read_data_out <- rhapsodi::read_data("rhapsodi_input/donor1_chr2_01.txt")
+```
+
+However, if the file was preloaded into a dataframe, `rhapsodi_dt`, the function would be called as
+
+```{r, eval = FALSE}
+read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = rhapsodi_dt)
+```
+
+As another example, if wanting to use a tab-delimited file (with a header), which was A/C/G/T/NA encoded with positions, ref, and alt columns in addition to the gamete columns, with path annd name `"rhapsodi_input/donor1_chr2_acgt.txt"`, the function would be called as 
+
+```{r, eval = FALSE}
+read_data_out <- rhapsodi::read_data("rhapsodi_input/donor1_chr2_acgt.txt", acgt=TRUE)
+```
+
+And if the file was preloaded into a dataframe, `rhapsodi_dt_acgt`, the function would be called as
+
+```{r, eval = FALSE}
+read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = rhapsodi_dt_acgt, acgt = TRUE)
+```
+
+## Phasing donor haplotypes
+
+The first of the three main algorithmic steps is phasing the diploid donor haplotypes from which the gametes originated. The function `phase_donor_haplotypes` is used to run phasing. First, the SNP positions are split into windows of length `window_length` with overlap of `window_length` // `overlap_denom`. Then, within each of these windows, binary clustering of the gamete data across SNPs and majority voting are utilized to reconstruct hapltoypes within each window. Finally, adjacent windows are stitched together based on the amount of consensus of genotypes within the overlapping regions to build the two haplotypes of the donor. 
+
+### Arguments
+The main arguments for this function are
+
+* `dt`: This should be the `dt` within the named list output from `read_data`.
+* `positions`: This should be the `positions` within the named list output from `read_data`.
+* `window_length`: Default is 3000. This is the size (in SNP indices) of the windows that will be used for clustering
+* `overlap_denom`: Default is 2. This is the denominator used in calculating the amount of overlap between windows, which will be the number of SNP indices which are considered when looking for amount of consensus in genotypes and stitching together haplotypes. Specifically, the overlap is `window_length` // `overlap_denom`.  
+* `threads`: Default is 2. The number of threads to utilize for multi-threading
+* `mcstop`: Default is TRUE. If TRUE, rhapsodi exits if confident stitching of haplotypes isn't possible because the consensus between overlapping windows is <0.9 but >0.1. If FALSE, rhapsodi continues and considers to which threshold the consensus is closer.
+* `stringent_stitch`: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, `stitch_new_min`
+* `stitch_new_min`: If `stringent_stitch` is TRUE, this value becomes the bifurcating threshold for stitching such that if the consensus is greater than this value, the windows are merged as the same haplotype. If consensus, is less than this value, the windows are treated as originating from different haplotypes.
+
+### Output
+
+The output of this function is a data frame with column names `index`, `pos`, `h1` and `h2` where `index` is the SNP index, `pos` is the genomic SNP positions, `h1` is haplotype1, and `h2` is haplotype2.
+
+### Example calls
+
+The recommended usage of this function is to pass the output from `read_data` and keep the defaults for the rest of the arguments. 
+
+```{r, eval = FALSE}
+complete_haplotypes <- rhapsodi::phase_donor_haplotypes(read_data_out$dt, read_data_out$positions)
+```
+
+However, if rhapsodi exits with a message similar to the following, then the recommended usage is to additionally pass the argument `mcstop = FALSE`. 
+
+> Haplotypes within overlapping windows are too discordant to merge with a mean concordance of [some number < 0.1 but > 0.9]. rhapsodi is exiting.
+
+By changing `mcstop` to FALSE, rhapsodi will continue stitching the overlapping haplotype windows together, considering whether the concordance between two overlapping windows is closer to 0.1 or 0.9.  
+
+```{r, eval = FALSE}
+complete_haplotypes <- rhapsodi::phase_donor_haplotypes(read_data_out$dt, read_data_out$positions, mcstop = FALSE)
+```
+
+Note that rhapsodi will still display a message similar to the one below, but it will not exit.
+
+> Haplotypes within overlapping windows are too discordant for confident merging with a mean concordance of [some number < 0.1 but > 0.9],  but continuing and [merging as the same haplotype | stitching windows as opposite haplotypes].
+
+Alternatively, the user can set a different bifurcating threshold value by setting `stringent_stitch` to FALSE, and passing the new threshold value to `stitch_new_min`, like in the following example. Because `stitch_new_min = 0.6`, windows with a concordance greater than 0.6 will be merged as originating from the same haplotype, but windows with a concordance less than 0.6 will be separated, assumed to originate from different haplotypes. 
+
+```{r, eval = FALSE}
+complete_haplotypes <- rhapsodi::phase_donor_haplotypes(read_data_out$dt, read_data_out$positions, stringent_stitch = FALSE, stitch_new_min = 0.6)
+```
+
+Setting `mcstop` to FALSE, theoretically should be equivalent to `stringent_stitch = FALSE` and setting `stitch_new_min` to 0.5.
+
+## Imputing gamete genotypes
+
+The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function `impute_gamete_genoyptes` is used to drive imputation.
+
+### Arguments
+The main arguments for this function are
+
+### Output
+
+### Example calls
+
+## Discovering Meiotic Recombination
+
+The third and final of the three main algorithmic steps is discovering gamete-specific meitoitic recombination events from the imputed gamete genotypes. The fuction `discover_meiotic_recombination` is used for the discovery process.
+
+### Arguments
+The main arguments for this function are
+
+### Output
+
+### Example calls
+
+## Exporting data
+
+The last of the two data bookend steps is exporting the output from rhapsodi. The function `export_data` is used to ornament and export the rhapsodi output.
+
+### Arguments
+The main arguments for this function are
+
+### Output
+
+### Example calls
+
+## Autorun of all 5 rhapsodi steps
+
+All 5 of the previous steps can be run by calling a single function `rhapsodi_autorun`. 
+
+## Example Data: 0/1/NA encoded
+
+The 0/1/NA encoded data we'll be using for this is the `sim01NA42` data. 
+
+```{r}
+head(sim01NA42)
+```
+
+```{r}
+dim(sim01NA42)
+```
+
+The dataframe has 4136 rows or heterozygous SNPs (hetSNPs) and 51 columns. The first column is the `positions` or the SNP index for this simulated data. For real data, this first column should be the genomic position. The rest of the 50 columns are the gamete genotypes.
+
+### step-by-step running 0/1/NA encoded data
+
+### rhapsodi_autorun with 0/1/NA encoded data
+
+### Output from rhapsodi with 0/1/NA encoded data
+
+
+## Example Data: A/C/G/T/NA encoded 
+
+The A/C/G/T/NA encoded data we'll be using for this is the `dataACGT` data.
+
+```{r}
+head(dataACGT)
+```
+
+```{r}
+dim(dataACGT)
+```
+
+The dataframe has 4136 rows or hetSNPs and 53 columns. The frist column is the `positions` or the SNP index for this simulated data. For real data, this first column should be the genomic position. The second column is the `ref` or reference allele, specifying the reference allele for each SNP/genomic position. The third columns is the `alt` or alternate allele, specifying the alternate allele for each SNP/genomic position. The rest of the 50 columns are the gamete genotypes.
+
+### step-by-step running A/C/G/T/NA encoded data
+
+```{r}
+read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = sim01NA42)
+complete_haplotypes <- rhapsodi::phase_donor_haplotypes(read_data_out$dt, read_data_out$positions)
+```
+
+```{r}
+head(complete_haplotypes)
+```
+
+```{r}
+filled_gametes <- rhapsodi::impute_gamete_genotypes(read_data_out$dt, complete_haplotypes, read_data_out$positions)
+names(filled_gametes)
+```
+
+### rhapsodi_autorun with A/C/G/T/NA encoded data
+
+### Output from rhapsodi with A/C/G/T/NA encoded data

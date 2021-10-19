@@ -1,4 +1,6 @@
-#' A function to read in the sparse gamete sequencing data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA. The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
+#' A function to read in the sparse gamete sequencing data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA.
+
+#' The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
 #' For both input types, the first column should contain SNP positions in integer format.
 #' For ACGT input type, specifically, the second column should be the REF allele and the third column should be the ALT allele.
 #' For 0/1/NA input type, specifically, gamete data starts in the second column and continues for the rest of the columns.
