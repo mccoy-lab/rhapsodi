@@ -21,19 +21,19 @@ library(rhapsodi)
 
 In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a *tab delimited file, with header* which rhapsodi will load, or (B) a *user pre-loaded dataframe*. 
 
-In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; then the rest of the following columns are the gamete data.
+In both cases, the first column must contain the genomic positions of the SNPs. Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; finally, the rest of the following columns are the gamete data.
 
 ## Stages of rhapsodi pipeline
 
 There are 5 total steps in the rhapsodi pipeline with 3 main algorithmic steps and 2 bookend data steps (reading in and exporting data). The steps are as follows.
 
-1. **Read in data** (the sparse gamete genotypes and the SNP genomic positions)
+1. **Read in data** (to extract the sparse gamete genotypes and the SNP genomic positions)
 2. **Phase diploid donor haplotypes** from sparse gamete genotypes
 3. **Impute missing gamete genotypes** using phased donor haplotypes
-4. **Discovery meitotic recombination** from imputed gamete genotypes
+4. **Discovery meiotic recombination** from imputed gamete genotypes
 5. **Export data** from the 3 tasks.
 
-These steps can be performed individually by the user or all together with the `rhappsodi_autorun` function. Later in this example, we'll walkthrough both of these run options. Note that the 3 algorithmic steps must be performed in order as the output of one is used as input for the next step. 
+These steps can be performed individually by the user or all together with the `rhappsodi_autorun` function. Later in this example, we'll walk-through both of these run options. Note that the 3 algorithmic steps must be performed in order as the output of one is used as input for the next step. 
 
 To explore the stages of the rhapsodi pipeline, we'll later use a simulated dataset that was generated to reflect Sperm-seq data from a single donor with the following profile: 
   * 50 gametes
@@ -46,18 +46,19 @@ The data has been both 0/1/NA encoded and A/C/G/T/NA encoded. We'll walk through
 
 ## Reading in data
 
-The first of the two data bookend steps is reading in the sparse gamete DNA sequencing data. The function `read_data` is used to read in and prepare data for rhapsodi. The preparation steps involve separating the input data frame into individual vector(s) for the genomic positions (and the reference and alternate alleles if applicable) and a dataframe of just the gamete genotypes. Further, all vectors and the dataframe are subset to just heterozygous SNPs (hetSNPs), or SNPs for which there is at least one reference observation and one alternate observation. If no hetSNPs remain after filtering, rhapsodi will exit with the following message
+The first of the two data bookend steps is reading in the sparse gamete DNA sequencing data. The function `read_data` is used to read in and prepare data for rhapsodi. The preparation steps involve separating the input dataframe into individual vector(s) for the genomic positions (and the reference and alternate alleles if applicable) and a dataframe of just the gamete genotypes. Further, all vectors and the dataframe are subset to just heterozygous SNPs (hetSNPs), or SNPs for which there is at least one reference observation and one alternate observation. If no hetSNPs remain after filtering, rhapsodi will exit with the following message
 
 > no hetSNPs so rhapsodi is exiting
 
-Such an event as no hetSNPs remaining is unlikely unless a dataset is extremely low coverage (<=0.001 (x) in simulations) or there are very few gametes (<= 3 in simulations). However, it is very possible that the number of input SNPs will differ from the number of SNPs that are retained following filtering; but as the number of gametes or the coverage increases, the umber of filtered SNPs decreases.
+Such an event as no hetSNPs remaining is unlikely unless a dataset is extremely low coverage (<=0.001 (x) in simulations) or there are very few gametes (<= 3 in simulations). However, it is very possible that the number of input SNPs will differ from the number of SNPs that are retained following filtering; yet, generally as the number of gametes or the coverage increases, the number of filtered SNPs decreases.
 
 ### Arguments
+
 The main arguments for this function are
 
-* `input_file`: the path to and name of the tab-delimited file with header and the sparse gamete genotypes. Pass `NULL` if instead using a *user pre-loaded dataframe*
-* `use_dt`: A boolean, default is FALSE. Pass TRUE if you want to input a *user pre-loaded dataframe*
-* `input_dt`: If `use_dt` is true, pass the name of the *user pre-loaded data frame*. 
+* `input_file`: the path to and name of the *tab-delimited file, with header* containing the sparse gamete genotypes. Pass `NULL` if instead using a *user pre-loaded dataframe*.
+* `use_dt`: A boolean, default is FALSE. Pass TRUE if you want to input a *user pre-loaded dataframe*.
+* `input_dt`: If `use_dt` is TRUE, pass the name of the *user pre-loaded data frame*. 
 * `acgt`: A boolean, default is FALSE. When FALSE, data is assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes. 
 
 
@@ -71,25 +72,26 @@ The output from this function is a named list with 4 elements.
 1. `alt`: a vector of the nucleotide(s) for each heterozygous SNP alternate allele
 
 ### Example calls
+
 For example, if wanting to use a tab-delimited file (with a header), which was 0/1/NA encoded, with path and name `"rhapsodi_input/donor1_chr2_01.txt"` the function would be called as 
 
 ```{r, eval = FALSE}
 read_data_out <- rhapsodi::read_data("rhapsodi_input/donor1_chr2_01.txt")
 ```
 
-However, if the file was preloaded into a dataframe, `rhapsodi_dt`, the function would be called as
+However, if the file was pre-loaded into a dataframe, `rhapsodi_dt`, the function would be called as
 
 ```{r, eval = FALSE}
 read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = rhapsodi_dt)
 ```
 
-As another example, if wanting to use a tab-delimited file (with a header), which was A/C/G/T/NA encoded with positions, ref, and alt columns in addition to the gamete columns, with path annd name `"rhapsodi_input/donor1_chr2_acgt.txt"`, the function would be called as 
+As another example, if wanting to use a tab-delimited file (with a header), which was A/C/G/T/NA encoded with positions, ref, and alt columns in addition to the gamete columns, with path and name `"rhapsodi_input/donor1_chr2_acgt.txt"`, the function would be called as 
 
 ```{r, eval = FALSE}
 read_data_out <- rhapsodi::read_data("rhapsodi_input/donor1_chr2_acgt.txt", acgt=TRUE)
 ```
 
-And if the file was preloaded into a dataframe, `rhapsodi_dt_acgt`, the function would be called as
+And if the file was pre-loaded into a dataframe, `rhapsodi_dt_acgt`, the function would be called as
 
 ```{r, eval = FALSE}
 read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = rhapsodi_dt_acgt, acgt = TRUE)
@@ -97,18 +99,19 @@ read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = rhapsodi_dt
 
 ## Phasing donor haplotypes
 
-The first of the three main algorithmic steps is phasing the diploid donor haplotypes from which the gametes originated. The function `phase_donor_haplotypes` is used to run phasing. First, the SNP positions are split into windows of length `window_length` with overlap of `window_length` // `overlap_denom`. Then, within each of these windows, binary clustering of the gamete data across SNPs and majority voting are utilized to reconstruct hapltoypes within each window. Finally, adjacent windows are stitched together based on the amount of consensus of genotypes within the overlapping regions to build the two haplotypes of the donor. 
+The first of the three main algorithmic steps is phasing the diploid donor haplotypes from which the gametes originated. The function `phase_donor_haplotypes` is used to run phasing. First, the SNP positions are split into windows of length `window_length` with overlap of `window_length` // `overlap_denom`. Then, within each of these windows, binary clustering of the gamete data across SNPs and majority voting are utilized to reconstruct hapltoypes within each window. Finally, adjacent windows are stitched together based on the amount of consensus in the genotypes within the overlapping regions to build the two haplotypes of the donor. 
 
 ### Arguments
+
 The main arguments for this function are
 
 * `dt`: This should be the `dt` within the named list output from `read_data`.
 * `positions`: This should be the `positions` within the named list output from `read_data`.
-* `window_length`: Default is 3000. This is the size (in SNP indices) of the windows that will be used for clustering
+* `window_length`: Default is 3000. This is the size (in SNP indices) of the windows that will be used for clustering.
 * `overlap_denom`: Default is 2. This is the denominator used in calculating the amount of overlap between windows, which will be the number of SNP indices which are considered when looking for amount of consensus in genotypes and stitching together haplotypes. Specifically, the overlap is `window_length` // `overlap_denom`.  
-* `threads`: Default is 2. The number of threads to utilize for multi-threading
+* `threads`: Default is 2. The number of threads to utilize for multi-threading.
 * `mcstop`: Default is TRUE. If TRUE, rhapsodi exits if confident stitching of haplotypes isn't possible because the consensus between overlapping windows is <0.9 but >0.1. If FALSE, rhapsodi continues and considers to which threshold the consensus is closer.
-* `stringent_stitch`: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, `stitch_new_min`
+* `stringent_stitch`: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, `stitch_new_min`.
 * `stitch_new_min`: If `stringent_stitch` is TRUE, this value becomes the bifurcating threshold for stitching such that if the consensus is greater than this value, the windows are merged as the same haplotype. If consensus, is less than this value, the windows are treated as originating from different haplotypes.
 
 ### Output
@@ -147,18 +150,19 @@ Setting `mcstop` to FALSE, theoretically should be equivalent to `stringent_stit
 
 ## Imputing gamete genotypes
 
-The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function `impute_gamete_genoyptes` is used to drive imputation. The function first builds a Hidden Markov Model (HMM) with emission probabilities controlled by the expected sequencing error rate and the transition probabilities controlled by the expected average recombination rate (or the number of expected meiotic recombination events per chromosome per gamete). Then the HMM is applied to the sparse gamete data, tracing the most likely path along the phased donor haplotypes for each gamete. NAs are filled if bordering the same haplotypes or based upop nthe first non-NA SNP for chromosome ends. Finally, by default, if original sequencing observations disagree with imputed genontypes, the imputation is overwritten by the original sequencing read in a process termed unsmoothing. All of these steps together recover the dense gamete geontype matrix.  
+The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function `impute_gamete_genoyptes` is used to drive imputation. The function first builds a Hidden Markov Model (HMM) with emission probabilities controlled by the expected sequencing error rate and the transition probabilities controlled by the expected average recombination rate (or the number of expected meiotic recombination events per chromosome per gamete divided by the number of hetSNPs). Then the HMM is applied to the sparse gamete data, tracing the most likely path along the phased donor haplotypes for each gamete. Internals NAs are filled if bordering the same haplotypes. Edge NAs are assigned haplotypes matching the first non-NA SNP on the chromosome's end. Finally, by default, if original sequencing observations disagree with imputed genotypes, the imputation is overwritten by the original sequencing read in a process termed unsmoothing. All of these steps together recover the dense gamete genotype matrix.  
 
 ### Arguments
+
 The main arguments for this function are
 
-* `original_gamete_data`: The `dt` output from the function `read_data`
-* `complete_haplotypes`: The output from the function `phase_donor_haplotypes`
-* `positions`: The `positions` output from the function `read_data`
+* `original_gamete_data`: The `dt` output from the function `read_data`.
+* `complete_haplotypes`: The output from the function `phase_donor_haplotypes`.
+* `positions`: The `positions` output from the function `read_data`.
 * `sequencing_error`: Default is 0.005. The expected sequencing error rate which controls emission probabilities. 
 * `avg_recomb`: Default is 1. The expected average number of recombination events per chromosome per gamete, which controls transition probabilities. 
-* `smooth_imputed_genotypes`: A boolean, default is FALSE. If TRUE, when true unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.
-* `threads`: Default is 2. The number of threads to utilize for multi-threading
+* `smooth_imputed_genotypes`: A boolean, default is FALSE. If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.
+* `threads`: Default is 2. The number of threads to utilize for multi-threading.
 
 ### Output
 
@@ -171,31 +175,134 @@ The output of this function is a named list with 4 elements
 
 ### Example calls
 
+The recommended usage to call this function is to pass it the output from both `read_data` and `phase_donor_haployptes`. Doing this, keeping the default sequencing error rate and average number of recombination breakpoints per chromosome per gamete, is accomplished by the following example. 
+
+```{r, eval = FALSE}
+filled_gametes_list <- rhapsodi::impute_gamte_genotypes(read_data_out$dt, complete_haplotypes, read_data_out$positions)
+```
+
+If you expect a non-default sequencing error rate, for example an error rate of 0.01, you should specify the expected sequencing error rate which the HMM will utilize for emission probabilities. To do this, the function should be called in the following manner:
+
+```{r, eval = FALSE}
+filled_gametes_list <- rhapsodi::impute_gamete_genotypes(read_data_out$dt, complete_haplotypes, read_data_out$positions, sequencing_error = 0.01)
+```
+
+Similarly, if you expect a non-default average number of recombination events per chromosome per gamete, for example 3 crossovers, you should specify the expected number of recombination events which the HMM will utilize for transition probabilities. To do this, the function should be called in the following way:
+
+```{r, eval = FALSE}
+filled_gametes_list <- rhapsodi::impute_gamete_genotypes(read_data_out$dt, complete_haplotypes, read_data_out$positions, avg_recomb = 3)
+```
+
 ## Discovering Meiotic Recombination
 
-The third and final of the three main algorithmic steps is discovering gamete-specific meitoitic recombination events from the imputed gamete genotypes. The fuction `discover_meiotic_recombination` is used for the discovery process.
+The third and final of the three main algorithmic steps is discovering gamete-specific meiotic recombination events from the imputed gamete genotypes. The function `discover_meiotic_recombination` is used for the discovery process.
 
 ### Arguments
+
 The main arguments for this function are
 
+* `original_gamete_data`: The `dt` output from the function `read_data`.
+* `complete_haplotypes`: The output from the function `phase_donor_haplotypes`.
+* `filled_gamete_data_list`: The output from the function `impute_gamete_genotypes`.
+* `positions`: The `positions` output from the function `read_data`.
+* `smooth_crossovers`: A boolean, default is TRUE. If TRUE, the filled gamete data that directly resulted from the HMM and NA filling is used. If FALSE, the filled gamete data that was unsmooothed is used.
+* `smooth_imputed_genotypes`: This boolean should be the same as the one that is passed to `impute_gamete_genotypes`.
+* `sampleName`: a string, default is "sampleT". The sample name will be reported in the output from this function.
+* `chrom`: a string, default is "chrT". The chromosome will be reported in the output from this function.
+* `threads`: Default is 2. The number of threads to utilize for multi-threading.
+
 ### Output
+
+The output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. The first column is the `ident` column which specifies the `sampleName`, the `chrom`, and the gamete where each recombination breakpoint was observed. These three pieces of information are concatenated together, separated by an underscore. The second column is the `Genomic_start` column which specifies the genomic position of the start of each recombination breakpoint. The third column is the `Genomic_end` column which specifies the genomic position of the end of each recombination breakpoint. If no recombination breakpoint is observed within a gamete, an NA is printed in both the `Genomic_start` and `Genomic_end` columns. Therefore, the number of rows in this dataframe is equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.
 
 ### Example calls
 
+The recommended usage to call this function is to pass the output from `read_data`, `phase_donor_haplotypes`, and `impute_gamete_genotypes` combined with the sample name, the chromosome, and whatever the `smoooth_imputed_genotypes` argument was when calling the `impute_gamete_genotypes` function earlier. Assuming default values were used for `impute_gamete_genotypes`, this would be as follows for a sample named "donorA" and its chromosome 1.
+
+``` {r, eval = FALSE}
+recomb_breaks <- rhapsodi::discover_meiotic_recombination(read_data_out$dt, complete_haplotypes, filled_gametes_list, read_data_out$positions, sampleName = "donorA", chrom = "chr1")
+```
+
+If `smooth_imputed_genotypes` was specified as TRUE when calling `impute_gamete_genotypes`, the function should be called as such
+
+```{r, eval = FALSE}
+recomb_breaks <- rhapsodi::discover_meiotic_recombination(read_data_out$dt, complete_haployptes, filled_gametes_list, read_data_out$positions, sampleName = "donorA", chrom = "chr1", smooth_imputed_genotypes = TRUE)
+```
+
+Another alternative usage of this function allows the user to specify whether recombination discovery is run on the smoothed or the unsmoothed gamete filled data. The default is to run discovery with the smoothed data directly from the HMM and NA filling functions. This is because with the unsmoothed data, there will likely be more false discoveries of recombination. We expect this because the overwriting of mismatches between the imputed data and the original sequencing reads could potentially re-introduce sequencing errors that the HMM corrected. If you wish to run meiotic recombination discovery with the unsmoothed data, `smooth_crossovers` should be set to FALSE. However, this is not recommended as it likely will result in more false discoveries. If the `impute_gamete_genotypes` function was run with `smooth_imputed_genotypes = TRUE`, then the following call should be used.
+
+```{r, eval = FALSE}
+recomb_breaks <- rhapsodi::discover_meiotic_recombination(read_data_out$dt, complete_haplotypes, filled_gametes_list, read_data_out$positions, sampleName = "donorA", chrom = "chr1", smooth_crossovers = FALSE)
+```
+
+Otherwise, if you wish to run meiotic recombination discovery with the unsmoothed data, and you ran `impute_gamete_genotypes` with `smooth_imputed_genotypes = FALSE`, then the following call should be used.
+
+```{r, eval = FALSE}
+recomb_breaks <- rhapsodi::discover_meiotic_recombination(read_data_out$dt, complete_haplotypes, filled_gametes_list, read_data_out$positions, sampleName = "donorA", chrom = "chr1", smooth_crossovers = FALSE, smooth_imputed_genotypes = FALSE)
+```
+
 ## Exporting data
 
-The last of the two data bookend steps is exporting the output from rhapsodi. The function `export_data` is used to ornament and export the rhapsodi output.
+The last of the two data bookend steps is exporting the output from rhapsodi. The function `export_data` is used to ornament and export the rhapsodi output. Specifically, the function will first add index (`index`) and genomic position (`pos`) columns to the datasets from `impute_gamete_genotypes`. Then, the function will add `a0` and `a1` columns for 0/1/NA encoded data, if the original input data was A/C/G/T/NA encoded. These `a0` and `a1` columns specify the allele for the 0 genotype and the allele for the 1 genotype respectively. Lastly, this function combines all of the data from the 3 main tasks into a single named list.
 
 ### Arguments
+
 The main arguments for this function are
 
+* `acgt`: A boolean, default is FALSE. Argument should match what was used in `read_data`. When FALSE, original input data was assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. When TRUE input data was assumed to be A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes. If TRUE, output 0/1/NA encoded matrices will include a0 and a1 columns that essentially add back the ref and alt columns. 
+* `input_data`: the named list returned from `read_data`
+* `complete_haplotypes` : the output of `phase_donor_haplotypes`
+* `filled_gametes` : the named list output from `impute_gamete_genotypes`
+* `recomb_breaks` : the output of `discover_meiotic_recombination`
+
 ### Output
+
+The output of this function is a named list with 6 elements
+
+1. `donor_haps` : the direct output from `phase_donor_haplotypes`; a data frame with column names `index`, `pos`, `h1` and `h2` where `index` is the SNP index, `pos` is the genomic SNP positions, `h1` is haplotype1, and `h2` is haplotype2.  The number of rows is equal to the number of hetSNPs.
+1. `gamete_haps` : an output from `impute_gamete_genotypes` with ornaments from `export data`;  Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded as "h1"/"h2"/NA, specifying specifically which donor haplotype that genotype originates from for each SNP and gamete. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (`index` and `pos`) 
+1. `gamete_genotypes` : an output from `impute_gamete_genotypes` with ornaments from `export data`; Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded 0/1/NA. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if `acgt` was FALSE (`index` and `pos`) or + 4 if `acgt` was TRUE (`index`, `pos`, `a0`, `a1`) 
+1. `unsmoothed_gamete_haps` : an output from `impute_gamete_genotypes` with ornaments from `export_data`;  Unsmoothed version of `gamete_haps` if `smooth_imputed_genotypes` is FALSE. NULL if `smooth_imputed_genotypes` is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (`index` and `pos`) 
+1. `unsmoothed_gamete_genotypes` : an output from `impute_gamete_genoyptes` with ornaments from `export_data`; Unsmoothed version of `gamete_genotypes` if `smooth_imputed_genotypes` is FALSE. NULL if `smooth_imputed_genotypes` is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if `acgt` was FALSE (`index` and `pos`) or + 4 if `acgt` was TRUE (`index`, `pos`, `a0`, `a1`)  
+1. `recomb_breaks` : the direct output from `discover_meiotic_recombination`; the output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. Column names `Ident`, `Genomic_start`, and `Genomic_end`, with number of rows equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.
 
 ### Example calls
 
 ## Autorun of all 5 rhapsodi steps
 
-All 5 of the previous steps can be run by calling a single function `rhapsodi_autorun`. 
+All 5 of the previous steps can be run by calling a single function `rhapsodi_autorun`. This autorun function should display a message after each task is completed, updating the user that that step ran.  
+
+### Arguments
+
+The input arguments for this function are a combination and subset of the input arguments of all the 5 individual functions. Unlike when the user runs the 5 steps separately, the autorun function handles passing the output of previous steps to the next rhapsodi stage, so the only data the user must provide is the original path to and name of a *tab delimited file, with header*  or *user pre-loaded dataframe*
+
+* `input_file`: the path to and name of the *tab-delimited file, with header* containing the sparse gamete genotypes. Pass `NULL` if instead using a *user pre-loaded dataframe*
+* `use_dt`: A boolean, default is FALSE. Pass TRUE if you want to input a *user pre-loaded dataframe*
+* `input_dt`: If `use_dt` is TRUE, pass the name of the *user pre-loaded data frame*. 
+* `acgt`: A boolean, default is FALSE. When FALSE, data is assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes.
+* `window_length`: Default is 3000. This is the size (in SNP indices) of the windows that will be used for clustering
+* `overlap_denom`: Default is 2. This is the denominator used in calculating the amount of overlap between windows, which will be the number of SNP indices which are considered when looking for amount of consensus in genotypes and stitching together haplotypes. Specifically, the overlap is `window_length` // `overlap_denom`.  
+* `threads`: Default is 2. The number of threads to utilize for multi-threading
+* `mcstop`: Default is TRUE. If TRUE, rhapsodi exits if confident stitching of haplotypes isn't possible because the consensus between overlapping windows is <0.9 but >0.1. If FALSE, rhapsodi continues and considers to which threshold the consensus is closer.
+* `stringent_stitch`: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, `stitch_new_min`
+* `stitch_new_min`: If `stringent_stitch` is TRUE, this value becomes the bifurcating threshold for stitching such that if the consensus is greater than this value, the windows are merged as the same haplotype. If consensus, is less than this value, the windows are treated as originating from different haplotypes.
+* `sequencing_error`: Default is 0.005. The expected sequencing error rate which controls emission probabilities. 
+* `avg_recomb`: Default is 1. The expected average number of recombination events per chromosome per gamete, which controls transition probabilities. 
+* `smooth_imputed_genotypes`: A boolean, default is FALSE. If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.
+* `smooth_crossovers`: A boolean, default is TRUE. If TRUE, the filled gamete data that directly resulted from the HMM and NA filling is used. If FALSE, the filled gamete data that was unsmooothed is used.
+* `sampleName`: a string, default is "sampleT". The sample name will be reported in the output from this function.
+* `chrom`: a string, default is "chrT". The chromosome will be reported in the output from this function.
+
+### Output
+
+The output of this function is the same named list with 6 elements that `export_data` would return.
+
+1. `donor_haps` : the direct output from `phase_donor_haplotypes`; a data frame with column names `index`, `pos`, `h1` and `h2` where `index` is the SNP index, `pos` is the genomic SNP positions, `h1` is haplotype1, and `h2` is haplotype2.  The number of rows is equal to the number of hetSNPs.
+1. `gamete_haps` : an output from `impute_gamete_genotypes` with ornaments from `export data`;  Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded as "h1"/"h2"/NA, specifying specifically which donor haplotype that genotype originates from for each SNP and gamete. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (`index` and `pos`) 
+1. `gamete_genotypes` : an output from `impute_gamete_genotypes` with ornaments from `export data`; Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded 0/1/NA. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if `acgt` was FALSE (`index` and `pos`) or + 4 if `acgt` was TRUE (`index`, `pos`, `a0`, `a1`) 
+1. `unsmoothed_gamete_haps` : an output from `impute_gamete_genotypes` with ornaments from `export_data`;  Unsmoothed version of `gamete_haps` if `smooth_imputed_genotypes` is FALSE. NULL if `smooth_imputed_genotypes` is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (`index` and `pos`) 
+1. `unsmoothed_gamete_genotypes` : an output from `impute_gamete_genoyptes` with ornaments from `export_data`; Unsmoothed version of `gamete_genotypes` if `smooth_imputed_genotypes` is FALSE. NULL if `smooth_imputed_genotypes` is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if `acgt` was FALSE (`index` and `pos`) or + 4 if `acgt` was TRUE (`index`, `pos`, `a0`, `a1`)  
+1. `recomb_breaks` : the direct output from `discover_meiotic_recombination`; the output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. Column names `Ident`, `Genomic_start`, and `Genomic_end`, with number of rows equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.
 
 ## Example Data: 0/1/NA encoded
 
@@ -247,6 +354,11 @@ head(complete_haplotypes)
 filled_gametes <- rhapsodi::impute_gamete_genotypes(read_data_out$dt, complete_haplotypes, read_data_out$positions)
 names(filled_gametes)
 dim(filled_gametes$filled_gametes)
+```
+
+
+```{r}
+recomb_breaks <- rhapsodi::discover_meiotic_recombination(read_data_out$dt, complete_haplotypes, filled_gametes, read_data_out$positions)
 ```
 
 ### rhapsodi_autorun with A/C/G/T/NA encoded data
