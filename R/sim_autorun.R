@@ -66,7 +66,7 @@ sim_autorun <- function(num_gametes, num_snps, coverage,
   if (smooth_imputed_genotypes){
     all_metrics <- sim_assess_it(generated_data$donor_haps, rhapsodi_out$donor_haps, generated_data$recomb_spots, rhapsodi_out$recomb_breaks, generated_data$gam_full, rhapsodi_out$gamete_genotypes[,-c(1,2)], cons = cons)
   } else{
-    all_metrics <- sim_assess_it(generated_data$donor_haps, rhapsodi_out$donor_haps, generated_data$recomb_spots, rhapsodi_out$recomb_breaks, genereated_data$gam_full, rhapsodi_out$unsmoothed_gamete_genoyptes[,-c(1,2)], cons=cons)
+    all_metrics <- sim_assess_it(generated_data$donor_haps, rhapsodi_out$donor_haps, generated_data$recomb_spots, rhapsodi_out$recomb_breaks, generated_data$gam_full, rhapsodi_out$unsmoothed_gamete_genoyptes[,-c(1,2)], cons=cons)
   }
   return(all_metrics)
 }

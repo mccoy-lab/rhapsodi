@@ -249,11 +249,11 @@ The last of the two data bookend steps is exporting the output from rhapsodi. Th
 
 The main arguments for this function are
 
-* `acgt`: A boolean, default is FALSE. Argument should match what was used in `read_data`. When FALSE, original input data was assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. When TRUE input data was assumed to be A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes. If TRUE, output 0/1/NA encoded matrices will include a0 and a1 columns that essentially add back the ref and alt columns. 
 * `input_data`: the named list returned from `read_data`
 * `complete_haplotypes` : the output of `phase_donor_haplotypes`
 * `filled_gametes` : the named list output from `impute_gamete_genotypes`
 * `recomb_breaks` : the output of `discover_meiotic_recombination`
+* `acgt`: A boolean, default is FALSE. Argument should match what was used in `read_data`. When FALSE, original input data was assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. When TRUE input data was assumed to be A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes. If TRUE, output 0/1/NA encoded matrices will include a0 and a1 columns that essentially add back the ref and alt columns. 
 
 ### Output
 
@@ -267,6 +267,18 @@ The output of this function is a named list with 6 elements
 1. `recomb_breaks` : the direct output from `discover_meiotic_recombination`; the output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. Column names `Ident`, `Genomic_start`, and `Genomic_end`, with number of rows equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.
 
 ### Example calls
+
+The recommended usage to call this function is to pass the output from the `read_data`, `phase_donor_haplotypes`, `impute_gamete_genotypes`, and `discover_meiotic_recombination` functions, together with the boolean that was used for the `acgt` argument in the `read_data` function. 
+
+```{r, eval = FALSE}
+rhapsodi_out <- rhapsodi::export_data(read_data_out, complete_haplotypes, filled_gametes_list, recomb_breaks)
+```
+
+Because the `acgt` argument by default is FALSE, `acgt=TRUE` is only needed if `acgt` was TRUE when calling the `read_data` function, as was done earlier with the theoretical inputs `"rhapsodi_input/donor1_chr2_acgt.txt"` or `rhapsodi_dt_acgt`.
+
+```{r, eval = FALSE}
+rhapsodi_out <- rhapsodi::export_data(read_data_out, complete_haplotypes, filled_gametes_list, recomb_breaks, acgt=TRUE)
+```
 
 ## Autorun of all 5 rhapsodi steps
 

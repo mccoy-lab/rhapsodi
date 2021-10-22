@@ -5,16 +5,14 @@
 \title{A function to export the data from rhapsodi}
 \usage{
 export_data(
-  acgt,
   input_data,
   complete_haplotypes,
   filled_gametes,
-  recomb_breaks
+  recomb_breaks,
+  acgt = FALSE
 )
 }
 \arguments{
-\item{acgt}{a bool; If TRUE, assumes that the input data was not 0/1/NA encoded, rather gamete genotypes were A/C/G/T/NA encoded and the dataframe had ref and alt columns. Will add these columns back as a0 and a1 for 0/1 encoded output data}
-
 \item{input_data}{the named list from \code{read_data}}
 
 \item{complete_haplotypes}{the dataframe from \code{phase_donor_haplotypes}}
@@ -22,6 +20,8 @@ export_data(
 \item{filled_gametes}{the named list from \code{impute_gamete_genotypes}}
 
 \item{recomb_breaks}{the dataframe from \code{discover_meitoic_recombination}}
+
+\item{acgt}{a bool; default is FALSE. If TRUE, assumes that the input data was not 0/1/NA encoded, rather gamete genotypes were A/C/G/T/NA encoded and the dataframe had ref and alt columns. Will add these columns back as a0 and a1 for 0/1 encoded output data}
 }
 \value{
 rhapsodi_out a named list with \code{donor_haps}, \code{gamete_haps}, \code{gamete_genotypes}, \code{unsmoothed_gamete_haps},  \code{unsmoothed_gamete_genotypes}, and \code{recomb_breaks}

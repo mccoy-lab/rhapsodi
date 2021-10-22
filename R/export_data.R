@@ -12,17 +12,17 @@
 #' `unsmoothed_gamete_genotypes` which is the filled gamete data frame specifying the genotype (in 0's and 1's) for each gamete position, after unsmoothing the the data by replacing imputed values with original sequencing reads when there's disagreement between observations and imputation. If acgt = FALSE, column names: index, pos, gamete_names. Otherwise: index, pos, a0, a1, gamete_names
 #' `recomb_breaks`which is a data frame specifying the recombination breakpoints for each gamete. Column names: Ident, Genomic_start, Genomic_end
 #'
-#' @param acgt a bool; If TRUE, assumes that the input data was not 0/1/NA encoded, rather gamete genotypes were A/C/G/T/NA encoded and the dataframe had ref and alt columns. Will add these columns back as a0 and a1 for 0/1 encoded output data
 #' @param input_data the named list from `read_data`
 #' @param complete_haplotypes the dataframe from `phase_donor_haplotypes`
 #' @param filled_gametes the named list from `impute_gamete_genotypes`
 #' @param recomb_breaks the dataframe from `discover_meitoic_recombination`
+#' @param acgt a bool; default is FALSE. If TRUE, assumes that the input data was not 0/1/NA encoded, rather gamete genotypes were A/C/G/T/NA encoded and the dataframe had ref and alt columns. Will add these columns back as a0 and a1 for 0/1 encoded output data
 #'
 #' @return rhapsodi_out a named list with `donor_haps`, `gamete_haps`, `gamete_genotypes`, `unsmoothed_gamete_haps`,  `unsmoothed_gamete_genotypes`, and `recomb_breaks`
 #'
 #' @export
 #'
-export_data <- function(acgt, input_data, complete_haplotypes, filled_gametes, recomb_breaks){
+export_data <- function(input_data, complete_haplotypes, filled_gametes, recomb_breaks, acgt=FALSE){
   filled_gametes$unsmoothed_gametes_haps <- cbind_pos(filled_gametes$unsmoothed_gametes_haps, input_data$positions)
   filled_gametes$unsmoothed_gametes <- cbind_pos(filled_gametes$unsmoothed_gametes, input_data$positions)
   filled_gametes$filled_gametes_haps <- cbind_pos(filled_gametes$filled_gametes_haps, input_data$positions)

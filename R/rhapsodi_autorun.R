@@ -48,6 +48,6 @@ rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt =
   message("Imputation Completed")
   recomb_breaks <- discover_meiotic_recombination(input_data$dt, complete_haplotypes, filled_gametes, input_data$positions, smooth_crossovers = smooth_crossovers, smooth_imputed_genotypes = smooth_imputed_genotypes, sampleName = sampleName, chrom=chrom, threads = threads)
   message("Discovery Completed")
-  rhapsodi_out <- export_data(acgt, input_data, complete_haplotypes, filled_gametes, recomb_breaks)
+  rhapsodi_out <- export_data(input_data, complete_haplotypes, filled_gametes, recomb_breaks, acgt = acgt)
   return (rhapsodi_out)
 }
