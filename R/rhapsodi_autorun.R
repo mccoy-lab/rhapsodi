@@ -32,6 +32,7 @@
 #' @param stitch_new_min a numeric >0, but <1; default is 0.5; used in `stitch_haplotypes` within `phase_donor_haplotypes`, this parameter is only evaluated if `stringent_stitch` is FALSE and is dually assigned as the `different_max` and `same_min` threshold values when considering the concordance between two windows and therefore which donors they originate from (same or different).
 #' @param smooth_imputed_genotypes a bool; default is FALSE; used in `impute_gamete_genotypes` whether to use smoothed data from the HMM or original reads for the ending filled gamete genotypes, whenever there is disagreement between the two. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch
 #' @param smooth_crossovers a bool; default is TRUE; used in `discover_meiotic_recombination` whether to use smoothed data from the HMM or original reads for recombination finding. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch
+#' @param verbose a bool; default is FALSE; if TRUE, prints progress statements after each step is successfully completed
 #'
 #' @return rhapsodi_out a named list with `donor_haps`, `gamete_haps`, `gamete_genotypes`, `unsmoothed_gamete_haps`,  `unsmoothed_gamete_genotypes`, and `recomb_breaks`
 #'
@@ -39,15 +40,15 @@
 #'
 rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt = FALSE, threads=2, sampleName="sampleT", chrom = "chrT", seqError_model = 0.005, avg_recomb_model = 1, 
                              window_length=3000, overlap_denom = 2, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5,
-                             smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE){
+                             smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE, verbose = FALSE){
   input_data <- read_data(input_file, use_dt = use_dt, input_dt = input_dt, acgt = acgt)
-  message("Data Input Completed")
+  if (verbose){ message("Data Input Completed")}
   complete_haplotypes <- phase_donor_haplotypes(input_data$dt, input_data$positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min)
-  message("Phasing Completed")
+  if (verbose){ message("Phasing Completed")}
   filled_gametes <- impute_gamete_genotypes(input_data$dt, complete_haplotypes, input_data$positions, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, smooth_imputed_genotypes = smooth_imputed_genotypes, threads = threads)
-  message("Imputation Completed")
+  if (verbose){message("Imputation Completed")}
   recomb_breaks <- discover_meiotic_recombination(input_data$dt, complete_haplotypes, filled_gametes, input_data$positions, smooth_crossovers = smooth_crossovers, smooth_imputed_genotypes = smooth_imputed_genotypes, sampleName = sampleName, chrom=chrom, threads = threads)
-  message("Discovery Completed")
+  if (verbose){message("Discovery Completed")}
   rhapsodi_out <- export_data(input_data, complete_haplotypes, filled_gametes, recomb_breaks, acgt = acgt)
   return (rhapsodi_out)
 }

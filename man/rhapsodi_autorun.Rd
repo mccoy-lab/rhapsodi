@@ -20,7 +20,8 @@ rhapsodi_autorun(
   stringent_stitch = TRUE,
   stitch_new_min = 0.5,
   smooth_imputed_genotypes = FALSE,
-  smooth_crossovers = TRUE
+  smooth_crossovers = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -55,6 +56,8 @@ rhapsodi_autorun(
 \item{smooth_imputed_genotypes}{a bool; default is FALSE; used in \code{impute_gamete_genotypes} whether to use smoothed data from the HMM or original reads for the ending filled gamete genotypes, whenever there is disagreement between the two. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
 
 \item{smooth_crossovers}{a bool; default is TRUE; used in \code{discover_meiotic_recombination} whether to use smoothed data from the HMM or original reads for recombination finding. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
+
+\item{verbose}{a bool; default is FALSE; if TRUE, prints progress statements after each step is successfully completed}
 }
 \value{
 rhapsodi_out a named list with \code{donor_haps}, \code{gamete_haps}, \code{gamete_genotypes}, \code{unsmoothed_gamete_haps},  \code{unsmoothed_gamete_genotypes}, and \code{recomb_breaks}

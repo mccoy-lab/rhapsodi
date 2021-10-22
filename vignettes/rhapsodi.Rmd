@@ -282,11 +282,11 @@ rhapsodi_out <- rhapsodi::export_data(read_data_out, complete_haplotypes, filled
 
 ## Autorun of all 5 rhapsodi steps
 
-All 5 of the previous steps can be run by calling a single function `rhapsodi_autorun`. This autorun function should display a message after each task is completed, updating the user that that step ran.  
+All 5 of the previous steps can be run by calling a single function `rhapsodi_autorun`. This autorun function should display a message after each task is completed, updating the user that that step successfully ran.  
 
 ### Arguments
 
-The input arguments for this function are a combination and subset of the input arguments of all the 5 individual functions. Unlike when the user runs the 5 steps separately, the autorun function handles passing the output of previous steps to the next rhapsodi stage, so the only data the user must provide is the original path to and name of a *tab delimited file, with header*  or *user pre-loaded dataframe*
+The input arguments for this function are a combination and subset of the input arguments of all the 5 individual functions. Unlike when the user runs the 5 steps separately, the autorun function handles passing the output of previous steps to the next rhapsodi stage, so the only *data* the user must provide is the original path to and name of a *tab delimited file, with header*  or *user pre-loaded dataframe*. The rest of the arguments control the behavior of rhapsodi (e.g. `mcstop`, `avg_recomb`, `smooth_imputed_genotypes`, etc.) and what rhapsodi eventually reports (e.g. `sampleName` and `chrom`)
 
 * `input_file`: the path to and name of the *tab-delimited file, with header* containing the sparse gamete genotypes. Pass `NULL` if instead using a *user pre-loaded dataframe*
 * `use_dt`: A boolean, default is FALSE. Pass TRUE if you want to input a *user pre-loaded dataframe*
@@ -304,6 +304,7 @@ The input arguments for this function are a combination and subset of the input 
 * `smooth_crossovers`: A boolean, default is TRUE. If TRUE, the filled gamete data that directly resulted from the HMM and NA filling is used. If FALSE, the filled gamete data that was unsmooothed is used.
 * `sampleName`: a string, default is "sampleT". The sample name will be reported in the output from this function.
 * `chrom`: a string, default is "chrT". The chromosome will be reported in the output from this function.
+* `verbose`: a bool, default is FALSE. If TRUE, will print progress updates after each step is successfully completed.
 
 ### Output
 
@@ -315,6 +316,11 @@ The output of this function is the same named list with 6 elements that `export_
 1. `unsmoothed_gamete_haps` : an output from `impute_gamete_genotypes` with ornaments from `export_data`;  Unsmoothed version of `gamete_haps` if `smooth_imputed_genotypes` is FALSE. NULL if `smooth_imputed_genotypes` is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (`index` and `pos`) 
 1. `unsmoothed_gamete_genotypes` : an output from `impute_gamete_genoyptes` with ornaments from `export_data`; Unsmoothed version of `gamete_genotypes` if `smooth_imputed_genotypes` is FALSE. NULL if `smooth_imputed_genotypes` is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if `acgt` was FALSE (`index` and `pos`) or + 4 if `acgt` was TRUE (`index`, `pos`, `a0`, `a1`)  
 1. `recomb_breaks` : the direct output from `discover_meiotic_recombination`; the output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. Column names `Ident`, `Genomic_start`, and `Genomic_end`, with number of rows equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.
+
+### Example Call
+
+Because so many combinations of the parameters exist, a single example call will be provided here. For this example, assume that we are running rhapsodi on the *pre-loaded dataframe* `rhapsodi_dt_acgt` which is A/C/G/T/NA encoded.
+
 
 ## Example Data: 0/1/NA encoded
 
