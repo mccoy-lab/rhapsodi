@@ -17,6 +17,8 @@ library(rhapsodi)
 
 ## Goal and applications of rhapsodi
 
+rhapsodi is an R package whose overall goal is to exploit low-coverage, single-gamete DNA sequencing data as a means of phasing a diploid donor's haplotypes, then imputing the missing gamete genotypes, and finally discovering gamete-specific meiotic recombination events. Because rhapsodi outputs high-quality information for each of these tasks, rhapsodi is applicable to a wide range of downstream tasks including identifying and exploring recombination hotspots; and scanning across gametes to discover selfish alleles that do not follow classical Mendelian inheritance rules.     
+
 ## Input data
 
 In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data which has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data can either be recorded in (A) a *tab delimited file, with header* which rhapsodi will load, or (B) a *user pre-loaded dataframe*. 
@@ -286,7 +288,7 @@ All 5 of the previous steps can be run by calling a single function `rhapsodi_au
 
 ### Arguments
 
-The input arguments for this function are a combination and subset of the input arguments of all the 5 individual functions. Unlike when the user runs the 5 steps separately, the autorun function handles passing the output of previous steps to the next rhapsodi stage, so the only *data* the user must provide is the original path to and name of a *tab delimited file, with header*  or *user pre-loaded dataframe*. The rest of the arguments control the behavior of rhapsodi (e.g. `mcstop`, `avg_recomb`, `smooth_imputed_genotypes`, etc.) and what rhapsodi eventually reports (e.g. `sampleName` and `chrom`)
+The input arguments for this function are a combination and subset of the input arguments of all the 5 individual functions. Unlike when the user runs the 5 steps separately, the autorun function handles passing the output of previous steps to the next rhapsodi stage, so the only *data* the user must provide is the original path to and name of a *tab delimited file, with header*  or *user pre-loaded dataframe*. The rest of the arguments control the behavior of rhapsodi (e.g. `mcstop`, `avg_recomb`, `smooth_imputed_genotypes`, etc.) and what rhapsodi eventually reports (e.g. `sampleName` and `chrom`). The only additional argument is `verbose` which controls if the user is updated on successful completion of each step.
 
 * `input_file`: the path to and name of the *tab-delimited file, with header* containing the sparse gamete genotypes. Pass `NULL` if instead using a *user pre-loaded dataframe*
 * `use_dt`: A boolean, default is FALSE. Pass TRUE if you want to input a *user pre-loaded dataframe*
@@ -298,8 +300,8 @@ The input arguments for this function are a combination and subset of the input 
 * `mcstop`: Default is TRUE. If TRUE, rhapsodi exits if confident stitching of haplotypes isn't possible because the consensus between overlapping windows is <0.9 but >0.1. If FALSE, rhapsodi continues and considers to which threshold the consensus is closer.
 * `stringent_stitch`: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, `stitch_new_min`
 * `stitch_new_min`: If `stringent_stitch` is TRUE, this value becomes the bifurcating threshold for stitching such that if the consensus is greater than this value, the windows are merged as the same haplotype. If consensus, is less than this value, the windows are treated as originating from different haplotypes.
-* `sequencing_error`: Default is 0.005. The expected sequencing error rate which controls emission probabilities. 
-* `avg_recomb`: Default is 1. The expected average number of recombination events per chromosome per gamete, which controls transition probabilities. 
+* `seqError_model`: Default is 0.005. (This is what governs `sequencing_error` in the `impute_gamete_genotypes` function.) The expected sequencing error rate which controls emission probabilities. 
+* `avg_recomb_model`: Default is 1. (This is the what governs `avg_recomb` in the `impute_gamete_genotypes` function.) The expected average number of recombination events per chromosome per gamete, which controls transition probabilities. 
 * `smooth_imputed_genotypes`: A boolean, default is FALSE. If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.
 * `smooth_crossovers`: A boolean, default is TRUE. If TRUE, the filled gamete data that directly resulted from the HMM and NA filling is used. If FALSE, the filled gamete data that was unsmooothed is used.
 * `sampleName`: a string, default is "sampleT". The sample name will be reported in the output from this function.
@@ -319,8 +321,29 @@ The output of this function is the same named list with 6 elements that `export_
 
 ### Example Call
 
-Because so many combinations of the parameters exist, a single example call will be provided here. For this example, assume that we are running rhapsodi on the *pre-loaded dataframe* `rhapsodi_dt_acgt` which is A/C/G/T/NA encoded.
+Because so many combinations of the parameters exist, a single example call will be provided here. For this example, assume that we are running rhapsodi on the *pre-loaded dataframe* `rhapsodi_dt_acgt` which is A/C/G/T/NA encoded. Therefore
+* `input_file` (the file + path argument) will be passed NULL
+* `use_dt = TRUE`
+* `input_dt = rhapsodi_dt_acgt`
+* `acgt = TRUE`
 
+In addition for this example, assume that (A) we want phasing to continue even if stitching encounters non-stringent concordance values, (B) we expect a sequencing error rate of 0.05, (C) we expect an average of number of 2 recombination events per gamete per chromosome, (D) due to the higher sequencing error rate, we decide to skip unsmoothing. Thus
+* `mcstop = FALSE`
+* `seqError_model = 0.05`
+* `avg_recomb_model = 2`
+* `smooth_imputed_genotypes = TRUE`
+
+Then, just generally, we want to use 8 threads, would like rhapsodi to update us on its progress with messages, and are running data from donorC, chromosome 17.
+* `threads=8`
+* `verbose = TRUE`
+* `sampleName = "donorC"`
+* `chrom="chr17"`
+
+With all of this together, keeping all other arguments as default, our example call would be the following.
+
+```{r, eval = FALSE}
+rhapsodi_out <- rhapsodi::rhapsodi_autorun(NULL, use_dt = TRUE, input_dt = rhapsodi_dt_acgt, acgt = TRUE, threads = 8, sampleName = 'donorC', chrom="chr17", seqError_model = 0.05, avg_recomb_model = 2, smooth_imputed_genotypes = TRUE, verbose = TRUE)
+```
 
 ## Example Data: 0/1/NA encoded
 
@@ -338,14 +361,85 @@ The dataframe has 4136 rows or heterozygous SNPs (hetSNPs) and 51 columns. The f
 
 ### step-by-step running 0/1/NA encoded data
 
+#### Read data in and run diploid donor haplotype phasing
+
+```{r}
+read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = sim01NA42)
+complete_haplotypes <- rhapsodi::phase_donor_haplotypes(read_data_out$dt, read_data_out$positions)
+```
+
+```{r}
+head(complete_haplotypes)
+```
+
+#### Impute gamete genotypes
+
+```{r}
+filled_gametes <- rhapsodi::impute_gamete_genotypes(read_data_out$dt, complete_haplotypes, read_data_out$positions)
+names(filled_gametes)
+dim(filled_gametes$filled_gametes)
+```
+
+
+#### Discover meiotic recombination
+
+```{r}
+recomb_breaks <- rhapsodi::discover_meiotic_recombination(read_data_out$dt, complete_haplotypes, filled_gametes, read_data_out$positions)
+```
+
+#### Export data
+
+```{r}
+rhapsodi_out_sbs_01 <- rhapsodi::export_data(read_data_out, complete_haplotypes, filled_gametes, recomb_breaks)
+names(rhapsodi_out_sbs_01)
+```
+
 ### rhapsodi_autorun with 0/1/NA encoded data
 
+```{r}
+rhapsodi_out_auto_01 <- rhapsodi::rhapsodi_autorun(NULL, use_dt = TRUE, input_dt = sim01NA42, verbose = TRUE)
+names(rhapsodi_out_auto_01)
+```
+
+
 ### Output from rhapsodi with 0/1/NA encoded data
+
+As should be, the outputs from running the ACGT data step-by-step and with the autorun function are identical to one another.
+
+```{r}
+identical(rhapsodi_out_sbs_01, rhapsodi_out_auto_01)
+```
+
+The `donor_haps` output contains numerical `index` and `pos` columns for the SNP index and genomic positions respectively. Finally, the numerical `h1` and `h2` columns record what rhapsodi determines to be the co-inherited genotypes for each haplotype.
+
+```{r}
+head(rhapsodi_out_auto_01$donor_haps)
+```
+`gamete_haps` and `unsmoothed_gamete_haps` both contain numerical `index` and `pos` columns as well, followed by character columns for each gamete recording what rhapsodi determines to be the donor haplotype (`"h1"` or `"h2"`) which was inherited for each SNP.
+
+```{r}
+head(rhapsodi_out_auto_01$gamete_haps)
+head(rhapsodi_out_auto_01$unsmoothed_gamete_haps)
+```
+
+`gamete_genotypes` and `unsmoothed_gamete_genotypes` both contain numerical `index` and `pos` columns as well. Finally, this is followed by numerical columns for each gamete recording what rhapsodi determines to be the inherited genotype for each SNP.
+
+
+```{r}
+head(rhapsodi_out_auto_01$gamete_genotypes)
+head(rhapsodi_out_auto_01$unsmoothed_gamete_genotypes)
+```
+
+`recomb_breaks` is the final output. The first columns is a character column, `Ident` which records the sample name, the chromosome, and the gamete for which rhapsodi observed a recombination breakpoint. `Genomic_start` is a numerical column recording the genomic start position of the breakpoint. `Genomic_end` is a numerical column recording the genomic end position of the breakpoint.
+
+```{r}
+head(rhapsodi_out_auto_01$recomb_breaks)
+```
 
 
 ## Example Data: A/C/G/T/NA encoded 
 
-The A/C/G/T/NA encoded data we'll be using for this is the `dataACGT` data.
+The A/C/G/T/NA encoded data we'll be using for this is the `dataACGT` data, which is actually derived from the `sim01NA42` data, just after randomly assigning alleles for the genotypes of 0 and 1 at each SNP.
 
 ```{r}
 head(dataACGT)
@@ -359,14 +453,18 @@ The dataframe has 4136 rows or hetSNPs and 53 columns. The first column is the `
 
 ### step-by-step running A/C/G/T/NA encoded data
 
+#### Read data in and run diploid donor haplotype phasing
+
 ```{r}
-read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = sim01NA42)
+read_data_out <- rhapsodi::read_data(NULL, use_dt = TRUE, input_dt = dataACGT, acgt = TRUE)
 complete_haplotypes <- rhapsodi::phase_donor_haplotypes(read_data_out$dt, read_data_out$positions)
 ```
 
 ```{r}
 head(complete_haplotypes)
 ```
+
+#### Impute gamete genotypes
 
 ```{r}
 filled_gametes <- rhapsodi::impute_gamete_genotypes(read_data_out$dt, complete_haplotypes, read_data_out$positions)
@@ -375,10 +473,58 @@ dim(filled_gametes$filled_gametes)
 ```
 
 
+#### Discover meiotic recombination
+
 ```{r}
 recomb_breaks <- rhapsodi::discover_meiotic_recombination(read_data_out$dt, complete_haplotypes, filled_gametes, read_data_out$positions)
 ```
 
+#### Export data
+
+```{r}
+rhapsodi_out_sbs <- rhapsodi::export_data(read_data_out, complete_haplotypes, filled_gametes, recomb_breaks, acgt = TRUE)
+names(rhapsodi_out_sbs)
+```
+
 ### rhapsodi_autorun with A/C/G/T/NA encoded data
 
+```{r}
+rhapsodi_out_auto <- rhapsodi::rhapsodi_autorun(NULL, use_dt = TRUE, input_dt = dataACGT, acgt = TRUE, verbose = TRUE)
+names(rhapsodi_out_auto)
+```
+
 ### Output from rhapsodi with A/C/G/T/NA encoded data
+
+As should be, the outputs from running the ACGT data step-by-step and with the autorun function are identical to one another.
+
+```{r}
+identical(rhapsodi_out_sbs, rhapsodi_out_auto)
+```
+
+The `donor_haps` output still contains the numerical `index` and `pos` columns for the SNP index and genomic positions respectively. In addition, this output now also includes the character `a0` and `a1` columns which record the allele for genotypes of 0 and 1 respectively. Finally, the numerical `h1` and `h2` columns record what rhapsodi determines to be the co-inherited genotypes for each haplotype.
+
+```{r}
+head(rhapsodi_out_auto$donor_haps)
+```
+`gamete_haps` and `unsmoothed_gamete_haps` both contain numerical `index` and `pos` columns as well, followed by character columns for each gamete recording what rhapsodi determines to be the donor haplotype (`"h1"` or `"h2"`) which was inherited for each SNP.
+
+```{r}
+head(rhapsodi_out_auto$gamete_haps)
+head(rhapsodi_out_auto$unsmoothed_gamete_haps)
+```
+
+`gamete_genotypes` and `unsmoothed_gamete_genotypes` both contain numerical `index` and `pos` columns as well. In addition, this output now also includes the character `a0` and `a1` columns which record the allele for genotypes of 0 and 1 respectively. Finally, this is followed by numerical columns for each gamete recording what rhapsodi determines to be the inherited genotype for each SNP.
+
+
+```{r}
+head(rhapsodi_out_auto$gamete_genotypes)
+head(rhapsodi_out_auto$unsmoothed_gamete_genotypes)
+```
+
+Finally, `recomb_breaks` is the same format as when non-acgt encoded data is used. The first columns is a character column, `Ident` which records the sample name, the chromosome, and the gamete for which rhapsodi observed a recombination breakpoint. `Genomic_start` is a numerical column recording the genomic start position of the breakpoint. `Genomic_end` is a numerical column recording the genomic end position of the breakpoint.
+
+```{r}
+head(rhapsodi_out_auto$recomb_breaks)
+```
+
+
