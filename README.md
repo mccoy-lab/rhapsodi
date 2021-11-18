@@ -5,13 +5,11 @@ rhapsodi, R Haplotype Sparse Data Imputation, is an R package meant to work with
 
 ## Installing rhapsodi
 
-rhapsodi can be installed with `devtools`. After cloning the repository, the following steps should be used to install and load rhapsodi.
+rhapsodi can be installed with `devtools`, as follows:
 
 ```
 library(devtools)
-#setwd(...location of rhapsodi...)
-devtools::install()
-library(rhapsodi)
+install_github("mccoy-lab/rhapsodi")
 ```
 
 ## Running rhapsodi
