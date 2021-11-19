@@ -1,7 +1,7 @@
 <a href="#"><img src="https://raw.githubusercontent.com/mccoy-lab/rhapsodi/master/man/figures/logo.png" alt="logo" width="400"/></a>
 
 ## Package Overview
-rhapsodi, R Haplotype Sparse Data Imputation, is an R package meant to work with very low-coverage single-cell DNA sequencing data of gametes originating from a single diploid donor. Specifically, rhapsodi (1) phases the diploid donor haplotypes, (2) imputes missing gamete genotypes, and (3) discovers gamete-specific meiotic recombination events. Our method can be applied to several organisms and gamete types and is useful for answering downstream questions related to selection, pre-implantation genetic diagnosis, recombination hot spots, genome assembly, & selfish genetic elements. 
+rhapsodi, R haploid sperm/oocyte data imputation, is an R package meant to work with very low-coverage single-cell DNA sequencing data of gametes originating from a single diploid donor. Specifically, rhapsodi (1) phases the diploid donor haplotypes, (2) imputes missing gamete genotypes, and (3) discovers gamete-specific meiotic recombination events. Our method can be applied to several organisms and gamete types and is useful for answering downstream questions related to selection, pre-implantation genetic diagnosis, recombination hot spots, genome assembly, & selfish genetic elements. 
 
 ## Installing rhapsodi
 
