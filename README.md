@@ -14,7 +14,7 @@ install_github("mccoy-lab/rhapsodi")
 
 ## Running rhapsodi
 
-The full rhapsodi analysis pipeline can be driven by the `rhapsodi_autorun` function that imports the data (`read_data`), runs the 3 main stages of analysis (`phase_donor_haplotyptes`, `impute_gamete_genotypes`, & `discover_meiotic_recombination`), and finally exports the data from each stage of analysis in a named list (`export_data`). Alternatively, each of these steps can be run by themselves, however, the 3 stages must be run in order as the output of each is used in the next step.
+The full rhapsodi analysis pipeline can be driven by the `rhapsodi_autorun` function that imports the data (`read_data`), runs the 3 main stages of analysis (`phase_donor_haplotypes`, `impute_gamete_genotypes`, & `discover_meiotic_recombination`), and finally exports the data from each stage of analysis in a named list (`export_data`). Alternatively, each of these steps can be run by themselves, however, the 3 stages must be run in order as the output of each is used in the next step.
 
 <a href="#"><img src="https://raw.githubusercontent.com/mccoy-lab/rhapsodi/master/man/figures/workflow.png" alt="logo" width="500"/></a>
 
