@@ -17,7 +17,7 @@ Suggests:
   knitr,
   BiocStyle,
   rmarkdown
-Title: R Haplotype Sparse Data Imputation
+Title: R haploid sperm/oocyte data imputation
 Version: 0.0.0.9000
 Authors@R: c(
     person(given = "Kathryn",
