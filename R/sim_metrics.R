@@ -13,31 +13,31 @@
 #' @return metric_list a named list returning precision, recall, accuracy, specificity, fpr, fdr, and f1 (the f1 score)
 #'
 sim_metrics <- function(tp, fp, tn, fn){
-  if ((tp+fp) > 0){
-    precision <- tp/(tp+fp)
-    fdr <- fp/(tp+fp)
+  if (sum(tp, fp, na.rm = TRUE) > 0){
+    precision <- tp/sum(tp, fp, na.rm = TRUE)
+    fdr <- fp/sum(tp, fp, na.rm = TRUE)
   } else{
     precision <- NA
     fdr <- NA
   }
-  if ((tp+fn) >0){
-    recall <- tp/(tp+fn)
+  if (sum(tp, fn, na.rm = TRUE) >0){
+    recall <- tp/sum(tp, fn, na.rm = TRUE)
   } else{
     recall <- NA
   }
-  if ((tn+fp) > 0){
-    specificity <- tn/(tn+fp)
-    fpr <- fp/(tn+fp)
+  if (sum(tn, fp, na.rm = TRUE) > 0){
+    specificity <- tn/sum(tn, fp, na.rm = TRUE)
+    fpr <- fp/sum(tn, fp, na.rm = TRUE)
   } else{
     specificity <- NA
     fpr <- NA
   }
-  if ((tp+fp+tn+fn) > 0){
-    accuracy <- (tp + tn)/(tp + tn + fp + fn)
+  if (sum(tp, fp, tn, fn, na.rm = TRUE) > 0){
+    accuracy <- sum(tp, tn, na.rm = TRUE)/sum(tp, tn, fp, fn, na.rm = TRUE)
   } else{
     accuracy <- NA
   }
-  f1 <- (2*precision*recall)/(precision+recall)
+  f1 <- prod(2,precision,recall, na.rm = TRUE)/sum(precision, recall, na.rm = TRUE)
   metric_list <- list(precision=precision,
                       recall=recall,
                       accuracy=accuracy,
