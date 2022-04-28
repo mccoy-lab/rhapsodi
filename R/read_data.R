@@ -52,7 +52,7 @@ read_data <- function(input_file, use_dt=FALSE, input_dt=NULL, acgt = FALSE){
   }
 
   hetRows <- ((rowSums(dt == 0, na.rm = TRUE) > 0) & (rowSums(dt == 1, na.rm=TRUE) > 0))
-  if (sum(hetRows == 0)){
+  if (sum(hetRows) == 0){
     stop("no hetSNPs so rhapsodi is exiting")
   }
   positions <- positions[hetRows]
