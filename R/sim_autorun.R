@@ -38,6 +38,7 @@
 #' @param stitch_new_min a numeric, >0, < 1, default = 0.5, used in `stitch_haplotypes` within `impute_donor_haplotypes` in `rhapsodi_autorun`, only evaluated if `stringent_stitch` is FALSE. This parameter is dually assigned as the `different_max` and `same_min` threshold values when considering the mean concordance between two overlapping windows in phasing
 #' @param smooth_imputed_genotypes a bool, default = FALSE, used in `report_gametes` and `unsmooth` within `rhapsodi_autorun`, whether to use smoothed data from the HMM or original reads when there are mismatches for ending/predicted filled gamete genotypes. If TRUE, doesn't replace smoothed data from HMM with original reads
 #' @param smooth_crossovers a bool, default = TRUE, used in `report_gametes` and `unsmooth` within `rhapsodi_autorun`, whether to use smoothed data from the HMM or original reads when there are mismatches for recombination breakpoint discovery. If TRUE, doesn't replace smoothed data from HMM with original reads
+#' @param verbose a bool; default is FALSE; if TRUE, prints progress statements after each step is successfully completed
 #' 
 #' @return all_metrics a named list of named lists with all the assessment metric values or vectors 
 #'  
@@ -50,23 +51,28 @@ sim_autorun <- function(num_gametes, num_snps, coverage,
                         add_de_novo_mut=FALSE, de_novo_lambda=5, de_novo_alpha=7.5, de_novo_beta=10,
                         cons=FALSE, sampleName="sim", chrom="chrS", seqError_model=0.005, avg_recomb_model=1,
                         window_length=3000, overlap_denom=2, mcstop = FALSE, stringent_stitch = TRUE, stitch_new_min = 0.5, 
-                        smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE){
+                        smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE, verbose = FALSE){
   #Generate simulated data
   generated_data <- sim_run_generative_model(num_gametes, num_snps, coverage, 
                                              recomb_lambda, random_seed = random_seed, 
                                              input_cov = input_cov, input_mgr =  input_mgr, missing_genotype_rate = missing_genotype_rate,
                                              add_seq_error = add_seq_error, seqError_add=seqError_add, 
                                              add_de_novo_mut=add_de_novo_mut, de_novo_lambda=de_novo_lambda, de_novo_alpha=de_novo_alpha, de_novo_beta=de_novo_beta)
+  if (verbose){ message("Input Data Simulated")}
   #Run rhapsodi on sparse simulated data (generated_data$gam_na)
   rhapsodi_out <- rhapsodi_autorun(NULL, use_dt = TRUE, input_dt = generated_data$gam_na, threads=threads, sampleName=sampleName, chrom=chrom, seqError_model=seqError_model, avg_recomb_model=avg_recomb_model,
                                    window_length=window_length, overlap_denom=overlap_denom, mcstop = mcstop, stringent_stitch = stringent_stitch, stitch_new_min = stitch_new_min,
-                                   smooth_imputed_genotypes=smooth_imputed_genotypes, smooth_crossovers=smooth_crossovers)
+                                   smooth_imputed_genotypes=smooth_imputed_genotypes, smooth_crossovers=smooth_crossovers, verbose = verbose)
   
-  #Assess how rhapsodi did
+  if (verbose) {message(" rhapsodi run complete")}
+   #Assess how rhapsodi did
   if (smooth_imputed_genotypes){
-    all_metrics <- sim_assess_it(generated_data$donor_haps, rhapsodi_out$donor_haps, generated_data$recomb_spots, rhapsodi_out$recomb_breaks, generated_data$gam_full, rhapsodi_out$gamete_genotypes[,-c(1,2)], cons = cons)
+    if (verbose) { message(" checking metrics")}
+    all_metrics <- sim_assess_it(generated_data$donor_haps, rhapsodi_out$donor_haps, generated_data$recomb_spots, rhapsodi_out$recomb_breaks, generated_data$gam_full, rhapsodi_out$gamete_genotypes[,-c(1,2)], cons = cons, verbose = verbose)
   } else{
-    all_metrics <- sim_assess_it(generated_data$donor_haps, rhapsodi_out$donor_haps, generated_data$recomb_spots, rhapsodi_out$recomb_breaks, generated_data$gam_full, rhapsodi_out$unsmoothed_gamete_genoyptes[,-c(1,2)], cons=cons)
+    if (verbose) { message(" checking metrics")}
+    all_metrics <- sim_assess_it(generated_data$donor_haps, rhapsodi_out$donor_haps, generated_data$recomb_spots, rhapsodi_out$recomb_breaks, generated_data$gam_full, rhapsodi_out$unsmoothed_gamete_genotypes[,-c(1,2)], cons=cons, verbose = verbose)
   }
+  if (verbose){ message("rhapsodi performance on simulated data assessed")}
   return(all_metrics)
 }
