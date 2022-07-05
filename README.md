@@ -18,3 +18,6 @@ The full rhapsodi analysis pipeline can be driven by the `rhapsodi_autorun` func
 
 <a href="#"><img src="https://raw.githubusercontent.com/mccoy-lab/rhapsodi/master/man/figures/workflow.png" alt="logo" width="500"/></a>
 
+## Manual
+
+The rhapsodi vignette can be viewed here: [rhapsodi vignette](http://htmlpreview.github.io/?https://github.com/mccoy-lab/rhapsodi/blob/master/vignettes/rhapsodi.html)
