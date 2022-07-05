@@ -31,7 +31,8 @@ sim_autorun(
   stringent_stitch = TRUE,
   stitch_new_min = 0.5,
   smooth_imputed_genotypes = FALSE,
-  smooth_crossovers = TRUE
+  smooth_crossovers = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -88,6 +89,8 @@ sim_autorun(
 \item{smooth_imputed_genotypes}{a bool, default = FALSE, used in \code{report_gametes} and \code{unsmooth} within \code{rhapsodi_autorun}, whether to use smoothed data from the HMM or original reads when there are mismatches for ending/predicted filled gamete genotypes. If TRUE, doesn't replace smoothed data from HMM with original reads}
 
 \item{smooth_crossovers}{a bool, default = TRUE, used in \code{report_gametes} and \code{unsmooth} within \code{rhapsodi_autorun}, whether to use smoothed data from the HMM or original reads when there are mismatches for recombination breakpoint discovery. If TRUE, doesn't replace smoothed data from HMM with original reads}
+
+\item{verbose}{a bool; default is FALSE; if TRUE, prints progress statements after each step is successfully completed}
 }
 \value{
 all_metrics a named list of named lists with all the assessment metric values or vectors

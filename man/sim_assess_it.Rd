@@ -11,7 +11,8 @@ sim_assess_it(
   pred_recomb,
   true_gam,
   pred_gam,
-  cons = FALSE
+  cons = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ sim_assess_it(
 \item{pred_gam}{a matrix, from the output of rhapsodi, the predicted/filled gamete genotypes where the rows are the SNPs and the columns are the gametes}
 
 \item{cons}{a bool; default=FALSE, If TRUE, compares recombination breakpoints in a conservative manner such that if two or more true breakpoints intersect a single predicted breakpoint, we only consider one intersection to be a tp and the rest to be fn.}
+
+\item{verbose}{a bool; default is FALSE; if TRUE, prints progress statements after each step is successfully completed}
 }
 \value{
 all_metrics a named list of named lists with all the assessment metric values or vectors
