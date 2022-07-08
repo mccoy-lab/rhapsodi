@@ -20,7 +20,7 @@ sim_gamete_killing(
 
 \item{p_kill}{a float, the probability that a gamete containing the SNP subject to TD will be removed from the dataset through simulated gamete killing}
 
-\item{killer_snp}{an integer indicating the specific SNP which will be subject so TD. Randomly selected if not provided by the user.}
+\item{killer_snp}{an integer indicating the specific SNP which will be subject to TD. Randomly selected if not provided by the user.}
 
 \item{killer_haplotype}{an integer, 0 or 1, indicating which haplotype will be subject to transmission distortion. Randomly selected if not provided by the user.}
 

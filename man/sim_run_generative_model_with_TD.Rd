@@ -16,7 +16,7 @@ sim_run_generative_model_with_TD(
   conversion_lambda = 4,
   killer_snp = NULL,
   killer_haplotype = NULL,
-  recomb_lambda,
+  recomb_lambda = 1,
   random_seed = 42,
   input_cov = TRUE,
   input_mgr = FALSE,
@@ -36,7 +36,23 @@ sim_run_generative_model_with_TD(
 
 \item{coverage}{a numeric, input if input_cov is TRUE, suggested NULL otherwise}
 
-\item{recomb_lambda}{a numeric, the average rate of recombination expected for the simulation}
+\item{TD_type}{a string, if \code{gk}, gamete killing is simulated; else any other string, gene conversion is simulated; default = "gk"}
+
+\item{p_kill}{a numeric, used within gamete killing simulation, the probability that a gamete containing the SNP subject to TD will be removed from the dataset through simulated gamete killing; default = 0.5}
+
+\item{p_convert}{a numeric, used within gene conversion simulation, the probability that a gamete with the TD allele will undergo a gene conversion event; default = 0.5}
+
+\item{converted_snp}{an integer, used within gene conversion simulation, but not required, indicating the specific SNP which will be subject so TD. Randomly selected if not provided by the user; default = NULL}
+
+\item{converted_haplotype}{an integer, 0 or 1, used within gene conversion simulation, but not required, indicating which haplotype will be subject to transmission distortion. Randomly selected if not provided by the user; default = NULL}
+
+\item{conversion_lambda}{a numeric, used within gene conversion simulation as lambda in the Poisson distribution to determine the length of the gene conversion event; default = 4}
+
+\item{killer_snp}{an integer, used within gamete killing simulation, but not required, indicating the specific SNP which will be subject to TD. Randomly selected if not provided by the user; default = NULL}
+
+\item{killer_haplotype}{an integer, 0 or 1, used within gamete killing simulation, but not required, indicating which haplotype will be subject to transmission distortion. Randomly selected if not provided by the user; default = NULL}
+
+\item{recomb_lambda}{a numeric, the average rate of recombination expected for the simulation; default = 1}
 
 \item{random_seed}{an integer, the random seed which will be set for the simulation, default=42}
 
