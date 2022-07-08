@@ -13,7 +13,15 @@
 #' @param num_gametes an integer, the number of gametes, or the number of columns for the sparse gamete data you want generated
 #' @param num_snps an integer, the number of SNPs, or the number of rows for the sparse gamete data you want generated. Note: not all of these will be heterozygous due to the coverage and therefore this number won't necessarily equal the number of SNPs following filtering at the end of the generation 
 #' @param coverage a numeric, input if input_cov is TRUE, suggested NULL otherwise
-#' @param recomb_lambda a numeric, the average rate of recombination expected for the simulation
+#' @param TD_type a string, if `gk`, gamete killing is simulated; else any other string, gene conversion is simulated; default = "gk"
+#' @param p_kill a numeric, used within gamete killing simulation, the probability that a gamete containing the SNP subject to TD will be removed from the dataset through simulated gamete killing; default = 0.5
+#' @param p_convert a numeric, used within gene conversion simulation, the probability that a gamete with the TD allele will undergo a gene conversion event; default = 0.5
+#' @param converted_snp an integer, used within gene conversion simulation, but not required, indicating the specific SNP which will be subject so TD. Randomly selected if not provided by the user; default = NULL
+#' @param converted_haplotype an integer, 0 or 1, used within gene conversion simulation, but not required, indicating which haplotype will be subject to transmission distortion. Randomly selected if not provided by the user; default = NULL
+#' @param conversion_lambda a numeric, used within gene conversion simulation as lambda in the Poisson distribution to determine the length of the gene conversion event; default = 4
+#' @param killer_snp an integer, used within gamete killing simulation, but not required, indicating the specific SNP which will be subject to TD. Randomly selected if not provided by the user; default = NULL
+#' @param killer_haplotype an integer, 0 or 1, used within gamete killing simulation, but not required, indicating which haplotype will be subject to transmission distortion. Randomly selected if not provided by the user; default = NULL
+#' @param recomb_lambda a numeric, the average rate of recombination expected for the simulation; default = 1
 #' @param random_seed an integer, the random seed which will be set for the simulation, default=42
 #' @param input_cov a logical, TRUE if coverage (i.e. like 0.01 (x)) will be input rather than missing genotype rate 
 #' @param input_mgr a logical, TRUE if missing genotype rate (i.e. like 80 (%) or 0.8) will be inpupt rather than coverage, default = FALSE
@@ -33,7 +41,7 @@ sim_run_generative_model_with_TD  <- function(num_gametes, num_snps, coverage,
                                               TD_type='gk', p_kill = 0.5,
                                               p_convert = 0.5, converted_snp = NULL, converted_haplotype = NULL, conversion_lambda = 4,
                                               killer_snp = NULL, killer_haplotype = NULL,
-                                              recomb_lambda, random_seed=42, 
+                                              recomb_lambda=1, random_seed=42, 
                                               input_cov=TRUE, input_mgr=FALSE, missing_genotype_rate=NULL,
                                               add_seq_error=TRUE, seqError_add=0.005, 
                                               add_de_novo_mut=FALSE, de_novo_lambda=5, de_novo_alpha=7.5, de_novo_beta=10){
@@ -54,11 +62,11 @@ sim_run_generative_model_with_TD  <- function(num_gametes, num_snps, coverage,
   # Generate gametes and simulate TD
   if (TD_type == 'gk'){
     TD_simulation <- sim_gamete_killing(num_gametes = num_gametes, num_snps = num_snps, p_kill=p_kill, killer_snp = killer_snp,
-                                        killer_haplotype = killer_haplotype, recomb_lambda = 1)
+                                        killer_haplotype = killer_haplotype, recomb_lambda = recomb_lambda)
   }
   else{
     TD_simulation <- sim_gene_conversion(num_gametes = num_gametes, num_snps = num_snps, p_convert=p_convert, converted_snp = converted_snp, 
-                                         converted_haplotype = converted_haplotype, conversion_lambda = conversion_lambda, recomb_lambda = 1)
+                                         converted_haplotype = converted_haplotype, conversion_lambda = conversion_lambda, recomb_lambda = recomb_lambda)
   }
   
   sim_gam <- TD_simulation[[1]]

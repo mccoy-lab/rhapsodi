@@ -9,7 +9,7 @@
 #' @param num_gametes an integer, the number of gametes, or the number of columns for the sparse gamete data you want generated
 #' @param num_snps an integer, the number of SNPs, or the number of rows for the sparse gamete data you want generated. Note: not all of these will be heterozygous due to the coverage and therefore this number won't necessarily equal the number of SNPs following filtering at the end of the generation 
 #' @param p_kill a float, the probability that a gamete containing the SNP subject to TD will be removed from the dataset through simulated gamete killing
-#' @param killer_snp an integer indicating the specific SNP which will be subject so TD. Randomly selected if not provided by the user. 
+#' @param killer_snp an integer indicating the specific SNP which will be subject to TD. Randomly selected if not provided by the user. 
 #' @param killer_haplotype an integer, 0 or 1, indicating which haplotype will be subject to transmission distortion. Randomly selected if not provided by the user.
 #' @param recomb_lambda a numeric, the average recombination rate, used as the mean for the poisson distribution 
 #' 
