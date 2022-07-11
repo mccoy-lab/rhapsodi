@@ -4,12 +4,14 @@
 \alias{fill_na}
 \title{A function to fill in missing data from each gamete}
 \usage{
-fill_na(imputed_gametes, col_index)
+fill_na(imputed_gametes, col_index, fill_ends = TRUE)
 }
 \arguments{
 \item{imputed_gametes}{Output of \code{run_hmm} which assigned a donor haplotype to each segment of each gamete}
 
 \item{col_index}{Each column of \code{imputed_gametes}, pulled via \code{apply} function}
+
+\item{fill_ends}{a boolean; if TRUE, fills the NAs at the terminal edges of chromosomes with the last known or imputed SNP (for end of chromosome) and the first known or imputed SNP (for beginning of chromosome); if FALSE, leaves these genotypes as NA; default = TRUE}
 }
 \value{
 gamete_sample_imputed Column with each gamete's imputed haplotypes

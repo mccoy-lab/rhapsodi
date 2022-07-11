@@ -20,6 +20,7 @@ rhapsodi_autorun(
   stringent_stitch = TRUE,
   stitch_new_min = 0.5,
   smooth_imputed_genotypes = FALSE,
+  fill_ends = TRUE,
   smooth_crossovers = TRUE,
   verbose = FALSE
 )
@@ -54,6 +55,8 @@ rhapsodi_autorun(
 \item{stitch_new_min}{a numeric >0, but <1; default is 0.5; used in \code{stitch_haplotypes} within \code{phase_donor_haplotypes}, this parameter is only evaluated if \code{stringent_stitch} is FALSE and is dually assigned as the \code{different_max} and \code{same_min} threshold values when considering the concordance between two windows and therefore which donors they originate from (same or different).}
 
 \item{smooth_imputed_genotypes}{a bool; default is FALSE; used in \code{impute_gamete_genotypes} whether to use smoothed data from the HMM or original reads for the ending filled gamete genotypes, whenever there is disagreement between the two. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
+
+\item{fill_ends}{a boolean; if TRUE, fills the NAs at the terminal edges of chromosomes with the last known or imputed SNP (for end of chromosome) and the first known or imputed SNP (for beginning of chromosome); if FALSE, leaves these genotypes as NA; default = TRUE}
 
 \item{smooth_crossovers}{a bool; default is TRUE; used in \code{discover_meiotic_recombination} whether to use smoothed data from the HMM or original reads for recombination finding. If TRUE, doesn't replace smoothed data from HMM with original reads when there's a mismatch}
 

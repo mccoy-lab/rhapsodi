@@ -37,6 +37,7 @@
 #' @param stringent_stitch a bool, default = TRUE, used in `stitch_haplotypes` within `impute_donor_haplotypes` in `rhapsodi_autorun`, this parameter is used to determine the threshold values used in determining whether two windows originate from the same donor. If TRUE, the preset thresholds of 0.1 and 0.9 are used.
 #' @param stitch_new_min a numeric, >0, < 1, default = 0.5, used in `stitch_haplotypes` within `impute_donor_haplotypes` in `rhapsodi_autorun`, only evaluated if `stringent_stitch` is FALSE. This parameter is dually assigned as the `different_max` and `same_min` threshold values when considering the mean concordance between two overlapping windows in phasing
 #' @param smooth_imputed_genotypes a bool, default = FALSE, used in `report_gametes` and `unsmooth` within `rhapsodi_autorun`, whether to use smoothed data from the HMM or original reads when there are mismatches for ending/predicted filled gamete genotypes. If TRUE, doesn't replace smoothed data from HMM with original reads
+#' @param fill_ends a boolean; if TRUE, fills the NAs at the terminal edges of chromosomes with the last known or imputed SNP (for end of chromosome) and the first known or imputed SNP (for beginning of chromosome); if FALSE, leaves these genotypes as NA; default = TRUE 
 #' @param smooth_crossovers a bool, default = TRUE, used in `report_gametes` and `unsmooth` within `rhapsodi_autorun`, whether to use smoothed data from the HMM or original reads when there are mismatches for recombination breakpoint discovery. If TRUE, doesn't replace smoothed data from HMM with original reads
 #' @param verbose a bool; default is FALSE; if TRUE, prints progress statements after each step is successfully completed
 #' 
@@ -51,7 +52,7 @@ sim_autorun <- function(num_gametes, num_snps, coverage,
                         add_de_novo_mut=FALSE, de_novo_lambda=5, de_novo_alpha=7.5, de_novo_beta=10,
                         cons=FALSE, sampleName="sim", chrom="chrS", seqError_model=0.005, avg_recomb_model=1,
                         window_length=3000, overlap_denom=2, mcstop = FALSE, stringent_stitch = TRUE, stitch_new_min = 0.5, 
-                        smooth_imputed_genotypes=FALSE, smooth_crossovers=TRUE, verbose = FALSE){
+                        smooth_imputed_genotypes=FALSE, fill_ends = TRUE, smooth_crossovers=TRUE, verbose = FALSE){
   #Generate simulated data
   generated_data <- sim_run_generative_model(num_gametes, num_snps, coverage, 
                                              recomb_lambda, random_seed = random_seed, 
@@ -62,7 +63,7 @@ sim_autorun <- function(num_gametes, num_snps, coverage,
   #Run rhapsodi on sparse simulated data (generated_data$gam_na)
   rhapsodi_out <- rhapsodi_autorun(NULL, use_dt = TRUE, input_dt = generated_data$gam_na, threads=threads, sampleName=sampleName, chrom=chrom, seqError_model=seqError_model, avg_recomb_model=avg_recomb_model,
                                    window_length=window_length, overlap_denom=overlap_denom, mcstop = mcstop, stringent_stitch = stringent_stitch, stitch_new_min = stitch_new_min,
-                                   smooth_imputed_genotypes=smooth_imputed_genotypes, smooth_crossovers=smooth_crossovers, verbose = verbose)
+                                   smooth_imputed_genotypes=smooth_imputed_genotypes, fill_ends = fill_ends, smooth_crossovers=smooth_crossovers, verbose = verbose)
   
   if (verbose) {message(" rhapsodi run complete")}
    #Assess how rhapsodi did

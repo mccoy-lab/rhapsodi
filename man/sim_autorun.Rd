@@ -31,6 +31,7 @@ sim_autorun(
   stringent_stitch = TRUE,
   stitch_new_min = 0.5,
   smooth_imputed_genotypes = FALSE,
+  fill_ends = TRUE,
   smooth_crossovers = TRUE,
   verbose = FALSE
 )
@@ -87,6 +88,8 @@ sim_autorun(
 \item{stitch_new_min}{a numeric, >0, < 1, default = 0.5, used in \code{stitch_haplotypes} within \code{impute_donor_haplotypes} in \code{rhapsodi_autorun}, only evaluated if \code{stringent_stitch} is FALSE. This parameter is dually assigned as the \code{different_max} and \code{same_min} threshold values when considering the mean concordance between two overlapping windows in phasing}
 
 \item{smooth_imputed_genotypes}{a bool, default = FALSE, used in \code{report_gametes} and \code{unsmooth} within \code{rhapsodi_autorun}, whether to use smoothed data from the HMM or original reads when there are mismatches for ending/predicted filled gamete genotypes. If TRUE, doesn't replace smoothed data from HMM with original reads}
+
+\item{fill_ends}{a boolean; if TRUE, fills the NAs at the terminal edges of chromosomes with the last known or imputed SNP (for end of chromosome) and the first known or imputed SNP (for beginning of chromosome); if FALSE, leaves these genotypes as NA; default = TRUE}
 
 \item{smooth_crossovers}{a bool, default = TRUE, used in \code{report_gametes} and \code{unsmooth} within \code{rhapsodi_autorun}, whether to use smoothed data from the HMM or original reads when there are mismatches for recombination breakpoint discovery. If TRUE, doesn't replace smoothed data from HMM with original reads}
 

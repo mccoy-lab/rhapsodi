@@ -11,6 +11,7 @@
 #' @param sequencing_error User-input for expected error in sequencing (default = 0.005) 
 #' @param avg_recomb User-input for average recombination rate that can be expected for a chromosome (default=1)s
 #' @param smooth_imputed_genotypes a bool, default is FALSE, whether to use smoothed data for ending genotypes. If `TRUE`, doesn't replace with original reads, returning smoothed data only. If `FALSE`, will return both smoothed and unsmoothed
+#' @param fill_ends a boolean; if TRUE, fills the NAs at the terminal edges of chromosomes with the last known or imputed SNP (for end of chromosome) and the first known or imputed SNP (for beginning of chromosome); if FALSE, leaves these genotypes as NA; default = TRUE 
 #' @param threads User-input value for calling `pbmclapply` or `mclapply` (default = 2)
 #' 
 #' @return gamete_data a named list with four data frames (names filled_gametes, unsmoothed_gametes, filled_gametes_haps, and unsmoothed_gametes_haps) resulting from the HMM, fill_NAs, and potentially the unsmooth functions, returning the imputed donor 0/1 encoded genotypes (outputs without _haps in the name) and haplotypes (outputs with _haps in the name) for each gamete. In the filled_gametes outputs, the dataframe represents the direct output. In the unsmoothed_gametes outputs, if `smooth_imputed_genotypes` is TRUE, these are NULL; if FALSE, original sequencing reads replace imputed genotypes if they disagree
@@ -21,7 +22,7 @@
 #' 
 #' @export
 
-impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, positions, sequencing_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, threads=2){
+impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, positions, sequencing_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, fill_ends = TRUE, threads=2){
   complete_haplotypes <- as_tibble(complete_haplotypes)
   dt_recoded <- recode_gametes(original_gamete_data, complete_haplotypes)
   #build the HMM
@@ -39,10 +40,10 @@ impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, p
   if (requireNamespace("pbapply", quietly = TRUE)){
   
     filled_gametes <- as.data.frame(do.call(cbind, pbapply::pblapply(1:ncol(imputed_gametes),
-                                                        function(x) fill_na(imputed_gametes, x)))) %>% `colnames<-`(colnames(original_gamete_data))
+                                                        function(x) fill_na(imputed_gametes, x, fill_ends = fill_ends)))) %>% `colnames<-`(colnames(original_gamete_data))
   } else {
     filled_gametes <- as.data.frame(do.call(cbind, lapply(1:ncol(imputed_gametes),
-                                                      function(x) fill_na(imputed_gametes, x)))) %>% `colnames<-`(colnames(original_gamete_data))
+                                                      function(x) fill_na(imputed_gametes, x, fill_ends = fill_ends)))) %>% `colnames<-`(colnames(original_gamete_data))
   }
   filled_gametes_01 <- re_recode_gametes(filled_gametes, complete_haplotypes) %>% `colnames<-`(colnames(original_gamete_data))
   

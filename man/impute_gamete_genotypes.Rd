@@ -11,6 +11,7 @@ impute_gamete_genotypes(
   sequencing_error = 0.005,
   avg_recomb = 1,
   smooth_imputed_genotypes = FALSE,
+  fill_ends = TRUE,
   threads = 2
 )
 }
@@ -26,6 +27,8 @@ impute_gamete_genotypes(
 \item{avg_recomb}{User-input for average recombination rate that can be expected for a chromosome (default=1)s}
 
 \item{smooth_imputed_genotypes}{a bool, default is FALSE, whether to use smoothed data for ending genotypes. If \code{TRUE}, doesn't replace with original reads, returning smoothed data only. If \code{FALSE}, will return both smoothed and unsmoothed}
+
+\item{fill_ends}{a boolean; if TRUE, fills the NAs at the terminal edges of chromosomes with the last known or imputed SNP (for end of chromosome) and the first known or imputed SNP (for beginning of chromosome); if FALSE, leaves these genotypes as NA; default = TRUE}
 
 \item{threads}{User-input value for calling \code{pbmclapply} or \code{mclapply} (default = 2)}
 }
