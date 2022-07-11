@@ -14,7 +14,19 @@
 
 <title>Introduction to rhapsodi</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -24,6 +36,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -125,7 +138,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -142,9 +335,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="TOC">
 <ul>
-<li><a href="#goal-and-applications-of-rhapsodi">Goal and applications of rhapsodi</a></li>
+<li><a href="#goal-and-applications-of-rhapsodi">Goal and applications
+of rhapsodi</a></li>
 <li><a href="#input-data">Input data</a></li>
-<li><a href="#stages-of-rhapsodi-pipeline">Stages of rhapsodi pipeline</a></li>
+<li><a href="#stages-of-rhapsodi-pipeline">Stages of rhapsodi
+pipeline</a></li>
 <li><a href="#reading-in-data">Reading in data</a>
 <ul>
 <li><a href="#arguments">Arguments</a></li>
@@ -163,7 +358,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#output-2">Output</a></li>
 <li><a href="#example-calls-2">Example calls</a></li>
 </ul></li>
-<li><a href="#discovering-meiotic-recombination">Discovering Meiotic Recombination</a>
+<li><a href="#discovering-meiotic-recombination">Discovering Meiotic
+Recombination</a>
 <ul>
 <li><a href="#arguments-3">Arguments</a></li>
 <li><a href="#output-3">Output</a></li>
@@ -175,287 +371,737 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#output-4">Output</a></li>
 <li><a href="#example-calls-4">Example calls</a></li>
 </ul></li>
-<li><a href="#autorun-of-all-5-rhapsodi-steps">Autorun of all 5 rhapsodi steps</a>
+<li><a href="#autorun-of-all-5-rhapsodi-steps">Autorun of all 5 rhapsodi
+steps</a>
 <ul>
 <li><a href="#arguments-5">Arguments</a></li>
 <li><a href="#output-5">Output</a></li>
 <li><a href="#example-call">Example Call</a></li>
 </ul></li>
-<li><a href="#example-data-01na-encoded">Example Data: 0/1/NA encoded</a>
+<li><a href="#example-data-01na-encoded">Example Data: 0/1/NA
+encoded</a>
 <ul>
-<li><a href="#step-by-step-running-01na-encoded-data">step-by-step running 0/1/NA encoded data</a></li>
-<li><a href="#rhapsodi_autorun-with-01na-encoded-data">rhapsodi_autorun with 0/1/NA encoded data</a></li>
-<li><a href="#output-from-rhapsodi-with-01na-encoded-data">Output from rhapsodi with 0/1/NA encoded data</a></li>
+<li><a href="#step-by-step-running-01na-encoded-data">step-by-step
+running 0/1/NA encoded data</a></li>
+<li><a href="#rhapsodi_autorun-with-01na-encoded-data">rhapsodi_autorun
+with 0/1/NA encoded data</a></li>
+<li><a href="#output-from-rhapsodi-with-01na-encoded-data">Output from
+rhapsodi with 0/1/NA encoded data</a></li>
 </ul></li>
-<li><a href="#example-data-acgtna-encoded">Example Data: A/C/G/T/NA encoded</a>
+<li><a href="#example-data-acgtna-encoded">Example Data: A/C/G/T/NA
+encoded</a>
 <ul>
-<li><a href="#step-by-step-running-acgtna-encoded-data">step-by-step running A/C/G/T/NA encoded data</a></li>
-<li><a href="#rhapsodi_autorun-with-acgtna-encoded-data">rhapsodi_autorun with A/C/G/T/NA encoded data</a></li>
-<li><a href="#output-from-rhapsodi-with-acgtna-encoded-data">Output from rhapsodi with A/C/G/T/NA encoded data</a></li>
+<li><a href="#step-by-step-running-acgtna-encoded-data">step-by-step
+running A/C/G/T/NA encoded data</a></li>
+<li><a href="#rhapsodi_autorun-with-acgtna-encoded-data">rhapsodi_autorun with
+A/C/G/T/NA encoded data</a></li>
+<li><a href="#output-from-rhapsodi-with-acgtna-encoded-data">Output from
+rhapsodi with A/C/G/T/NA encoded data</a></li>
 </ul></li>
 </ul>
 </div>
 
 <div id="goal-and-applications-of-rhapsodi" class="section level2">
 <h2>Goal and applications of rhapsodi</h2>
-<p>rhapsodi is an R package whose overall goal is to exploit low-coverage, single-gamete DNA sequencing data as a means of phasing a diploid donor’s haplotypes, then imputing the missing gamete genotypes, and finally discovering gamete-specific meiotic recombination events. Because rhapsodi outputs high-quality information for each of these tasks, rhapsodi is applicable to a wide range of downstream tasks including identifying and exploring recombination hotspots; and scanning across gametes to discover selfish alleles that do not follow classical Mendelian inheritance rules.</p>
+<p>rhapsodi is an R package whose overall goal is to exploit
+low-coverage, single-gamete DNA sequencing data as a means of phasing a
+diploid donor’s haplotypes, then imputing the missing gamete genotypes,
+and finally discovering gamete-specific meiotic recombination events.
+Because rhapsodi outputs high-quality information for each of these
+tasks, rhapsodi is applicable to a wide range of downstream tasks
+including identifying and exploring recombination hotspots; and scanning
+across gametes to discover selfish alleles that do not follow classical
+Mendelian inheritance rules.</p>
 </div>
 <div id="input-data" class="section level2">
 <h2>Input data</h2>
-<p>In general, the input data for rhapsodi is low-coverage single-cell gamete DNA sequencing data, with all gametes originating from a single diploid donor. This data has been recorded such that for every SNP, the genotype (or lack of genotype) is recorded for each sequenced gamete. This data must be donor- and chromosome-specific, such that for every rhapsodi run, while there are many gamete chromosomes under consideration, all gamete chromosomes included in the input data are from a single diploid donor and the same chromosome of genomic SNPs (e.g. only chr1). This data can either be recorded in (A) a <em>tab delimited file, with header</em> which rhapsodi will load, or (B) a <em>user pre-loaded dataframe</em>.</p>
-<p>In both cases, the first column must contain the genomic positions of the SNPs for that chromosome. (Note: there is no chromosome column.) Data can be encoded in two ways with genotypes recorded as 0/1 or A/C/G/T nucleotides; further, NA represents no available genotype for a given gamete at a given SNP. If the data is stored such that genotypes are recorded as 0/1, then the rest of the columns are assumed to be the gamete data. However, if the data are recorded as in nucleotide format with A/C/G/T (or some combination of these nucleotides for any biallelic polymorphism), then the second and third columns must specify the reference and alternate alleles respectively; finally, the rest of the following columns are the gamete data.</p>
+<p>In general, the input data for rhapsodi is low-coverage single-cell
+gamete DNA sequencing data, with all gametes originating from a single
+diploid donor. This data has been recorded such that for every SNP, the
+genotype (or lack of genotype) is recorded for each sequenced gamete.
+This data must be donor- and chromosome-specific, such that for every
+rhapsodi run, while there are many gamete chromosomes under
+consideration, all gamete chromosomes included in the input data are
+from a single diploid donor and the same chromosome of genomic SNPs
+(e.g. only chr1). This data can either be recorded in (A) a <em>tab
+delimited file, with header</em> which rhapsodi will load, or (B) a
+<em>user pre-loaded dataframe</em>.</p>
+<p>In both cases, the first column must contain the genomic positions of
+the SNPs for that chromosome. (Note: there is no chromosome column.)
+Data can be encoded in two ways with genotypes recorded as 0/1 or
+A/C/G/T nucleotides; further, NA represents no available genotype for a
+given gamete at a given SNP. If the data is stored such that genotypes
+are recorded as 0/1, then the rest of the columns are assumed to be the
+gamete data. However, if the data are recorded as in nucleotide format
+with A/C/G/T (or some combination of these nucleotides for any biallelic
+polymorphism), then the second and third columns must specify the
+reference and alternate alleles respectively; finally, the rest of the
+following columns are the gamete data.</p>
 </div>
 <div id="stages-of-rhapsodi-pipeline" class="section level2">
 <h2>Stages of rhapsodi pipeline</h2>
-<p>There are 5 total steps in the rhapsodi pipeline with 3 main algorithmic steps and 2 bookend data steps (reading in and exporting data). The steps are as follows.</p>
+<p>There are 5 total steps in the rhapsodi pipeline with 3 main
+algorithmic steps and 2 bookend data steps (reading in and exporting
+data). The steps are as follows.</p>
 <ol style="list-style-type: decimal">
-<li><strong>Read in data</strong> (to extract the sparse gamete genotypes and the SNP genomic positions)</li>
-<li><strong>Phase diploid donor haplotypes</strong> from sparse gamete genotypes</li>
-<li><strong>Impute missing gamete genotypes</strong> using phased donor haplotypes</li>
-<li><strong>Discovery meiotic recombination</strong> from imputed gamete genotypes</li>
+<li><strong>Read in data</strong> (to extract the sparse gamete
+genotypes and the SNP genomic positions)</li>
+<li><strong>Phase diploid donor haplotypes</strong> from sparse gamete
+genotypes</li>
+<li><strong>Impute missing gamete genotypes</strong> using phased donor
+haplotypes</li>
+<li><strong>Discovery meiotic recombination</strong> from imputed gamete
+genotypes</li>
 <li><strong>Export data</strong> from the 3 tasks.</li>
 </ol>
-<p>These steps can be performed individually by the user or all together with the <code>rhappsodi_autorun</code> function. Later in this example, we’ll walk-through both of these run options. Note that the 3 algorithmic steps must be performed in order as the output of one is used as input for the next step.</p>
-<p>To explore the stages of the rhapsodi pipeline, we’ll later use a simulated dataset that was generated to reflect Sperm-seq data from a single donor with the following profile: * 50 gametes * 5000 SNPs * a coverage of 0.1 * an average recombination rate of 1 * a sequencing error rate of 0.005</p>
-<p>The data has been both 0/1/NA encoded and A/C/G/T/NA encoded. We’ll walk through the steps of rhapsodi with both of these cases.</p>
+<p>These steps can be performed individually by the user or all together
+with the <code>rhappsodi_autorun</code> function. Later in this example,
+we’ll walk-through both of these run options. Note that the 3
+algorithmic steps must be performed in order as the output of one is
+used as input for the next step.</p>
+<p>To explore the stages of the rhapsodi pipeline, we’ll later use a
+simulated dataset that was generated to reflect Sperm-seq data from a
+single donor with the following profile: * 50 gametes * 5000 SNPs * a
+coverage of 0.1 * an average recombination rate of 1 * a sequencing
+error rate of 0.005</p>
+<p>The data has been both 0/1/NA encoded and A/C/G/T/NA encoded. We’ll
+walk through the steps of rhapsodi with both of these cases.</p>
 </div>
 <div id="reading-in-data" class="section level2">
 <h2>Reading in data</h2>
-<p>The first of the two data bookend steps is reading in the sparse gamete DNA sequencing data. The function <code>read_data</code> is used to read in and prepare data for rhapsodi. The preparation steps involve separating the input dataframe into individual vector(s) for the genomic positions (and the reference and alternate alleles if applicable) and a dataframe of just the gamete genotypes. Further, all vectors and the dataframe are subset to just heterozygous SNPs (hetSNPs), or SNPs for which there is at least one reference observation and one alternate observation. If no hetSNPs remain after filtering, rhapsodi will exit with the following message</p>
+<p>The first of the two data bookend steps is reading in the sparse
+gamete DNA sequencing data. The function <code>read_data</code> is used
+to read in and prepare data for rhapsodi. The preparation steps involve
+separating the input dataframe into individual vector(s) for the genomic
+positions (and the reference and alternate alleles if applicable) and a
+dataframe of just the gamete genotypes. Further, all vectors and the
+dataframe are subset to just heterozygous SNPs (hetSNPs), or SNPs for
+which there is at least one reference observation and one alternate
+observation. If no hetSNPs remain after filtering, rhapsodi will exit
+with the following message</p>
 <blockquote>
 <p>no hetSNPs so rhapsodi is exiting</p>
 </blockquote>
-<p>Such an event as no hetSNPs remaining is unlikely unless a dataset is extremely low coverage (&lt;=0.001 (x) in simulations) or there are very few gametes (&lt;= 3 in simulations). However, it is very possible that the number of input SNPs will differ from the number of SNPs that are retained following filtering; yet, generally as the number of gametes or the coverage increases, the number of filtered SNPs decreases.</p>
+<p>Such an event as no hetSNPs remaining is unlikely unless a dataset is
+extremely low coverage (&lt;=0.001 (x) in simulations) or there are very
+few gametes (&lt;= 3 in simulations). However, it is very possible that
+the number of input SNPs will differ from the number of SNPs that are
+retained following filtering; yet, generally as the number of gametes or
+the coverage increases, the number of filtered SNPs decreases.</p>
 <div id="arguments" class="section level3">
 <h3>Arguments</h3>
 <p>The main arguments for this function are</p>
 <ul>
-<li><code>input_file</code>: the path to and name of the <em>tab-delimited file, with header</em> containing the sparse gamete genotypes. Pass <code>NULL</code> if instead using a <em>user pre-loaded dataframe</em>.</li>
-<li><code>use_dt</code>: A boolean, default is FALSE. Pass TRUE if you want to input a <em>user pre-loaded dataframe</em>.</li>
-<li><code>input_dt</code>: If <code>use_dt</code> is TRUE, pass the name of the <em>user pre-loaded data frame</em>.</li>
-<li><code>acgt</code>: A boolean, default is FALSE. When FALSE, data is assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes.</li>
+<li><code>input_file</code>: the path to and name of the
+<em>tab-delimited file, with header</em> containing the sparse gamete
+genotypes. Pass <code>NULL</code> if instead using a <em>user pre-loaded
+dataframe</em>.</li>
+<li><code>use_dt</code>: A boolean, default is FALSE. Pass TRUE if you
+want to input a <em>user pre-loaded dataframe</em>.</li>
+<li><code>input_dt</code>: If <code>use_dt</code> is TRUE, pass the name
+of the <em>user pre-loaded data frame</em>.</li>
+<li><code>acgt</code>: A boolean, default is FALSE. When FALSE, data is
+assumed to be 0/1/NA encoded with genomic position and gamete genotypes
+columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref,
+and alt columns before the gamete genotypes.</li>
 </ul>
 </div>
 <div id="output" class="section level3">
 <h3>Output</h3>
 <p>The output from this function is a named list with 4 elements.</p>
 <ol style="list-style-type: decimal">
-<li><code>positions</code>: a vector of the genomic positions of the heterozygous SNPs</li>
-<li><code>dt</code>: a dataframe of the heterozygous SNPs only, 0/1/NA encoded. Number of rows is equal to number of hetSNPs. Number of columns is equal to number of gametes.</li>
-<li><code>ref</code>: a vector of the nucleotide(s) for each heterozygous SNP reference allele</li>
-<li><code>alt</code>: a vector of the nucleotide(s) for each heterozygous SNP alternate allele</li>
+<li><code>positions</code>: a vector of the genomic positions of the
+heterozygous SNPs</li>
+<li><code>dt</code>: a dataframe of the heterozygous SNPs only, 0/1/NA
+encoded. Number of rows is equal to number of hetSNPs. Number of columns
+is equal to number of gametes.</li>
+<li><code>ref</code>: a vector of the nucleotide(s) for each
+heterozygous SNP reference allele</li>
+<li><code>alt</code>: a vector of the nucleotide(s) for each
+heterozygous SNP alternate allele</li>
 </ol>
 </div>
 <div id="example-calls" class="section level3">
 <h3>Example calls</h3>
-<p>For example, if wanting to use a tab-delimited file (with a header), which was 0/1/NA encoded, with path and name <code>&quot;rhapsodi_input/donor1_chr2_01.txt&quot;</code> the function would be called as</p>
+<p>For example, if wanting to use a tab-delimited file (with a header),
+which was 0/1/NA encoded, with path and name
+<code>&quot;rhapsodi_input/donor1_chr2_01.txt&quot;</code> the function would be
+called as</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="st">&quot;rhapsodi_input/donor1_chr2_01.txt&quot;</span>)</span></code></pre></div>
-<p>However, if the file was pre-loaded into a dataframe, <code>rhapsodi_dt</code>, the function would be called as</p>
+<p>However, if the file was pre-loaded into a dataframe,
+<code>rhapsodi_dt</code>, the function would be called as</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="cn">NULL</span>, <span class="at">use_dt =</span> <span class="cn">TRUE</span>, <span class="at">input_dt =</span> rhapsodi_dt)</span></code></pre></div>
-<p>As another example, if wanting to use a tab-delimited file (with a header), which was A/C/G/T/NA encoded with positions, ref, and alt columns in addition to the gamete columns, with path and name <code>&quot;rhapsodi_input/donor1_chr2_acgt.txt&quot;</code>, the function would be called as</p>
+<p>As another example, if wanting to use a tab-delimited file (with a
+header), which was A/C/G/T/NA encoded with positions, ref, and alt
+columns in addition to the gamete columns, with path and name
+<code>&quot;rhapsodi_input/donor1_chr2_acgt.txt&quot;</code>, the function would
+be called as</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="st">&quot;rhapsodi_input/donor1_chr2_acgt.txt&quot;</span>, <span class="at">acgt=</span><span class="cn">TRUE</span>)</span></code></pre></div>
-<p>And if the file was pre-loaded into a dataframe, <code>rhapsodi_dt_acgt</code>, the function would be called as</p>
+<p>And if the file was pre-loaded into a dataframe,
+<code>rhapsodi_dt_acgt</code>, the function would be called as</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>read_data_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">read_data</span>(<span class="cn">NULL</span>, <span class="at">use_dt =</span> <span class="cn">TRUE</span>, <span class="at">input_dt =</span> rhapsodi_dt_acgt, <span class="at">acgt =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="phasing-donor-haplotypes" class="section level2">
 <h2>Phasing donor haplotypes</h2>
-<p>The first of the three main algorithmic steps is phasing the diploid donor haplotypes from which the gametes originated. The function <code>phase_donor_haplotypes</code> is used to run phasing. First, the SNP positions are split into windows of length <code>window_length</code> with overlap of <code>window_length</code> // <code>overlap_denom</code>. Then, within each of these windows, binary clustering of the gamete data across SNPs and majority voting are utilized to reconstruct hapltoypes within each window. Finally, adjacent windows are stitched together based on the amount of consensus in the genotypes within the overlapping regions to build the two haplotypes of the donor.</p>
+<p>The first of the three main algorithmic steps is phasing the diploid
+donor haplotypes from which the gametes originated. The function
+<code>phase_donor_haplotypes</code> is used to run phasing. First, the
+SNP positions are split into windows of length
+<code>window_length</code> with overlap of <code>window_length</code> //
+<code>overlap_denom</code>. Then, within each of these windows, binary
+clustering of the gamete data across SNPs and majority voting are
+utilized to reconstruct hapltoypes within each window. Finally, adjacent
+windows are stitched together based on the amount of consensus in the
+genotypes within the overlapping regions to build the two haplotypes of
+the donor.</p>
 <div id="arguments-1" class="section level3">
 <h3>Arguments</h3>
 <p>The main arguments for this function are</p>
 <ul>
-<li><code>dt</code>: This should be the <code>dt</code> within the named list output from <code>read_data</code>.</li>
-<li><code>positions</code>: This should be the <code>positions</code> within the named list output from <code>read_data</code>.</li>
-<li><code>window_length</code>: Default is 3000. This is the size (in SNP indices) of the windows that will be used for clustering.</li>
-<li><code>overlap_denom</code>: Default is 2. This is the denominator used in calculating the amount of overlap between windows, which will be the number of SNP indices which are considered when looking for amount of consensus in genotypes and stitching together haplotypes. Specifically, the overlap is <code>window_length</code> // <code>overlap_denom</code>.<br />
+<li><code>dt</code>: This should be the <code>dt</code> within the named
+list output from <code>read_data</code>.</li>
+<li><code>positions</code>: This should be the <code>positions</code>
+within the named list output from <code>read_data</code>.</li>
+<li><code>window_length</code>: Default is 3000. This is the size (in
+SNP indices) of the windows that will be used for clustering.</li>
+<li><code>overlap_denom</code>: Default is 2. This is the denominator
+used in calculating the amount of overlap between windows, which will be
+the number of SNP indices which are considered when looking for amount
+of consensus in genotypes and stitching together haplotypes.
+Specifically, the overlap is <code>window_length</code> //
+<code>overlap_denom</code>.<br />
 </li>
-<li><code>threads</code>: Default is 2. The number of threads to utilize for multi-threading.</li>
-<li><code>mcstop</code>: Default is TRUE. If TRUE, rhapsodi exits if confident stitching of haplotypes isn’t possible because the consensus between overlapping windows is &lt;0.9 but &gt;0.1. If FALSE, rhapsodi continues and considers to which threshold the consensus is closer.</li>
-<li><code>stringent_stitch</code>: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, <code>stitch_new_min</code>.</li>
-<li><code>stitch_new_min</code>: If <code>stringent_stitch</code> is TRUE, this value becomes the bifurcating threshold for stitching such that if the consensus is greater than this value, the windows are merged as the same haplotype. If consensus, is less than this value, the windows are treated as originating from different haplotypes.</li>
+<li><code>threads</code>: Default is 2. The number of threads to utilize
+for multi-threading.</li>
+<li><code>mcstop</code>: Default is TRUE. If TRUE, rhapsodi exits if
+confident stitching of haplotypes isn’t possible because the consensus
+between overlapping windows is &lt;0.9 but &gt;0.1. If FALSE, rhapsodi
+continues and considers to which threshold the consensus is closer.</li>
+<li><code>stringent_stitch</code>: Default is FALSE. If TRUE, the user
+can set a specified bifurcating threshold value for stitching,
+<code>stitch_new_min</code>.</li>
+<li><code>stitch_new_min</code>: If <code>stringent_stitch</code> is
+TRUE, this value becomes the bifurcating threshold for stitching such
+that if the consensus is greater than this value, the windows are merged
+as the same haplotype. If consensus, is less than this value, the
+windows are treated as originating from different haplotypes.</li>
 </ul>
 </div>
 <div id="output-1" class="section level3">
 <h3>Output</h3>
-<p>The output of this function is a data frame with column names <code>index</code>, <code>pos</code>, <code>h1</code> and <code>h2</code> where <code>index</code> is the SNP index, <code>pos</code> is the genomic SNP positions, <code>h1</code> is haplotype1, and <code>h2</code> is haplotype2. The number of rows is equal to the number of hetSNPs.</p>
+<p>The output of this function is a data frame with column names
+<code>index</code>, <code>pos</code>, <code>h1</code> and
+<code>h2</code> where <code>index</code> is the SNP index,
+<code>pos</code> is the genomic SNP positions, <code>h1</code> is
+haplotype1, and <code>h2</code> is haplotype2. The number of rows is
+equal to the number of hetSNPs.</p>
 </div>
 <div id="example-calls-1" class="section level3">
 <h3>Example calls</h3>
-<p>The recommended usage of this function is to pass the output from <code>read_data</code> and keep the defaults for the rest of the arguments.</p>
+<p>The recommended usage of this function is to pass the output from
+<code>read_data</code> and keep the defaults for the rest of the
+arguments.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>complete_haplotypes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">phase_donor_haplotypes</span>(read_data_out<span class="sc">$</span>dt, read_data_out<span class="sc">$</span>positions)</span></code></pre></div>
-<p>However, if rhapsodi exits with a message similar to the following, then the recommended usage is to additionally pass the argument <code>mcstop = FALSE</code>.</p>
+<p>However, if rhapsodi exits with a message similar to the following,
+then the recommended usage is to additionally pass the argument
+<code>mcstop = FALSE</code>.</p>
 <blockquote>
-<p>Haplotypes within overlapping windows are too discordant to merge with a mean concordance of [some number &lt; 0.1 but &gt; 0.9]. rhapsodi is exiting.</p>
+<p>Haplotypes within overlapping windows are too discordant to merge
+with a mean concordance of [some number &lt; 0.1 but &gt; 0.9]. rhapsodi
+is exiting.</p>
 </blockquote>
-<p>By changing <code>mcstop</code> to FALSE, rhapsodi will continue stitching the overlapping haplotype windows together, considering whether the concordance between two overlapping windows is closer to 0.1 or 0.9.</p>
+<p>By changing <code>mcstop</code> to FALSE, rhapsodi will continue
+stitching the overlapping haplotype windows together, considering
+whether the concordance between two overlapping windows is closer to 0.1
+or 0.9.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>complete_haplotypes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">phase_donor_haplotypes</span>(read_data_out<span class="sc">$</span>dt, read_data_out<span class="sc">$</span>positions, <span class="at">mcstop =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p>Note that rhapsodi will still display a message similar to the one below, but it will not exit.</p>
+<p>Note that rhapsodi will still display a message similar to the one
+below, but it will not exit.</p>
 <blockquote>
-<p>Haplotypes within overlapping windows are too discordant for confident merging with a mean concordance of [some number &lt; 0.1 but &gt; 0.9], but continuing and [merging as the same haplotype | stitching windows as opposite haplotypes].</p>
+<p>Haplotypes within overlapping windows are too discordant for
+confident merging with a mean concordance of [some number &lt; 0.1 but
+&gt; 0.9], but continuing and [merging as the same haplotype | stitching
+windows as opposite haplotypes].</p>
 </blockquote>
-<p>Alternatively, the user can set a different bifurcating threshold value by setting <code>stringent_stitch</code> to FALSE, and passing the new threshold value to <code>stitch_new_min</code>, like in the following example. Because <code>stitch_new_min = 0.6</code>, windows with a concordance greater than 0.6 will be merged as originating from the same haplotype, but windows with a concordance less than 0.6 will be separated, assumed to originate from different haplotypes.</p>
+<p>Alternatively, the user can set a different bifurcating threshold
+value by setting <code>stringent_stitch</code> to FALSE, and passing the
+new threshold value to <code>stitch_new_min</code>, like in the
+following example. Because <code>stitch_new_min = 0.6</code>, windows
+with a concordance greater than 0.6 will be merged as originating from
+the same haplotype, but windows with a concordance less than 0.6 will be
+separated, assumed to originate from different haplotypes.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>complete_haplotypes <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">phase_donor_haplotypes</span>(read_data_out<span class="sc">$</span>dt, read_data_out<span class="sc">$</span>positions, <span class="at">stringent_stitch =</span> <span class="cn">FALSE</span>, <span class="at">stitch_new_min =</span> <span class="fl">0.6</span>)</span></code></pre></div>
-<p>Setting <code>mcstop</code> to FALSE, theoretically should be equivalent to <code>stringent_stitch = FALSE</code> and setting <code>stitch_new_min</code> to 0.5.</p>
+<p>Setting <code>mcstop</code> to FALSE, theoretically should be
+equivalent to <code>stringent_stitch = FALSE</code> and setting
+<code>stitch_new_min</code> to 0.5.</p>
 </div>
 </div>
 <div id="imputing-gamete-genotypes" class="section level2">
 <h2>Imputing gamete genotypes</h2>
-<p>The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function <code>impute_gamete_genoyptes</code> is used to drive imputation. The function first builds a Hidden Markov Model (HMM) with emission probabilities controlled by the expected sequencing error rate and the transition probabilities controlled by the expected average recombination rate (or the number of expected meiotic recombination events per chromosome per gamete divided by the number of hetSNPs). Then the HMM is applied to the sparse gamete data, tracing the most likely path along the phased donor haplotypes for each gamete. Internals NAs are filled if bordering the same haplotypes. Edge NAs are assigned haplotypes matching the first non-NA SNP on the chromosome’s end. Finally, by default, if original sequencing observations disagree with imputed genotypes, the imputation is overwritten by the original sequencing read in a process termed unsmoothing. All of these steps together recover the dense gamete genotype matrix.</p>
+<p>The second of the three main algorithmic steps is imputing the
+missing gamete genotypes. The function
+<code>impute_gamete_genoyptes</code> is used to drive imputation. The
+function first builds a Hidden Markov Model (HMM) with emission
+probabilities controlled by the expected sequencing error rate and the
+transition probabilities controlled by the expected average
+recombination rate (or the number of expected meiotic recombination
+events per chromosome per gamete divided by the number of hetSNPs). Then
+the HMM is applied to the sparse gamete data, tracing the most likely
+path along the phased donor haplotypes for each gamete. Internals NAs
+are filled if bordering the same haplotypes. By default, edge NAs are
+assigned haplotypes matching the first non-NA SNP on the chromosome’s
+end. Alternatively, these NAs at the terminal edges of chromosomes can
+be left as NAs rather than being filled/assigned genotypes. Finally, by
+default, if original sequencing observations disagree with imputed
+genotypes, the imputation is overwritten by the original sequencing read
+in a process termed unsmoothing. All of these steps together recover the
+dense gamete genotype matrix.</p>
 <div id="arguments-2" class="section level3">
 <h3>Arguments</h3>
 <p>The main arguments for this function are</p>
 <ul>
-<li><code>original_gamete_data</code>: The <code>dt</code> output from the function <code>read_data</code>.</li>
-<li><code>complete_haplotypes</code>: The output from the function <code>phase_donor_haplotypes</code>.</li>
-<li><code>positions</code>: The <code>positions</code> output from the function <code>read_data</code>.</li>
-<li><code>sequencing_error</code>: Default is 0.005. The expected sequencing error rate which controls emission probabilities.</li>
-<li><code>avg_recomb</code>: Default is 1. The expected average number of recombination events per chromosome per gamete, which controls transition probabilities.</li>
-<li><code>smooth_imputed_genotypes</code>: A boolean, default is FALSE. If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.</li>
-<li><code>threads</code>: Default is 2. The number of threads to utilize for multi-threading.</li>
+<li><code>original_gamete_data</code>: The <code>dt</code> output from
+the function <code>read_data</code>.</li>
+<li><code>complete_haplotypes</code>: The output from the function
+<code>phase_donor_haplotypes</code>.</li>
+<li><code>positions</code>: The <code>positions</code> output from the
+function <code>read_data</code>.</li>
+<li><code>sequencing_error</code>: Default is 0.005. The expected
+sequencing error rate which controls emission probabilities.</li>
+<li><code>avg_recomb</code>: Default is 1. The expected average number
+of recombination events per chromosome per gamete, which controls
+transition probabilities.</li>
+<li><code>smooth_imputed_genotypes</code>: A boolean, default is FALSE.
+If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is
+applied such that original sequencing observations are used in place of
+imputed genotypes if the two disagree.</li>
+<li><code>fill_ends</code>: A boolean, default is TRUE, If TRUE, fills
+the NAs at the terminal edges of chromosomes with the first/last known
+or imputed SNP for the beginning/ending of chromosomes respectively; if
+FALSE, leaves these genotypes as NA in the final imputed genotypes.
+Default is TRUE.</li>
+<li><code>threads</code>: Default is 2. The number of threads to utilize
+for multi-threading.</li>
 </ul>
 </div>
 <div id="output-2" class="section level3">
 <h3>Output</h3>
 <p>The output of this function is a named list with 4 elements</p>
 <ol style="list-style-type: decimal">
-<li><code>filled_gametes</code>: Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded 0/1/NA. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes.</li>
-<li><code>filled_gametes_haps</code>: Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded as “h1”/“h2”/NA, specifying specifically which donor haplotype that genotype originates from for each SNP and gamete. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes.</li>
-<li><code>unsmoothed_gametes</code>: Unsmoothed version of <code>filled_gametes</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE.</li>
-<li><code>unsmoothed_gametes_haps</code>: Unsmoothed version of <code>filled_gametes_haps</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE.</li>
+<li><code>filled_gametes</code>: Dataframe with imputed donor
+genotypes/recovered dense matrix where genotypes are encoded 0/1/NA.
+Number of rows equal to number of hetSNPs; number of columns equal to
+number of gametes.</li>
+<li><code>filled_gametes_haps</code>: Dataframe with imputed donor
+genotypes/recovered dense matrix where genotypes are encoded as
+“h1”/“h2”/NA, specifying specifically which donor haplotype that
+genotype originates from for each SNP and gamete. Number of rows equal
+to number of hetSNPs; number of columns equal to number of gametes.</li>
+<li><code>unsmoothed_gametes</code>: Unsmoothed version of
+<code>filled_gametes</code> if <code>smooth_imputed_genotypes</code> is
+FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE.</li>
+<li><code>unsmoothed_gametes_haps</code>: Unsmoothed version of
+<code>filled_gametes_haps</code> if
+<code>smooth_imputed_genotypes</code> is FALSE. NULL if
+<code>smooth_imputed_genotypes</code> is TRUE.</li>
 </ol>
 </div>
 <div id="example-calls-2" class="section level3">
 <h3>Example calls</h3>
-<p>The recommended usage to call this function is to pass it the output from both <code>read_data</code> and <code>phase_donor_haployptes</code>. Doing this, keeping the default sequencing error rate and average number of recombination breakpoints per chromosome per gamete, is accomplished by the following example.</p>
+<p>The recommended usage to call this function is to pass it the output
+from both <code>read_data</code> and
+<code>phase_donor_haployptes</code>. Doing this, keeping the default
+sequencing error rate and average number of recombination breakpoints
+per chromosome per gamete, is accomplished by the following example.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>filled_gametes_list <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">impute_gamte_genotypes</span>(read_data_out<span class="sc">$</span>dt, complete_haplotypes, read_data_out<span class="sc">$</span>positions)</span></code></pre></div>
-<p>If you expect a non-default sequencing error rate, for example an error rate of 0.01, you should specify the expected sequencing error rate which the HMM will utilize for emission probabilities. To do this, the function should be called in the following manner:</p>
+<p>If you expect a non-default sequencing error rate, for example an
+error rate of 0.01, you should specify the expected sequencing error
+rate which the HMM will utilize for emission probabilities. To do this,
+the function should be called in the following manner:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>filled_gametes_list <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">impute_gamete_genotypes</span>(read_data_out<span class="sc">$</span>dt, complete_haplotypes, read_data_out<span class="sc">$</span>positions, <span class="at">sequencing_error =</span> <span class="fl">0.01</span>)</span></code></pre></div>
-<p>Similarly, if you expect a non-default average number of recombination events per chromosome per gamete, for example 3 crossovers, you should specify the expected number of recombination events which the HMM will utilize for transition probabilities. To do this, the function should be called in the following way:</p>
+<p>Similarly, if you expect a non-default average number of
+recombination events per chromosome per gamete, for example 3
+crossovers, you should specify the expected number of recombination
+events which the HMM will utilize for transition probabilities. To do
+this, the function should be called in the following way:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>filled_gametes_list <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">impute_gamete_genotypes</span>(read_data_out<span class="sc">$</span>dt, complete_haplotypes, read_data_out<span class="sc">$</span>positions, <span class="at">avg_recomb =</span> <span class="dv">3</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="discovering-meiotic-recombination" class="section level2">
 <h2>Discovering Meiotic Recombination</h2>
-<p>The third and final of the three main algorithmic steps is discovering gamete-specific meiotic recombination events from the imputed gamete genotypes. The function <code>discover_meiotic_recombination</code> is used for the discovery process.</p>
+<p>The third and final of the three main algorithmic steps is
+discovering gamete-specific meiotic recombination events from the
+imputed gamete genotypes. The function
+<code>discover_meiotic_recombination</code> is used for the discovery
+process.</p>
 <div id="arguments-3" class="section level3">
 <h3>Arguments</h3>
 <p>The main arguments for this function are</p>
 <ul>
-<li><code>original_gamete_data</code>: The <code>dt</code> output from the function <code>read_data</code>.</li>
-<li><code>complete_haplotypes</code>: The output from the function <code>phase_donor_haplotypes</code>.</li>
-<li><code>filled_gamete_data_list</code>: The output from the function <code>impute_gamete_genotypes</code>.</li>
-<li><code>positions</code>: The <code>positions</code> output from the function <code>read_data</code>.</li>
-<li><code>smooth_crossovers</code>: A boolean, default is TRUE. If TRUE, the filled gamete data that directly resulted from the HMM and NA filling is used. If FALSE, the filled gamete data that was unsmooothed is used.</li>
-<li><code>smooth_imputed_genotypes</code>: This boolean should be the same as the one that is passed to <code>impute_gamete_genotypes</code>.</li>
-<li><code>sampleName</code>: a string, default is “sampleT”. The sample name will be reported in the output from this function.</li>
-<li><code>chrom</code>: a string, default is “chrT”. The chromosome will be reported in the output from this function.</li>
-<li><code>threads</code>: Default is 2. The number of threads to utilize for multi-threading.</li>
+<li><code>original_gamete_data</code>: The <code>dt</code> output from
+the function <code>read_data</code>.</li>
+<li><code>complete_haplotypes</code>: The output from the function
+<code>phase_donor_haplotypes</code>.</li>
+<li><code>filled_gamete_data_list</code>: The output from the function
+<code>impute_gamete_genotypes</code>.</li>
+<li><code>positions</code>: The <code>positions</code> output from the
+function <code>read_data</code>.</li>
+<li><code>smooth_crossovers</code>: A boolean, default is TRUE. If TRUE,
+the filled gamete data that directly resulted from the HMM and NA
+filling is used. If FALSE, the filled gamete data that was unsmooothed
+is used.</li>
+<li><code>smooth_imputed_genotypes</code>: This boolean should be the
+same as the one that is passed to
+<code>impute_gamete_genotypes</code>.</li>
+<li><code>sampleName</code>: a string, default is “sampleT”. The sample
+name will be reported in the output from this function.</li>
+<li><code>chrom</code>: a string, default is “chrT”. The chromosome will
+be reported in the output from this function.</li>
+<li><code>threads</code>: Default is 2. The number of threads to utilize
+for multi-threading.</li>
 </ul>
 </div>
 <div id="output-3" class="section level3">
 <h3>Output</h3>
-<p>The output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. The first column is the <code>ident</code> column which specifies the <code>sampleName</code>, the <code>chrom</code>, and the gamete where each recombination breakpoint was observed. These three pieces of information are concatenated together, separated by an underscore. The second column is the <code>Genomic_start</code> column which specifies the genomic position of the start of each recombination breakpoint. The third column is the <code>Genomic_end</code> column which specifies the genomic position of the end of each recombination breakpoint. If no recombination breakpoint is observed within a gamete, an NA is printed in both the <code>Genomic_start</code> and <code>Genomic_end</code> columns. Therefore, the number of rows in this dataframe is equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.</p>
+<p>The output of this function is a dataframe with three columns that
+specifies the predicted recombination breakpoints for each gamete, using
+genomic coordinates. The first column is the <code>ident</code> column
+which specifies the <code>sampleName</code>, the <code>chrom</code>, and
+the gamete where each recombination breakpoint was observed. These three
+pieces of information are concatenated together, separated by an
+underscore. The second column is the <code>Genomic_start</code> column
+which specifies the genomic position of the start of each recombination
+breakpoint. The third column is the <code>Genomic_end</code> column
+which specifies the genomic position of the end of each recombination
+breakpoint. If no recombination breakpoint is observed within a gamete,
+an NA is printed in both the <code>Genomic_start</code> and
+<code>Genomic_end</code> columns. Therefore, the number of rows in this
+dataframe is equal to the number of observed recombination breakpoints +
+the number of gametes without any observed recombination
+breakpoints.</p>
 </div>
 <div id="example-calls-3" class="section level3">
 <h3>Example calls</h3>
-<p>The recommended usage to call this function is to pass the output from <code>read_data</code>, <code>phase_donor_haplotypes</code>, and <code>impute_gamete_genotypes</code> combined with the sample name, the chromosome, and whatever the <code>smoooth_imputed_genotypes</code> argument was when calling the <code>impute_gamete_genotypes</code> function earlier. Assuming default values were used for <code>impute_gamete_genotypes</code>, this would be as follows for a sample named “donorA” and its chromosome 1.</p>
+<p>The recommended usage to call this function is to pass the output
+from <code>read_data</code>, <code>phase_donor_haplotypes</code>, and
+<code>impute_gamete_genotypes</code> combined with the sample name, the
+chromosome, and whatever the <code>smoooth_imputed_genotypes</code>
+argument was when calling the <code>impute_gamete_genotypes</code>
+function earlier. Assuming default values were used for
+<code>impute_gamete_genotypes</code>, this would be as follows for a
+sample named “donorA” and its chromosome 1.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>recomb_breaks <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">discover_meiotic_recombination</span>(read_data_out<span class="sc">$</span>dt, complete_haplotypes, filled_gametes_list, read_data_out<span class="sc">$</span>positions, <span class="at">sampleName =</span> <span class="st">&quot;donorA&quot;</span>, <span class="at">chrom =</span> <span class="st">&quot;chr1&quot;</span>)</span></code></pre></div>
-<p>If <code>smooth_imputed_genotypes</code> was specified as TRUE when calling <code>impute_gamete_genotypes</code>, the function should be called as such</p>
+<p>If <code>smooth_imputed_genotypes</code> was specified as TRUE when
+calling <code>impute_gamete_genotypes</code>, the function should be
+called as such</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>recomb_breaks <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">discover_meiotic_recombination</span>(read_data_out<span class="sc">$</span>dt, complete_haployptes, filled_gametes_list, read_data_out<span class="sc">$</span>positions, <span class="at">sampleName =</span> <span class="st">&quot;donorA&quot;</span>, <span class="at">chrom =</span> <span class="st">&quot;chr1&quot;</span>, <span class="at">smooth_imputed_genotypes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<p>Another alternative usage of this function allows the user to specify whether recombination discovery is run on the smoothed or the unsmoothed gamete filled data. The default is to run discovery with the smoothed data directly from the HMM and NA filling functions. This is because with the unsmoothed data, there will likely be more false discoveries of recombination. We expect this because the overwriting of mismatches between the imputed data and the original sequencing reads could potentially re-introduce sequencing errors that the HMM corrected. If you wish to run meiotic recombination discovery with the unsmoothed data, <code>smooth_crossovers</code> should be set to FALSE. However, this is not recommended as it likely will result in more false discoveries. If the <code>impute_gamete_genotypes</code> function was run with <code>smooth_imputed_genotypes = TRUE</code>, then the following call should be used.</p>
+<p>Another alternative usage of this function allows the user to specify
+whether recombination discovery is run on the smoothed or the unsmoothed
+gamete filled data. The default is to run discovery with the smoothed
+data directly from the HMM and NA filling functions. This is because
+with the unsmoothed data, there will likely be more false discoveries of
+recombination. We expect this because the overwriting of mismatches
+between the imputed data and the original sequencing reads could
+potentially re-introduce sequencing errors that the HMM corrected. If
+you wish to run meiotic recombination discovery with the unsmoothed
+data, <code>smooth_crossovers</code> should be set to FALSE. However,
+this is not recommended as it likely will result in more false
+discoveries. If the <code>impute_gamete_genotypes</code> function was
+run with <code>smooth_imputed_genotypes = TRUE</code>, then the
+following call should be used.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>recomb_breaks <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">discover_meiotic_recombination</span>(read_data_out<span class="sc">$</span>dt, complete_haplotypes, filled_gametes_list, read_data_out<span class="sc">$</span>positions, <span class="at">sampleName =</span> <span class="st">&quot;donorA&quot;</span>, <span class="at">chrom =</span> <span class="st">&quot;chr1&quot;</span>, <span class="at">smooth_crossovers =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p>Otherwise, if you wish to run meiotic recombination discovery with the unsmoothed data, and you ran <code>impute_gamete_genotypes</code> with <code>smooth_imputed_genotypes = FALSE</code>, then the following call should be used.</p>
+<p>Otherwise, if you wish to run meiotic recombination discovery with
+the unsmoothed data, and you ran <code>impute_gamete_genotypes</code>
+with <code>smooth_imputed_genotypes = FALSE</code>, then the following
+call should be used.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>recomb_breaks <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">discover_meiotic_recombination</span>(read_data_out<span class="sc">$</span>dt, complete_haplotypes, filled_gametes_list, read_data_out<span class="sc">$</span>positions, <span class="at">sampleName =</span> <span class="st">&quot;donorA&quot;</span>, <span class="at">chrom =</span> <span class="st">&quot;chr1&quot;</span>, <span class="at">smooth_crossovers =</span> <span class="cn">FALSE</span>, <span class="at">smooth_imputed_genotypes =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="exporting-data" class="section level2">
 <h2>Exporting data</h2>
-<p>The last of the two data bookend steps is exporting the output from rhapsodi. The function <code>export_data</code> is used to ornament and export the rhapsodi output. Specifically, the function will first add index (<code>index</code>) and genomic position (<code>pos</code>) columns to the datasets from <code>impute_gamete_genotypes</code>. Then, the function will add <code>a0</code> and <code>a1</code> columns for 0/1/NA encoded data, if the original input data was A/C/G/T/NA encoded. These <code>a0</code> and <code>a1</code> columns specify the allele for the 0 genotype and the allele for the 1 genotype respectively. Lastly, this function combines all of the data from the 3 main tasks into a single named list.</p>
+<p>The last of the two data bookend steps is exporting the output from
+rhapsodi. The function <code>export_data</code> is used to ornament and
+export the rhapsodi output. Specifically, the function will first add
+index (<code>index</code>) and genomic position (<code>pos</code>)
+columns to the datasets from <code>impute_gamete_genotypes</code>. Then,
+the function will add <code>a0</code> and <code>a1</code> columns for
+0/1/NA encoded data, if the original input data was A/C/G/T/NA encoded.
+These <code>a0</code> and <code>a1</code> columns specify the allele for
+the 0 genotype and the allele for the 1 genotype respectively. Lastly,
+this function combines all of the data from the 3 main tasks into a
+single named list.</p>
 <div id="arguments-4" class="section level3">
 <h3>Arguments</h3>
 <p>The main arguments for this function are</p>
 <ul>
-<li><code>input_data</code>: the named list returned from <code>read_data</code></li>
-<li><code>complete_haplotypes</code> : the output of <code>phase_donor_haplotypes</code></li>
-<li><code>filled_gametes</code> : the named list output from <code>impute_gamete_genotypes</code></li>
-<li><code>recomb_breaks</code> : the output of <code>discover_meiotic_recombination</code></li>
-<li><code>acgt</code>: A boolean, default is FALSE. Argument should match what was used in <code>read_data</code>. When FALSE, original input data was assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. When TRUE input data was assumed to be A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes. If TRUE, output 0/1/NA encoded matrices will include a0 and a1 columns that essentially add back the ref and alt columns.</li>
+<li><code>input_data</code>: the named list returned from
+<code>read_data</code></li>
+<li><code>complete_haplotypes</code> : the output of
+<code>phase_donor_haplotypes</code></li>
+<li><code>filled_gametes</code> : the named list output from
+<code>impute_gamete_genotypes</code></li>
+<li><code>recomb_breaks</code> : the output of
+<code>discover_meiotic_recombination</code></li>
+<li><code>acgt</code>: A boolean, default is FALSE. Argument should
+match what was used in <code>read_data</code>. When FALSE, original
+input data was assumed to be 0/1/NA encoded with genomic position and
+gamete genotypes columns. When TRUE input data was assumed to be
+A/C/G/T/NA encoded with positions, ref, and alt columns before the
+gamete genotypes. If TRUE, output 0/1/NA encoded matrices will include
+a0 and a1 columns that essentially add back the ref and alt
+columns.</li>
 </ul>
 </div>
 <div id="output-4" class="section level3">
 <h3>Output</h3>
 <p>The output of this function is a named list with 6 elements</p>
 <ol style="list-style-type: decimal">
-<li><code>donor_haps</code> : the direct output from <code>phase_donor_haplotypes</code>; a data frame with column names <code>index</code>, <code>pos</code>, <code>h1</code> and <code>h2</code> where <code>index</code> is the SNP index, <code>pos</code> is the genomic SNP positions, <code>h1</code> is haplotype1, and <code>h2</code> is haplotype2. The number of rows is equal to the number of hetSNPs.</li>
-<li><code>gamete_haps</code> : an output from <code>impute_gamete_genotypes</code> with ornaments from <code>export data</code>; Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded as “h1”/“h2”/NA, specifying specifically which donor haplotype that genotype originates from for each SNP and gamete. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (<code>index</code> and <code>pos</code>)</li>
-<li><code>gamete_genotypes</code> : an output from <code>impute_gamete_genotypes</code> with ornaments from <code>export data</code>; Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded 0/1/NA. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if <code>acgt</code> was FALSE (<code>index</code> and <code>pos</code>) or + 4 if <code>acgt</code> was TRUE (<code>index</code>, <code>pos</code>, <code>a0</code>, <code>a1</code>)</li>
-<li><code>unsmoothed_gamete_haps</code> : an output from <code>impute_gamete_genotypes</code> with ornaments from <code>export_data</code>; Unsmoothed version of <code>gamete_haps</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (<code>index</code> and <code>pos</code>)</li>
-<li><code>unsmoothed_gamete_genotypes</code> : an output from <code>impute_gamete_genoyptes</code> with ornaments from <code>export_data</code>; Unsmoothed version of <code>gamete_genotypes</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if <code>acgt</code> was FALSE (<code>index</code> and <code>pos</code>) or + 4 if <code>acgt</code> was TRUE (<code>index</code>, <code>pos</code>, <code>a0</code>, <code>a1</code>)<br />
+<li><code>donor_haps</code> : the direct output from
+<code>phase_donor_haplotypes</code>; a data frame with column names
+<code>index</code>, <code>pos</code>, <code>h1</code> and
+<code>h2</code> where <code>index</code> is the SNP index,
+<code>pos</code> is the genomic SNP positions, <code>h1</code> is
+haplotype1, and <code>h2</code> is haplotype2. The number of rows is
+equal to the number of hetSNPs.</li>
+<li><code>gamete_haps</code> : an output from
+<code>impute_gamete_genotypes</code> with ornaments from
+<code>export data</code>; Dataframe with imputed donor
+genotypes/recovered dense matrix where genotypes are encoded as
+“h1”/“h2”/NA, specifying specifically which donor haplotype that
+genotype originates from for each SNP and gamete. Number of rows equal
+to number of hetSNPs; number of columns equal to number of gametes + 2
+(<code>index</code> and <code>pos</code>)</li>
+<li><code>gamete_genotypes</code> : an output from
+<code>impute_gamete_genotypes</code> with ornaments from
+<code>export data</code>; Dataframe with imputed donor
+genotypes/recovered dense matrix where genotypes are encoded 0/1/NA.
+Number of rows equal to number of hetSNPs; number of columns equal to
+number of gametes + 2 if <code>acgt</code> was FALSE (<code>index</code>
+and <code>pos</code>) or + 4 if <code>acgt</code> was TRUE
+(<code>index</code>, <code>pos</code>, <code>a0</code>,
+<code>a1</code>)</li>
+<li><code>unsmoothed_gamete_haps</code> : an output from
+<code>impute_gamete_genotypes</code> with ornaments from
+<code>export_data</code>; Unsmoothed version of <code>gamete_haps</code>
+if <code>smooth_imputed_genotypes</code> is FALSE. NULL if
+<code>smooth_imputed_genotypes</code> is TRUE. Number of rows equal to
+number of hetSNPs; number of columns equal to number of gametes + 2
+(<code>index</code> and <code>pos</code>)</li>
+<li><code>unsmoothed_gamete_genotypes</code> : an output from
+<code>impute_gamete_genoyptes</code> with ornaments from
+<code>export_data</code>; Unsmoothed version of
+<code>gamete_genotypes</code> if <code>smooth_imputed_genotypes</code>
+is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE. Number
+of rows equal to number of hetSNPs; number of columns equal to number of
+gametes + 2 if <code>acgt</code> was FALSE (<code>index</code> and
+<code>pos</code>) or + 4 if <code>acgt</code> was TRUE
+(<code>index</code>, <code>pos</code>, <code>a0</code>,
+<code>a1</code>)<br />
 </li>
-<li><code>recomb_breaks</code> : the direct output from <code>discover_meiotic_recombination</code>; the output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. Column names <code>Ident</code>, <code>Genomic_start</code>, and <code>Genomic_end</code>, with number of rows equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.</li>
+<li><code>recomb_breaks</code> : the direct output from
+<code>discover_meiotic_recombination</code>; the output of this function
+is a dataframe with three columns that specifies the predicted
+recombination breakpoints for each gamete, using genomic coordinates.
+Column names <code>Ident</code>, <code>Genomic_start</code>, and
+<code>Genomic_end</code>, with number of rows equal to the number of
+observed recombination breakpoints + the number of gametes without any
+observed recombination breakpoints.</li>
 </ol>
 </div>
 <div id="example-calls-4" class="section level3">
 <h3>Example calls</h3>
-<p>The recommended usage to call this function is to pass the output from the <code>read_data</code>, <code>phase_donor_haplotypes</code>, <code>impute_gamete_genotypes</code>, and <code>discover_meiotic_recombination</code> functions, together with the boolean that was used for the <code>acgt</code> argument in the <code>read_data</code> function.</p>
+<p>The recommended usage to call this function is to pass the output
+from the <code>read_data</code>, <code>phase_donor_haplotypes</code>,
+<code>impute_gamete_genotypes</code>, and
+<code>discover_meiotic_recombination</code> functions, together with the
+boolean that was used for the <code>acgt</code> argument in the
+<code>read_data</code> function.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rhapsodi_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">export_data</span>(read_data_out, complete_haplotypes, filled_gametes_list, recomb_breaks)</span></code></pre></div>
-<p>Because the <code>acgt</code> argument by default is FALSE, <code>acgt=TRUE</code> is only needed if <code>acgt</code> was TRUE when calling the <code>read_data</code> function, as was done earlier with the theoretical inputs <code>&quot;rhapsodi_input/donor1_chr2_acgt.txt&quot;</code> or <code>rhapsodi_dt_acgt</code>.</p>
+<p>Because the <code>acgt</code> argument by default is FALSE,
+<code>acgt=TRUE</code> is only needed if <code>acgt</code> was TRUE when
+calling the <code>read_data</code> function, as was done earlier with
+the theoretical inputs
+<code>&quot;rhapsodi_input/donor1_chr2_acgt.txt&quot;</code> or
+<code>rhapsodi_dt_acgt</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rhapsodi_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">export_data</span>(read_data_out, complete_haplotypes, filled_gametes_list, recomb_breaks, <span class="at">acgt=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="autorun-of-all-5-rhapsodi-steps" class="section level2">
 <h2>Autorun of all 5 rhapsodi steps</h2>
-<p>All 5 of the previous steps can be run by calling a single function <code>rhapsodi_autorun</code>. This autorun function should display a message after each task is completed, updating the user that that step successfully ran.</p>
+<p>All 5 of the previous steps can be run by calling a single function
+<code>rhapsodi_autorun</code>. This autorun function should display a
+message after each task is completed, updating the user that that step
+successfully ran.</p>
 <div id="arguments-5" class="section level3">
 <h3>Arguments</h3>
-<p>The input arguments for this function are a combination and subset of the input arguments of all the 5 individual functions. Unlike when the user runs the 5 steps separately, the autorun function handles passing the output of previous steps to the next rhapsodi stage, so the only <em>data</em> the user must provide is the original path to and name of a <em>tab delimited file, with header</em> or <em>user pre-loaded dataframe</em>. The rest of the arguments control the behavior of rhapsodi (e.g. <code>mcstop</code>, <code>avg_recomb</code>, <code>smooth_imputed_genotypes</code>, etc.) and what rhapsodi eventually reports (e.g. <code>sampleName</code> and <code>chrom</code>). The only additional argument is <code>verbose</code> which controls if the user is updated on successful completion of each step.</p>
+<p>The input arguments for this function are a combination and subset of
+the input arguments of all the 5 individual functions. Unlike when the
+user runs the 5 steps separately, the autorun function handles passing
+the output of previous steps to the next rhapsodi stage, so the only
+<em>data</em> the user must provide is the original path to and name of
+a <em>tab delimited file, with header</em> or <em>user pre-loaded
+dataframe</em>. The rest of the arguments control the behavior of
+rhapsodi (e.g. <code>mcstop</code>, <code>avg_recomb</code>,
+<code>smooth_imputed_genotypes</code>, etc.) and what rhapsodi
+eventually reports (e.g. <code>sampleName</code> and
+<code>chrom</code>). The only additional argument is
+<code>verbose</code> which controls if the user is updated on successful
+completion of each step.</p>
 <ul>
-<li><code>input_file</code>: the path to and name of the <em>tab-delimited file, with header</em> containing the sparse gamete genotypes. Pass <code>NULL</code> if instead using a <em>user pre-loaded dataframe</em></li>
-<li><code>use_dt</code>: A boolean, default is FALSE. Pass TRUE if you want to input a <em>user pre-loaded dataframe</em></li>
-<li><code>input_dt</code>: If <code>use_dt</code> is TRUE, pass the name of the <em>user pre-loaded data frame</em>.</li>
-<li><code>acgt</code>: A boolean, default is FALSE. When FALSE, data is assumed to be 0/1/NA encoded with genomic position and gamete genotypes columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref, and alt columns before the gamete genotypes.</li>
-<li><code>window_length</code>: Default is 3000. This is the size (in SNP indices) of the windows that will be used for clustering</li>
-<li><code>overlap_denom</code>: Default is 2. This is the denominator used in calculating the amount of overlap between windows, which will be the number of SNP indices which are considered when looking for amount of consensus in genotypes and stitching together haplotypes. Specifically, the overlap is <code>window_length</code> // <code>overlap_denom</code>.<br />
+<li><code>input_file</code>: the path to and name of the
+<em>tab-delimited file, with header</em> containing the sparse gamete
+genotypes. Pass <code>NULL</code> if instead using a <em>user pre-loaded
+dataframe</em></li>
+<li><code>use_dt</code>: A boolean, default is FALSE. Pass TRUE if you
+want to input a <em>user pre-loaded dataframe</em></li>
+<li><code>input_dt</code>: If <code>use_dt</code> is TRUE, pass the name
+of the <em>user pre-loaded data frame</em>.</li>
+<li><code>acgt</code>: A boolean, default is FALSE. When FALSE, data is
+assumed to be 0/1/NA encoded with genomic position and gamete genotypes
+columns. Pass TRUE if data is A/C/G/T/NA encoded with positions, ref,
+and alt columns before the gamete genotypes.</li>
+<li><code>window_length</code>: Default is 3000. This is the size (in
+SNP indices) of the windows that will be used for clustering</li>
+<li><code>overlap_denom</code>: Default is 2. This is the denominator
+used in calculating the amount of overlap between windows, which will be
+the number of SNP indices which are considered when looking for amount
+of consensus in genotypes and stitching together haplotypes.
+Specifically, the overlap is <code>window_length</code> //
+<code>overlap_denom</code>.<br />
 </li>
-<li><code>threads</code>: Default is 2. The number of threads to utilize for multi-threading</li>
-<li><code>mcstop</code>: Default is TRUE. If TRUE, rhapsodi exits if confident stitching of haplotypes isn’t possible because the consensus between overlapping windows is &lt;0.9 but &gt;0.1. If FALSE, rhapsodi continues and considers to which threshold the consensus is closer.</li>
-<li><code>stringent_stitch</code>: Default is FALSE. If TRUE, the user can set a specified bifurcating threshold value for stitching, <code>stitch_new_min</code></li>
-<li><code>stitch_new_min</code>: If <code>stringent_stitch</code> is TRUE, this value becomes the bifurcating threshold for stitching such that if the consensus is greater than this value, the windows are merged as the same haplotype. If consensus, is less than this value, the windows are treated as originating from different haplotypes.</li>
-<li><code>seqError_model</code>: Default is 0.005. (This is what governs <code>sequencing_error</code> in the <code>impute_gamete_genotypes</code> function.) The expected sequencing error rate which controls emission probabilities.</li>
-<li><code>avg_recomb_model</code>: Default is 1. (This is the what governs <code>avg_recomb</code> in the <code>impute_gamete_genotypes</code> function.) The expected average number of recombination events per chromosome per gamete, which controls transition probabilities.</li>
-<li><code>smooth_imputed_genotypes</code>: A boolean, default is FALSE. If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.</li>
-<li><code>smooth_crossovers</code>: A boolean, default is TRUE. If TRUE, the filled gamete data that directly resulted from the HMM and NA filling is used. If FALSE, the filled gamete data that was unsmooothed is used.</li>
-<li><code>sampleName</code>: a string, default is “sampleT”. The sample name will be reported in the output from this function.</li>
-<li><code>chrom</code>: a string, default is “chrT”. The chromosome will be reported in the output from this function.</li>
-<li><code>verbose</code>: a bool, default is FALSE. If TRUE, will print progress updates after each step is successfully completed.</li>
+<li><code>threads</code>: Default is 2. The number of threads to utilize
+for multi-threading</li>
+<li><code>mcstop</code>: Default is TRUE. If TRUE, rhapsodi exits if
+confident stitching of haplotypes isn’t possible because the consensus
+between overlapping windows is &lt;0.9 but &gt;0.1. If FALSE, rhapsodi
+continues and considers to which threshold the consensus is closer.</li>
+<li><code>stringent_stitch</code>: Default is FALSE. If TRUE, the user
+can set a specified bifurcating threshold value for stitching,
+<code>stitch_new_min</code></li>
+<li><code>stitch_new_min</code>: If <code>stringent_stitch</code> is
+TRUE, this value becomes the bifurcating threshold for stitching such
+that if the consensus is greater than this value, the windows are merged
+as the same haplotype. If consensus, is less than this value, the
+windows are treated as originating from different haplotypes.</li>
+<li><code>seqError_model</code>: Default is 0.005. (This is what governs
+<code>sequencing_error</code> in the
+<code>impute_gamete_genotypes</code> function.) The expected sequencing
+error rate which controls emission probabilities.</li>
+<li><code>avg_recomb_model</code>: Default is 1. (This is the what
+governs <code>avg_recomb</code> in the
+<code>impute_gamete_genotypes</code> function.) The expected average
+number of recombination events per chromosome per gamete, which controls
+transition probabilities.</li>
+<li><code>smooth_imputed_genotypes</code>: A boolean, default is FALSE.
+If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is
+applied such that original sequencing observations are used in place of
+imputed genotypes if the two disagree.</li>
+<li><code>fill_ends</code>: A boolean, default is TRUE, If TRUE, fills
+the NAs at the terminal edges of chromosomes with the first/last known
+or imputed SNP for the beginning/ending of chromosomes respectively; if
+FALSE, leaves these genotypes as NA in the final imputed genotypes.
+Default is TRUE.</li>
+<li><code>smooth_crossovers</code>: A boolean, default is TRUE. If TRUE,
+the filled gamete data that directly resulted from the HMM and NA
+filling is used. If FALSE, the filled gamete data that was unsmooothed
+is used.</li>
+<li><code>sampleName</code>: a string, default is “sampleT”. The sample
+name will be reported in the output from this function.</li>
+<li><code>chrom</code>: a string, default is “chrT”. The chromosome will
+be reported in the output from this function.</li>
+<li><code>verbose</code>: a bool, default is FALSE. If TRUE, will print
+progress updates after each step is successfully completed.</li>
 </ul>
 </div>
 <div id="output-5" class="section level3">
 <h3>Output</h3>
-<p>The output of this function is the same named list with 6 elements that <code>export_data</code> would return.</p>
+<p>The output of this function is the same named list with 6 elements
+that <code>export_data</code> would return.</p>
 <ol style="list-style-type: decimal">
-<li><code>donor_haps</code> : the direct output from <code>phase_donor_haplotypes</code>; a data frame with column names <code>index</code>, <code>pos</code>, <code>h1</code> and <code>h2</code> where <code>index</code> is the SNP index, <code>pos</code> is the genomic SNP positions, <code>h1</code> is haplotype1, and <code>h2</code> is haplotype2. The number of rows is equal to the number of hetSNPs.</li>
-<li><code>gamete_haps</code> : an output from <code>impute_gamete_genotypes</code> with ornaments from <code>export data</code>; Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded as “h1”/“h2”/NA, specifying specifically which donor haplotype that genotype originates from for each SNP and gamete. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (<code>index</code> and <code>pos</code>)</li>
-<li><code>gamete_genotypes</code> : an output from <code>impute_gamete_genotypes</code> with ornaments from <code>export data</code>; Dataframe with imputed donor genotypes/recovered dense matrix where genotypes are encoded 0/1/NA. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if <code>acgt</code> was FALSE (<code>index</code> and <code>pos</code>) or + 4 if <code>acgt</code> was TRUE (<code>index</code>, <code>pos</code>, <code>a0</code>, <code>a1</code>)</li>
-<li><code>unsmoothed_gamete_haps</code> : an output from <code>impute_gamete_genotypes</code> with ornaments from <code>export_data</code>; Unsmoothed version of <code>gamete_haps</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 (<code>index</code> and <code>pos</code>)</li>
-<li><code>unsmoothed_gamete_genotypes</code> : an output from <code>impute_gamete_genoyptes</code> with ornaments from <code>export_data</code>; Unsmoothed version of <code>gamete_genotypes</code> if <code>smooth_imputed_genotypes</code> is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE. Number of rows equal to number of hetSNPs; number of columns equal to number of gametes + 2 if <code>acgt</code> was FALSE (<code>index</code> and <code>pos</code>) or + 4 if <code>acgt</code> was TRUE (<code>index</code>, <code>pos</code>, <code>a0</code>, <code>a1</code>)<br />
+<li><code>donor_haps</code> : the direct output from
+<code>phase_donor_haplotypes</code>; a data frame with column names
+<code>index</code>, <code>pos</code>, <code>h1</code> and
+<code>h2</code> where <code>index</code> is the SNP index,
+<code>pos</code> is the genomic SNP positions, <code>h1</code> is
+haplotype1, and <code>h2</code> is haplotype2. The number of rows is
+equal to the number of hetSNPs.</li>
+<li><code>gamete_haps</code> : an output from
+<code>impute_gamete_genotypes</code> with ornaments from
+<code>export data</code>; Dataframe with imputed donor
+genotypes/recovered dense matrix where genotypes are encoded as
+“h1”/“h2”/NA, specifying specifically which donor haplotype that
+genotype originates from for each SNP and gamete. Number of rows equal
+to number of hetSNPs; number of columns equal to number of gametes + 2
+(<code>index</code> and <code>pos</code>)</li>
+<li><code>gamete_genotypes</code> : an output from
+<code>impute_gamete_genotypes</code> with ornaments from
+<code>export data</code>; Dataframe with imputed donor
+genotypes/recovered dense matrix where genotypes are encoded 0/1/NA.
+Number of rows equal to number of hetSNPs; number of columns equal to
+number of gametes + 2 if <code>acgt</code> was FALSE (<code>index</code>
+and <code>pos</code>) or + 4 if <code>acgt</code> was TRUE
+(<code>index</code>, <code>pos</code>, <code>a0</code>,
+<code>a1</code>)</li>
+<li><code>unsmoothed_gamete_haps</code> : an output from
+<code>impute_gamete_genotypes</code> with ornaments from
+<code>export_data</code>; Unsmoothed version of <code>gamete_haps</code>
+if <code>smooth_imputed_genotypes</code> is FALSE. NULL if
+<code>smooth_imputed_genotypes</code> is TRUE. Number of rows equal to
+number of hetSNPs; number of columns equal to number of gametes + 2
+(<code>index</code> and <code>pos</code>)</li>
+<li><code>unsmoothed_gamete_genotypes</code> : an output from
+<code>impute_gamete_genoyptes</code> with ornaments from
+<code>export_data</code>; Unsmoothed version of
+<code>gamete_genotypes</code> if <code>smooth_imputed_genotypes</code>
+is FALSE. NULL if <code>smooth_imputed_genotypes</code> is TRUE. Number
+of rows equal to number of hetSNPs; number of columns equal to number of
+gametes + 2 if <code>acgt</code> was FALSE (<code>index</code> and
+<code>pos</code>) or + 4 if <code>acgt</code> was TRUE
+(<code>index</code>, <code>pos</code>, <code>a0</code>,
+<code>a1</code>)<br />
 </li>
-<li><code>recomb_breaks</code> : the direct output from <code>discover_meiotic_recombination</code>; the output of this function is a dataframe with three columns that specifies the predicted recombination breakpoints for each gamete, using genomic coordinates. Column names <code>Ident</code>, <code>Genomic_start</code>, and <code>Genomic_end</code>, with number of rows equal to the number of observed recombination breakpoints + the number of gametes without any observed recombination breakpoints.</li>
+<li><code>recomb_breaks</code> : the direct output from
+<code>discover_meiotic_recombination</code>; the output of this function
+is a dataframe with three columns that specifies the predicted
+recombination breakpoints for each gamete, using genomic coordinates.
+Column names <code>Ident</code>, <code>Genomic_start</code>, and
+<code>Genomic_end</code>, with number of rows equal to the number of
+observed recombination breakpoints + the number of gametes without any
+observed recombination breakpoints.</li>
 </ol>
 </div>
 <div id="example-call" class="section level3">
 <h3>Example Call</h3>
-<p>Because so many combinations of the parameters exist, a single example call will be provided here. For this example, assume that we are running rhapsodi on the <em>pre-loaded dataframe</em> <code>rhapsodi_dt_acgt</code> which is A/C/G/T/NA encoded. Therefore * <code>input_file</code> (the file + path argument) will be passed NULL * <code>use_dt = TRUE</code> * <code>input_dt = rhapsodi_dt_acgt</code> * <code>acgt = TRUE</code></p>
-<p>In addition for this example, assume that (A) we want phasing to continue even if stitching encounters non-stringent concordance values, (B) we expect a sequencing error rate of 0.05, (C) we expect an average of number of 2 recombination events per gamete per chromosome, (D) due to the higher sequencing error rate, we decide to skip unsmoothing. Thus * <code>mcstop = FALSE</code> * <code>seqError_model = 0.05</code> * <code>avg_recomb_model = 2</code> * <code>smooth_imputed_genotypes = TRUE</code></p>
-<p>Then, just generally, we want to use 8 threads, would like rhapsodi to update us on its progress with messages, and are running data from donorC, chromosome 17. * <code>threads=8</code> * <code>verbose = TRUE</code> * <code>sampleName = &quot;donorC&quot;</code> * <code>chrom=&quot;chr17&quot;</code></p>
-<p>With all of this together, keeping all other arguments as default, our example call would be the following.</p>
+<p>Because so many combinations of the parameters exist, a single
+example call will be provided here. For this example, assume that we are
+running rhapsodi on the <em>pre-loaded dataframe</em>
+<code>rhapsodi_dt_acgt</code> which is A/C/G/T/NA encoded. Therefore *
+<code>input_file</code> (the file + path argument) will be passed NULL *
+<code>use_dt = TRUE</code> * <code>input_dt = rhapsodi_dt_acgt</code> *
+<code>acgt = TRUE</code></p>
+<p>In addition for this example, assume that (A) we want phasing to
+continue even if stitching encounters non-stringent concordance values,
+(B) we expect a sequencing error rate of 0.05, (C) we expect an average
+of number of 2 recombination events per gamete per chromosome, (D) due
+to the higher sequencing error rate, we decide to skip unsmoothing. Thus
+* <code>mcstop = FALSE</code> * <code>seqError_model = 0.05</code> *
+<code>avg_recomb_model = 2</code> *
+<code>smooth_imputed_genotypes = TRUE</code></p>
+<p>Then, just generally, we want to use 8 threads, would like rhapsodi
+to update us on its progress with messages, and are running data from
+donorC, chromosome 17. * <code>threads=8</code> *
+<code>verbose = TRUE</code> * <code>sampleName = &quot;donorC&quot;</code> *
+<code>chrom=&quot;chr17&quot;</code></p>
+<p>With all of this together, keeping all other arguments as default,
+our example call would be the following.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rhapsodi_out <span class="ot">&lt;-</span> rhapsodi<span class="sc">::</span><span class="fu">rhapsodi_autorun</span>(<span class="cn">NULL</span>, <span class="at">use_dt =</span> <span class="cn">TRUE</span>, <span class="at">input_dt =</span> rhapsodi_dt_acgt, <span class="at">acgt =</span> <span class="cn">TRUE</span>, <span class="at">threads =</span> <span class="dv">8</span>, <span class="at">sampleName =</span> <span class="st">&#39;donorC&#39;</span>, <span class="at">chrom=</span><span class="st">&quot;chr17&quot;</span>, <span class="at">seqError_model =</span> <span class="fl">0.05</span>, <span class="at">avg_recomb_model =</span> <span class="dv">2</span>, <span class="at">smooth_imputed_genotypes =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="example-data-01na-encoded" class="section level2">
 <h2>Example Data: 0/1/NA encoded</h2>
-<p>The 0/1/NA encoded data we’ll be using for this is the <code>sim01NA42</code> data.</p>
+<p>The 0/1/NA encoded data we’ll be using for this is the
+<code>sim01NA42</code> data.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim01NA42)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   positions gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_ gam10_ gam11_</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         3    NA    NA    NA     0    NA    NA    NA    NA     1     NA     NA</span></span>
@@ -494,7 +1140,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     NA     NA     NA     NA     NA     NA</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sim01NA42)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4136   51</span></span></code></pre></div>
-<p>The dataframe has 4136 rows or heterozygous SNPs (hetSNPs) and 51 columns. The first column is the <code>positions</code> or the SNP index for this simulated data. For real data, this first column should be the genomic position. The rest of the 50 columns are the gamete genotypes.</p>
+<p>The dataframe has 4136 rows or heterozygous SNPs (hetSNPs) and 51
+columns. The first column is the <code>positions</code> or the SNP index
+for this simulated data. For real data, this first column should be the
+genomic position. The rest of the 50 columns are the gamete
+genotypes.</p>
 <div id="step-by-step-running-01na-encoded-data" class="section level3">
 <h3>step-by-step running 0/1/NA encoded data</h3>
 <div id="read-data-in-and-run-diploid-donor-haplotype-phasing" class="section level4">
@@ -550,10 +1200,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="output-from-rhapsodi-with-01na-encoded-data" class="section level3">
 <h3>Output from rhapsodi with 0/1/NA encoded data</h3>
-<p>As should be, the outputs from running the ACGT data step-by-step and with the autorun function are identical to one another.</p>
+<p>As should be, the outputs from running the ACGT data step-by-step and
+with the autorun function are identical to one another.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(rhapsodi_out_sbs_01, rhapsodi_out_auto_01)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>The <code>donor_haps</code> output contains numerical <code>index</code> and <code>pos</code> columns for the SNP index and genomic positions respectively. Finally, the numerical <code>h1</code> and <code>h2</code> columns record what rhapsodi determines to be the co-inherited genotypes for each haplotype.</p>
+<p>The <code>donor_haps</code> output contains numerical
+<code>index</code> and <code>pos</code> columns for the SNP index and
+genomic positions respectively. Finally, the numerical <code>h1</code>
+and <code>h2</code> columns record what rhapsodi determines to be the
+co-inherited genotypes for each haplotype.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto_01<span class="sc">$</span>donor_haps)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   index pos h1 h2</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1   3  0  1</span></span>
@@ -562,7 +1217,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     4   8  1  0</span></span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     5   9  0  1</span></span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     6  10  0  1</span></span></code></pre></div>
-<p><code>gamete_haps</code> and <code>unsmoothed_gamete_haps</code> both contain numerical <code>index</code> and <code>pos</code> columns as well, followed by character columns for each gamete recording what rhapsodi determines to be the donor haplotype (<code>&quot;h1&quot;</code> or <code>&quot;h2&quot;</code>) which was inherited for each SNP.</p>
+<p><code>gamete_haps</code> and <code>unsmoothed_gamete_haps</code> both
+contain numerical <code>index</code> and <code>pos</code> columns as
+well, followed by character columns for each gamete recording what
+rhapsodi determines to be the donor haplotype (<code>&quot;h1&quot;</code> or
+<code>&quot;h2&quot;</code>) which was inherited for each SNP.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto_01<span class="sc">$</span>gamete_haps)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   index pos gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_ gam10_ gam11_</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1   3    h2    h2    h2    h1    h1    h1    h2    h1    h1     h1     h1</span></span>
@@ -635,7 +1294,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-70"><a href="#cb28-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     h2     h1     h1     h2     h1     h2</span></span>
 <span id="cb28-71"><a href="#cb28-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     h2     h1     h1     h2     h1     h2</span></span>
 <span id="cb28-72"><a href="#cb28-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     h2     h1     h1     h2     h1     h2</span></span></code></pre></div>
-<p><code>gamete_genotypes</code> and <code>unsmoothed_gamete_genotypes</code> both contain numerical <code>index</code> and <code>pos</code> columns as well. Finally, this is followed by numerical columns for each gamete recording what rhapsodi determines to be the inherited genotype for each SNP.</p>
+<p><code>gamete_genotypes</code> and
+<code>unsmoothed_gamete_genotypes</code> both contain numerical
+<code>index</code> and <code>pos</code> columns as well. Finally, this
+is followed by numerical columns for each gamete recording what rhapsodi
+determines to be the inherited genotype for each SNP.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto_01<span class="sc">$</span>gamete_genotypes)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   index pos gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_ gam10_ gam11_</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1   3     1     1     1     0     0     0     1     0     0      0      0</span></span>
@@ -708,7 +1371,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      0      1      1      0      1      0</span></span>
 <span id="cb29-71"><a href="#cb29-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      1      0      0      1      0      1</span></span>
 <span id="cb29-72"><a href="#cb29-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      1      0      0      1      0      1</span></span></code></pre></div>
-<p><code>recomb_breaks</code> is the final output. The first columns is a character column, <code>Ident</code> which records the sample name, the chromosome, and the gamete for which rhapsodi observed a recombination breakpoint. <code>Genomic_start</code> is a numerical column recording the genomic start position of the breakpoint. <code>Genomic_end</code> is a numerical column recording the genomic end position of the breakpoint.</p>
+<p><code>recomb_breaks</code> is the final output. The first columns is
+a character column, <code>Ident</code> which records the sample name,
+the chromosome, and the gamete for which rhapsodi observed a
+recombination breakpoint. <code>Genomic_start</code> is a numerical
+column recording the genomic start position of the breakpoint.
+<code>Genomic_end</code> is a numerical column recording the genomic end
+position of the breakpoint.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto_01<span class="sc">$</span>recomb_breaks)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Ident Genomic_start Genomic_end</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 sampleT_chrT_gam1_           161         166</span></span>
@@ -721,7 +1390,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="example-data-acgtna-encoded" class="section level2">
 <h2>Example Data: A/C/G/T/NA encoded</h2>
-<p>The A/C/G/T/NA encoded data we’ll be using for this is the <code>dataACGT</code> data, which is actually derived from the <code>sim01NA42</code> data, just after randomly assigning alleles for the genotypes of 0 and 1 at each SNP.</p>
+<p>The A/C/G/T/NA encoded data we’ll be using for this is the
+<code>dataACGT</code> data, which is actually derived from the
+<code>sim01NA42</code> data, just after randomly assigning alleles for
+the genotypes of 0 and 1 at each SNP.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dataACGT)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   positions  ref  alt gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         3    A    G  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     A  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     G</span></span>
@@ -760,7 +1432,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      T   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;</span></span></code></pre></div>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dataACGT)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4136   53</span></span></code></pre></div>
-<p>The dataframe has 4136 rows or hetSNPs and 53 columns. The first column is the <code>positions</code> or the SNP index for this simulated data. For real data, this first column should be the genomic position. The second column is the <code>ref</code> or reference allele, specifying the reference allele for each SNP/genomic position. The third columns is the <code>alt</code> or alternate allele, specifying the alternate allele for each SNP/genomic position. The rest of the 50 columns are the gamete genotypes.</p>
+<p>The dataframe has 4136 rows or hetSNPs and 53 columns. The first
+column is the <code>positions</code> or the SNP index for this simulated
+data. For real data, this first column should be the genomic position.
+The second column is the <code>ref</code> or reference allele,
+specifying the reference allele for each SNP/genomic position. The third
+columns is the <code>alt</code> or alternate allele, specifying the
+alternate allele for each SNP/genomic position. The rest of the 50
+columns are the gamete genotypes.</p>
 <div id="step-by-step-running-acgtna-encoded-data" class="section level3">
 <h3>step-by-step running A/C/G/T/NA encoded data</h3>
 <div id="read-data-in-and-run-diploid-donor-haplotype-phasing-1" class="section level4">
@@ -812,10 +1491,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="output-from-rhapsodi-with-acgtna-encoded-data" class="section level3">
 <h3>Output from rhapsodi with A/C/G/T/NA encoded data</h3>
-<p>As should be, the outputs from running the ACGT data step-by-step and with the autorun function are identical to one another.</p>
+<p>As should be, the outputs from running the ACGT data step-by-step and
+with the autorun function are identical to one another.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(rhapsodi_out_sbs, rhapsodi_out_auto)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>The <code>donor_haps</code> output still contains the numerical <code>index</code> and <code>pos</code> columns for the SNP index and genomic positions respectively. In addition, this output now also includes the character <code>a0</code> and <code>a1</code> columns which record the allele for genotypes of 0 and 1 respectively. Finally, the numerical <code>h1</code> and <code>h2</code> columns record what rhapsodi determines to be the co-inherited genotypes for each haplotype.</p>
+<p>The <code>donor_haps</code> output still contains the numerical
+<code>index</code> and <code>pos</code> columns for the SNP index and
+genomic positions respectively. In addition, this output now also
+includes the character <code>a0</code> and <code>a1</code> columns which
+record the allele for genotypes of 0 and 1 respectively. Finally, the
+numerical <code>h1</code> and <code>h2</code> columns record what
+rhapsodi determines to be the co-inherited genotypes for each
+haplotype.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto<span class="sc">$</span>donor_haps)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   index pos   a0   a1 h1 h2</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1   3    A    G  0  1</span></span>
@@ -824,7 +1511,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     4   8 CCCC GAGT  1  0</span></span>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     5   9    T    C  0  1</span></span>
 <span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     6  10    C    T  0  1</span></span></code></pre></div>
-<p><code>gamete_haps</code> and <code>unsmoothed_gamete_haps</code> both contain numerical <code>index</code> and <code>pos</code> columns as well, followed by character columns for each gamete recording what rhapsodi determines to be the donor haplotype (<code>&quot;h1&quot;</code> or <code>&quot;h2&quot;</code>) which was inherited for each SNP.</p>
+<p><code>gamete_haps</code> and <code>unsmoothed_gamete_haps</code> both
+contain numerical <code>index</code> and <code>pos</code> columns as
+well, followed by character columns for each gamete recording what
+rhapsodi determines to be the donor haplotype (<code>&quot;h1&quot;</code> or
+<code>&quot;h2&quot;</code>) which was inherited for each SNP.</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto<span class="sc">$</span>gamete_haps)</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   index pos gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_ gam10_ gam11_</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1   3    h2    h2    h2    h1    h1    h1    h2    h1    h1     h1     h1</span></span>
@@ -897,7 +1588,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb41-70"><a href="#cb41-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     h2     h1     h1     h2     h1     h2</span></span>
 <span id="cb41-71"><a href="#cb41-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     h2     h1     h1     h2     h1     h2</span></span>
 <span id="cb41-72"><a href="#cb41-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     h2     h1     h1     h2     h1     h2</span></span></code></pre></div>
-<p><code>gamete_genotypes</code> and <code>unsmoothed_gamete_genotypes</code> both contain numerical <code>index</code> and <code>pos</code> columns as well. In addition, this output now also includes the character <code>a0</code> and <code>a1</code> columns which record the allele for genotypes of 0 and 1 respectively. Finally, this is followed by numerical columns for each gamete recording what rhapsodi determines to be the inherited genotype for each SNP.</p>
+<p><code>gamete_genotypes</code> and
+<code>unsmoothed_gamete_genotypes</code> both contain numerical
+<code>index</code> and <code>pos</code> columns as well. In addition,
+this output now also includes the character <code>a0</code> and
+<code>a1</code> columns which record the allele for genotypes of 0 and 1
+respectively. Finally, this is followed by numerical columns for each
+gamete recording what rhapsodi determines to be the inherited genotype
+for each SNP.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto<span class="sc">$</span>gamete_genotypes)</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   index pos   a0   a1 gam1_ gam2_ gam3_ gam4_ gam5_ gam6_ gam7_ gam8_ gam9_</span></span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1   3    A    G     1     1     1     0     0     0     1     0     0</span></span>
@@ -970,7 +1668,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb42-70"><a href="#cb42-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      0      1      0      1      1      0      1      0</span></span>
 <span id="cb42-71"><a href="#cb42-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      1      0      1      0      0      1      0      1</span></span>
 <span id="cb42-72"><a href="#cb42-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      1      0      1      0      0      1      0      1</span></span></code></pre></div>
-<p>Finally, <code>recomb_breaks</code> is the same format as when non-acgt encoded data is used. The first columns is a character column, <code>Ident</code> which records the sample name, the chromosome, and the gamete for which rhapsodi observed a recombination breakpoint. <code>Genomic_start</code> is a numerical column recording the genomic start position of the breakpoint. <code>Genomic_end</code> is a numerical column recording the genomic end position of the breakpoint.</p>
+<p>Finally, <code>recomb_breaks</code> is the same format as when
+non-acgt encoded data is used. The first columns is a character column,
+<code>Ident</code> which records the sample name, the chromosome, and
+the gamete for which rhapsodi observed a recombination breakpoint.
+<code>Genomic_start</code> is a numerical column recording the genomic
+start position of the breakpoint. <code>Genomic_end</code> is a
+numerical column recording the genomic end position of the
+breakpoint.</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rhapsodi_out_auto<span class="sc">$</span>recomb_breaks)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Ident Genomic_start Genomic_end</span></span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 sampleT_chrT_gam1_           161         166</span></span>

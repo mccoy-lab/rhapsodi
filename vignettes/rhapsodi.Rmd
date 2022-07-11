@@ -152,7 +152,7 @@ Setting `mcstop` to FALSE, theoretically should be equivalent to `stringent_stit
 
 ## Imputing gamete genotypes
 
-The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function `impute_gamete_genoyptes` is used to drive imputation. The function first builds a Hidden Markov Model (HMM) with emission probabilities controlled by the expected sequencing error rate and the transition probabilities controlled by the expected average recombination rate (or the number of expected meiotic recombination events per chromosome per gamete divided by the number of hetSNPs). Then the HMM is applied to the sparse gamete data, tracing the most likely path along the phased donor haplotypes for each gamete. Internals NAs are filled if bordering the same haplotypes. Edge NAs are assigned haplotypes matching the first non-NA SNP on the chromosome's end. Finally, by default, if original sequencing observations disagree with imputed genotypes, the imputation is overwritten by the original sequencing read in a process termed unsmoothing. All of these steps together recover the dense gamete genotype matrix.  
+The second of the three main algorithmic steps is imputing the missing gamete genotypes. The function `impute_gamete_genoyptes` is used to drive imputation. The function first builds a Hidden Markov Model (HMM) with emission probabilities controlled by the expected sequencing error rate and the transition probabilities controlled by the expected average recombination rate (or the number of expected meiotic recombination events per chromosome per gamete divided by the number of hetSNPs). Then the HMM is applied to the sparse gamete data, tracing the most likely path along the phased donor haplotypes for each gamete. Internals NAs are filled if bordering the same haplotypes. By default, edge NAs are assigned haplotypes matching the first non-NA SNP on the chromosome's end. Alternatively, these NAs at the terminal edges of chromosomes can be left as NAs rather than being filled/assigned genotypes. Finally, by default, if original sequencing observations disagree with imputed genotypes, the imputation is overwritten by the original sequencing read in a process termed unsmoothing. All of these steps together recover the dense gamete genotype matrix.  
 
 ### Arguments
 
@@ -164,6 +164,7 @@ The main arguments for this function are
 * `sequencing_error`: Default is 0.005. The expected sequencing error rate which controls emission probabilities. 
 * `avg_recomb`: Default is 1. The expected average number of recombination events per chromosome per gamete, which controls transition probabilities. 
 * `smooth_imputed_genotypes`: A boolean, default is FALSE. If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.
+* `fill_ends`: A boolean, default is TRUE, If TRUE, fills the NAs at the terminal edges of chromosomes with the first/last known or imputed SNP for the beginning/ending of chromosomes respectively; if FALSE, leaves these genotypes as NA in the final imputed genotypes. Default is TRUE. 
 * `threads`: Default is 2. The number of threads to utilize for multi-threading.
 
 ### Output
@@ -303,6 +304,7 @@ The input arguments for this function are a combination and subset of the input 
 * `seqError_model`: Default is 0.005. (This is what governs `sequencing_error` in the `impute_gamete_genotypes` function.) The expected sequencing error rate which controls emission probabilities. 
 * `avg_recomb_model`: Default is 1. (This is the what governs `avg_recomb` in the `impute_gamete_genotypes` function.) The expected average number of recombination events per chromosome per gamete, which controls transition probabilities. 
 * `smooth_imputed_genotypes`: A boolean, default is FALSE. If TRUE, unsmoothing process is not applied. If FALSE, unsmoothing is applied such that original sequencing observations are used in place of imputed genotypes if the two disagree.
+* `fill_ends`: A boolean, default is TRUE, If TRUE, fills the NAs at the terminal edges of chromosomes with the first/last known or imputed SNP for the beginning/ending of chromosomes respectively; if FALSE, leaves these genotypes as NA in the final imputed genotypes. Default is TRUE.
 * `smooth_crossovers`: A boolean, default is TRUE. If TRUE, the filled gamete data that directly resulted from the HMM and NA filling is used. If FALSE, the filled gamete data that was unsmooothed is used.
 * `sampleName`: a string, default is "sampleT". The sample name will be reported in the output from this function.
 * `chrom`: a string, default is "chrT". The chromosome will be reported in the output from this function.
