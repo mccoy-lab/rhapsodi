@@ -8,8 +8,8 @@
 #' @param original_gamete_data original matrix of gametes
 #' @param complete_haplotypes Inferred parental haplotypes 
 #' @param positions vector of SNP position
-#' @param sequencing_error User-input for expected error in sequencing (default = 0.005) 
-#' @param avg_recomb User-input for average recombination rate that can be expected for a chromosome (default=1)s
+#' @param genotyping_error User-input for expected error in genotyping (default = 0.005) 
+#' @param avg_recomb User-input for average recombination rate that can be expected for a chromosome (default=1)
 #' @param smooth_imputed_genotypes a bool, default is FALSE, whether to use smoothed data for ending genotypes. If `TRUE`, doesn't replace with original reads, returning smoothed data only. If `FALSE`, will return both smoothed and unsmoothed
 #' @param fill_ends a boolean; if TRUE, fills the NAs at the terminal edges of chromosomes with the last known or imputed SNP (for end of chromosome) and the first known or imputed SNP (for beginning of chromosome); if FALSE, leaves these genotypes as NA; default = TRUE 
 #' @param threads User-input value for calling `pbmclapply` or `mclapply` (default = 2)
@@ -22,11 +22,11 @@
 #' 
 #' @export
 
-impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, positions, sequencing_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, fill_ends = TRUE, threads=2){
+impute_gamete_genotypes <- function(original_gamete_data, complete_haplotypes, positions, genotyping_error=0.005, avg_recomb = 1, smooth_imputed_genotypes=FALSE, fill_ends = TRUE, threads=2){
   complete_haplotypes <- as_tibble(complete_haplotypes)
   dt_recoded <- recode_gametes(original_gamete_data, complete_haplotypes)
   #build the HMM
-  hmm <- build_hmm(nrow(dt_recoded), sequencing_error, avg_recomb)
+  hmm <- build_hmm(nrow(dt_recoded), genotyping_error, avg_recomb)
   if (requireNamespace("pbmcapply", quietly = TRUE)){
     
     imputed_gametes <- as_tibble(do.call(cbind, pbmcapply::pbmclapply(1:ncol(dt_recoded), 

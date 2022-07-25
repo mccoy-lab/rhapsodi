@@ -4,7 +4,7 @@
 #' Then calling `phase_donor_haplotypes` to run donor phasing
 #' Then calling `impute_gamete_genotypes` to run gamete genotype imputation
 #' And finally calling `discover_meiotic_recombination` to run meiotic recombination discovery
-#' Input data should be sparse gamete sequencing data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA. The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
+#' Input data should be sparse gamete genotype data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA. The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
 #' For both input types, the first column should contain SNP positions in integer format. 
 #' For ACGT input type, specifically (acgt = TRUE), the second column should be the REF allele and the third column should be the ALT allele. All following columns should be gamete data, with each gamete having its own column. Within these columns, data should be A/C/G/T/NA
 #' For 0/1/NA input type, specifically (acgt = FALSE), gamete data starts in the second column and continues for the rest of the columns.
@@ -23,10 +23,12 @@
 #' @param threads an integer; default is 2, number of threads to utilize when we use `mclapply`like functions
 #' @param sampleName a string; default is "sampleT", fill in with whatever the sample name is. We assume a single input file is from a single sample/donor
 #' @param chrom a string; default is "chrT", fill in with whatever the chromosome is. We assume a single input file is from a single chromosome
-#' @param seqError_model a numeric; default is 0.005, used in `build_hmm` within `impute_gamete_genotypes`, the expected error rate in sequencing
+#' @param seqError_model a numeric; default is 0.005, used in `build_hmm` within `impute_gamete_genotypes`, the expected error rate in genotyping
 #' @param avg_recomb_model a numeric; default is 1, used in `build_hmm` within `impute_gamete_genotypes`, the expected number of average recombination events per chromosome
 #' @param window_length an integer; default is 3000, used in `split_with_overlap` within `phase_donor_haplotypes`, the segment length to use in constructing overlapping windows for phasing
 #' @param overlap_denom an integer; default is 2, used in `split_with_overlap` within `phase_donor_haplotypes`, User-input value for denominator in calculation of overlap, or the degree of overlap between segments
+#' @param calculate_window_size_bool A bool; used in `phase_donor_haplotypes`, whether or not to calculate the window size based on characteristics of the input dataset; default = FALSE
+#' @param estimated_coverage a numeric; used in `calculate_window_size` within `phase_donor_haplotypes` only if the user wants rhapsodi to calculate the preferred window size for accurate phasing given characteristics of the data; the estimated sequencing depth of coverage of the input data; default = NULL 
 #' @param mcstop a bool; used in `stitch_haplotypes` within `phase_donor_haplotypes`, only considered if `stringent_stitch` is TRUE; default is TRUE; this parameter is used to determine whether phasing continues or exits if the mean concordance between two windows is between 0.1 and 0.9. If TRUE, rhapsodi exits. If FALSE, rhapsodi and phasing continues, asking which threshold the concordance is closer to and acting accordingly
 #' @param stringent_stitch a bool; used in `stitch_haplotypes` within `phase_donor_haplotypes`, default is TRUE, this parameter is used to determine the threshold values used in determining whether two windows originate from the same donor. If TRUE, the preset thresholds of 0.1 and 0.9 are used.
 #' @param stitch_new_min a numeric >0, but <1; default is 0.5; used in `stitch_haplotypes` within `phase_donor_haplotypes`, this parameter is only evaluated if `stringent_stitch` is FALSE and is dually assigned as the `different_max` and `same_min` threshold values when considering the concordance between two windows and therefore which donors they originate from (same or different).
@@ -40,13 +42,14 @@
 #' @export
 #'
 rhapsodi_autorun <- function(input_file, use_dt = FALSE, input_dt = NULL, acgt = FALSE, threads=2, sampleName="sampleT", chrom = "chrT", seqError_model = 0.005, avg_recomb_model = 1, 
-                             window_length=3000, overlap_denom = 2, mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5,
+                             window_length=3000, overlap_denom = 2, calculate_window_size_bool = FALSE, estimated_coverage = NULL,
+                             mcstop=TRUE, stringent_stitch=TRUE, stitch_new_min=0.5,
                              smooth_imputed_genotypes=FALSE, fill_ends = TRUE, smooth_crossovers=TRUE, verbose = FALSE){
   input_data <- read_data(input_file, use_dt = use_dt, input_dt = input_dt, acgt = acgt)
   if (verbose){ message("Data Input Completed")}
-  complete_haplotypes <- phase_donor_haplotypes(input_data$dt, input_data$positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min)
+  complete_haplotypes <- phase_donor_haplotypes(input_data$dt, input_data$positions, window_length = window_length, overlap_denom = overlap_denom, threads=threads, mcstop=mcstop, stringent_stitch=stringent_stitch, stitch_new_min = stitch_new_min, calculate_window_size_bool = calculate_window_size_bool, cov = estimated_coverage, ger = seqError_model, avgr = avg_recomb_model)
   if (verbose){ message("Phasing Completed")}
-  filled_gametes <- impute_gamete_genotypes(input_data$dt, complete_haplotypes, input_data$positions, sequencing_error = seqError_model, avg_recomb = avg_recomb_model, smooth_imputed_genotypes = smooth_imputed_genotypes, fill_ends = fill_ends, threads = threads)
+  filled_gametes <- impute_gamete_genotypes(input_data$dt, complete_haplotypes, input_data$positions, genotyping_error = seqError_model, avg_recomb = avg_recomb_model, smooth_imputed_genotypes = smooth_imputed_genotypes, fill_ends = fill_ends, threads = threads)
   if (verbose){message("Imputation Completed")}
   recomb_breaks <- discover_meiotic_recombination(input_data$dt, complete_haplotypes, filled_gametes, input_data$positions, smooth_crossovers = smooth_crossovers, smooth_imputed_genotypes = smooth_imputed_genotypes, sampleName = sampleName, chrom=chrom, threads = threads)
   if (verbose){message("Discovery Completed")}
