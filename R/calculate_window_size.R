@@ -22,8 +22,8 @@
 #' @export
 
 calculate_window_size <- function(ngam, cov, nsnp, ger, avgr){
-  betaregmodel <- readRDS(betaregmodel_20220718)
-  window_prop <- predict(betaregmodel, data.frame(gametes = ngam, coverage = cov, se = ger, avgr = avgr))
+  load(betaregmodel_20220718)
+  window_prop <- predict(betares, data.frame(gametes = ngam, coverage = cov, se = ger, avgr = avgr))
   window_size = as.integer(window_prop * nsnp)
   return(window_size)
 }
