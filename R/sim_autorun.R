@@ -20,8 +20,8 @@
 #' @param input_cov a bool, TRUE if coverage (i.e. like 0.01 (x)) will be input rather than missing genotype rate, default = TRUE, used within `sim_run_generative_model`
 #' @param input_mgr a bool, TRUE if missing genotype rate (i.e. like 80 (%) or 0.8) will be input rather than coverage, default = FALSE, used within `sim_run_generative_model`
 #' @param missing_genotype_rate a numeric, input if `input_mgr` is TRUE and `input_cov` is FALSE, suggested NULL otherwise, default = NULL, used within `sim_run_generative_model`
-#' @param add_seq_error a bool, TRUE if you want to simulate sequencing error in the generated data, default = TRUE, used within `sim_run_generative_model`
-#' @param seqError_add a numeric, default = 0.005, the sequencing error rate if adding sequencing error to the generated data, used by `sim_add_seq_error` within `sim_run_generative_model`
+#' @param add_seq_error a bool, TRUE if you want to simulate genotyping error in the generated data, default = TRUE, used within `sim_run_generative_model`
+#' @param seqError_add a numeric, default = 0.005, the genotyping error rate if adding genotyping error to the generated data, used by `sim_add_seq_error` within `sim_run_generative_model`
 #' @param add_de_novo_mut a bool, TRUE if you want to add de novo mutations to the generated data, default = FALSE, used within `sim_run_generative_model`
 #' @param de_novo_lambda an integer, default = 5, parameterizes a poisson distribution to find the number of de novo mutations (DNM) total, used by `sim_add_de_novo_mut` within `sim_run_generative_model`
 #' @param de_novo_alpha a numeric, default=7.5, shape parameter for a gamma distribution to find the number of gametes affected per DNM, used by `sim_add_de_novo_mut` within `sim_run_generative_model`
@@ -29,10 +29,11 @@
 #' @param cons a bool, default = FALSE, If TRUE, compares recombination breakpoints in a conservative manner such that if two ore more true breakpoints intersect a single prediction, we only consider one intersection to be a tp and the rest to be fn. If FALSE, all are tp. Used by `sim_find_tp` and `sim_find_fn` within `sim_assess_recomb` by `sim_assess_it`
 #' @param sampleName a string, default = "sim", only used in reporting recombination breakpoints by rhapsodi. Used by `find_recomb_spots` and `report_gametes` within `rhapsodi_autorun`
 #' @param chrom a string, default = "chrS", only used in reporting recombination breakpoints by rhapsodi. Used by `find_recomb_spots` and `report_gametes` within `rhapsodi_autorun`
-#' @param seqError_model a numeric, default = 0.005, used in `build_hmm` within `fill_gametes` in `rhapsodi_autorun`, the expected error rate in sequencing, affects emission probabilities
+#' @param seqError_model a numeric, default = 0.005, used in `build_hmm` within `fill_gametes` in `rhapsodi_autorun`, the expected error rate in genotyping, affects emission probabilities
 #' @param avg_recomb_model a numeric, default = 1, used in `buil_hmm` within `fill_gametes` in `rhapsodi_autorun`, the expected number of average recombination spots per chromosome, affects transition probabilities
 #' @param window_length an integer, default = 3000, used in `split_with_overlap` within `impute_donor_haplotypes` in `rhapsodi_autorun` as the segment length to use in constructing overlapping windows for phasing
 #' @param overlap_denom an integer, default = 2, used in `split_with_overlap` within `impute_donor_haplotypes` in `rhapsodi_autorun` as the denominator in calculating the amount of overlap to use in the overlapping windows for phasing
+#' @param calculate_window_size_bool A bool; used in `phase_donor_haplotypes`, whether or not to calculate the window size based on characteristics of the input dataset; default = FALSE
 #' @param mcstop a bool, default = FALSE, used in `stitch_haplotypes` within `impute_donor_haplotypes` in `rhapsodi_autorun`, only considered if `stringent_stitch` is TRUE. This parameter is used to determine whether phasing continues or exits if the mean concordance bewteen two windows is between 0.1 and 0.9. We prefer TRUE or continuing despite discordance for the simulation section so rhapsodi continues asking which threshold is closer and acts accordingly
 #' @param stringent_stitch a bool, default = TRUE, used in `stitch_haplotypes` within `impute_donor_haplotypes` in `rhapsodi_autorun`, this parameter is used to determine the threshold values used in determining whether two windows originate from the same donor. If TRUE, the preset thresholds of 0.1 and 0.9 are used.
 #' @param stitch_new_min a numeric, >0, < 1, default = 0.5, used in `stitch_haplotypes` within `impute_donor_haplotypes` in `rhapsodi_autorun`, only evaluated if `stringent_stitch` is FALSE. This parameter is dually assigned as the `different_max` and `same_min` threshold values when considering the mean concordance between two overlapping windows in phasing
@@ -51,7 +52,7 @@ sim_autorun <- function(num_gametes, num_snps, coverage,
                         add_seq_error=TRUE, seqError_add=0.005,
                         add_de_novo_mut=FALSE, de_novo_lambda=5, de_novo_alpha=7.5, de_novo_beta=10,
                         cons=FALSE, sampleName="sim", chrom="chrS", seqError_model=0.005, avg_recomb_model=1,
-                        window_length=3000, overlap_denom=2, mcstop = FALSE, stringent_stitch = TRUE, stitch_new_min = 0.5, 
+                        window_length=3000, overlap_denom=2, calculate_window_size_bool = FALSE, mcstop = FALSE, stringent_stitch = TRUE, stitch_new_min = 0.5, 
                         smooth_imputed_genotypes=FALSE, fill_ends = TRUE, smooth_crossovers=TRUE, verbose = FALSE){
   #Generate simulated data
   generated_data <- sim_run_generative_model(num_gametes, num_snps, coverage, 
@@ -61,8 +62,18 @@ sim_autorun <- function(num_gametes, num_snps, coverage,
                                              add_de_novo_mut=add_de_novo_mut, de_novo_lambda=de_novo_lambda, de_novo_alpha=de_novo_alpha, de_novo_beta=de_novo_beta)
   if (verbose){ message("Input Data Simulated")}
   #Run rhapsodi on sparse simulated data (generated_data$gam_na)
+  if (calculate_window_size_bool){
+    if (input_mgr == TRUE){
+      estimated_coverage <- sim_find_cov_from_mgr(missing_genotype_rate)
+    } else {
+      estimated_coverage <- coverage
+    }
+  } else {
+    estimated_coverage <- NULL
+  }
   rhapsodi_out <- rhapsodi_autorun(NULL, use_dt = TRUE, input_dt = generated_data$gam_na, threads=threads, sampleName=sampleName, chrom=chrom, seqError_model=seqError_model, avg_recomb_model=avg_recomb_model,
-                                   window_length=window_length, overlap_denom=overlap_denom, mcstop = mcstop, stringent_stitch = stringent_stitch, stitch_new_min = stitch_new_min,
+                                   window_length=window_length, overlap_denom=overlap_denom, calculuate_window_size_bool=calculate_window_size_bool, estimated_coverage = estimated_coverage, 
+                                   mcstop = mcstop, stringent_stitch = stringent_stitch, stitch_new_min = stitch_new_min,
                                    smooth_imputed_genotypes=smooth_imputed_genotypes, fill_ends = fill_ends, smooth_crossovers=smooth_crossovers, verbose = verbose)
   
   if (verbose) {message(" rhapsodi run complete")}
