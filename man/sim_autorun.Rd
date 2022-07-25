@@ -27,6 +27,7 @@ sim_autorun(
   avg_recomb_model = 1,
   window_length = 3000,
   overlap_denom = 2,
+  calculate_window_size_bool = FALSE,
   mcstop = FALSE,
   stringent_stitch = TRUE,
   stitch_new_min = 0.5,
@@ -55,9 +56,9 @@ sim_autorun(
 
 \item{missing_genotype_rate}{a numeric, input if \code{input_mgr} is TRUE and \code{input_cov} is FALSE, suggested NULL otherwise, default = NULL, used within \code{sim_run_generative_model}}
 
-\item{add_seq_error}{a bool, TRUE if you want to simulate sequencing error in the generated data, default = TRUE, used within \code{sim_run_generative_model}}
+\item{add_seq_error}{a bool, TRUE if you want to simulate genotyping error in the generated data, default = TRUE, used within \code{sim_run_generative_model}}
 
-\item{seqError_add}{a numeric, default = 0.005, the sequencing error rate if adding sequencing error to the generated data, used by \code{sim_add_seq_error} within \code{sim_run_generative_model}}
+\item{seqError_add}{a numeric, default = 0.005, the genotyping error rate if adding genotyping error to the generated data, used by \code{sim_add_seq_error} within \code{sim_run_generative_model}}
 
 \item{add_de_novo_mut}{a bool, TRUE if you want to add de novo mutations to the generated data, default = FALSE, used within \code{sim_run_generative_model}}
 
@@ -73,13 +74,15 @@ sim_autorun(
 
 \item{chrom}{a string, default = "chrS", only used in reporting recombination breakpoints by rhapsodi. Used by \code{find_recomb_spots} and \code{report_gametes} within \code{rhapsodi_autorun}}
 
-\item{seqError_model}{a numeric, default = 0.005, used in \code{build_hmm} within \code{fill_gametes} in \code{rhapsodi_autorun}, the expected error rate in sequencing, affects emission probabilities}
+\item{seqError_model}{a numeric, default = 0.005, used in \code{build_hmm} within \code{fill_gametes} in \code{rhapsodi_autorun}, the expected error rate in genotyping, affects emission probabilities}
 
 \item{avg_recomb_model}{a numeric, default = 1, used in \code{buil_hmm} within \code{fill_gametes} in \code{rhapsodi_autorun}, the expected number of average recombination spots per chromosome, affects transition probabilities}
 
 \item{window_length}{an integer, default = 3000, used in \code{split_with_overlap} within \code{impute_donor_haplotypes} in \code{rhapsodi_autorun} as the segment length to use in constructing overlapping windows for phasing}
 
 \item{overlap_denom}{an integer, default = 2, used in \code{split_with_overlap} within \code{impute_donor_haplotypes} in \code{rhapsodi_autorun} as the denominator in calculating the amount of overlap to use in the overlapping windows for phasing}
+
+\item{calculate_window_size_bool}{A bool; used in \code{phase_donor_haplotypes}, whether or not to calculate the window size based on characteristics of the input dataset; default = FALSE}
 
 \item{mcstop}{a bool, default = FALSE, used in \code{stitch_haplotypes} within \code{impute_donor_haplotypes} in \code{rhapsodi_autorun}, only considered if \code{stringent_stitch} is TRUE. This parameter is used to determine whether phasing continues or exits if the mean concordance bewteen two windows is between 0.1 and 0.9. We prefer TRUE or continuing despite discordance for the simulation section so rhapsodi continues asking which threshold is closer and acts accordingly}
 

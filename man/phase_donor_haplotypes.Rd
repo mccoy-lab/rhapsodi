@@ -12,7 +12,11 @@ phase_donor_haplotypes(
   threads = 2,
   mcstop = TRUE,
   stringent_stitch = TRUE,
-  stitch_new_min = 0.5
+  stitch_new_min = 0.5,
+  calculate_window_size_bool = FALSE,
+  cov = NULL,
+  ger = NULL,
+  avgr = NULL
 )
 }
 \arguments{
@@ -31,6 +35,14 @@ phase_donor_haplotypes(
 \item{stringent_stitch}{A bool; whether or not to use the original bounds (0.1, 0.9 cutoff) in \code{stitch_haplotypes}, or a user specified threshold value \code{stitch_new_min}.}
 
 \item{stitch_new_min}{A numeric/float, if \code{stringent_stitch} == FALSE, the new minimum value to use as a cutoff in \code{stitch_haplotypes}. If concordance is below this value, we assume the windows are opposite haplotypes, if greater than or equal, we assume the same haplotypes}
+
+\item{calculate_window_size_bool}{A bool; whether or not to calculate the window size based on characteristics of the input dataset; default = FALSE}
+
+\item{cov}{A numeric; the expected sequencing depth coverage, necessary only if wanting rhapsodi to calculate the preferred window size; default = NULL}
+
+\item{ger}{A numeric; the expected genotyping error rate, necessary only if wanting rhapsodi to calculate the preferred window size; default = NULL}
+
+\item{avgr}{A numeric; the expected average recombination rate, necessary only if wanting rhapsodi to calculate the preferred window size; default = NULL}
 }
 \value{
 complete_haplotypes phased haplotypes as a data frame with column names index, pos (for SNP positions), h1 (haplotype 1), & h2 (haplotype 2)

@@ -16,6 +16,8 @@ rhapsodi_autorun(
   avg_recomb_model = 1,
   window_length = 3000,
   overlap_denom = 2,
+  calculate_window_size_bool = FALSE,
+  estimated_coverage = NULL,
   mcstop = TRUE,
   stringent_stitch = TRUE,
   stitch_new_min = 0.5,
@@ -40,13 +42,17 @@ rhapsodi_autorun(
 
 \item{chrom}{a string; default is "chrT", fill in with whatever the chromosome is. We assume a single input file is from a single chromosome}
 
-\item{seqError_model}{a numeric; default is 0.005, used in \code{build_hmm} within \code{impute_gamete_genotypes}, the expected error rate in sequencing}
+\item{seqError_model}{a numeric; default is 0.005, used in \code{build_hmm} within \code{impute_gamete_genotypes}, the expected error rate in genotyping}
 
 \item{avg_recomb_model}{a numeric; default is 1, used in \code{build_hmm} within \code{impute_gamete_genotypes}, the expected number of average recombination events per chromosome}
 
 \item{window_length}{an integer; default is 3000, used in \code{split_with_overlap} within \code{phase_donor_haplotypes}, the segment length to use in constructing overlapping windows for phasing}
 
 \item{overlap_denom}{an integer; default is 2, used in \code{split_with_overlap} within \code{phase_donor_haplotypes}, User-input value for denominator in calculation of overlap, or the degree of overlap between segments}
+
+\item{calculate_window_size_bool}{A bool; used in \code{phase_donor_haplotypes}, whether or not to calculate the window size based on characteristics of the input dataset; default = FALSE}
+
+\item{estimated_coverage}{a numeric; used in \code{calculate_window_size} within \code{phase_donor_haplotypes} only if the user wants rhapsodi to calculate the preferred window size for accurate phasing given characteristics of the data; the estimated sequencing depth of coverage of the input data; default = NULL}
 
 \item{mcstop}{a bool; used in \code{stitch_haplotypes} within \code{phase_donor_haplotypes}, only considered if \code{stringent_stitch} is TRUE; default is TRUE; this parameter is used to determine whether phasing continues or exits if the mean concordance between two windows is between 0.1 and 0.9. If TRUE, rhapsodi exits. If FALSE, rhapsodi and phasing continues, asking which threshold the concordance is closer to and acting accordingly}
 
@@ -70,7 +76,7 @@ This function runs all steps of rhapsodi by first inputting the data
 Then calling \code{phase_donor_haplotypes} to run donor phasing
 Then calling \code{impute_gamete_genotypes} to run gamete genotype imputation
 And finally calling \code{discover_meiotic_recombination} to run meiotic recombination discovery
-Input data should be sparse gamete sequencing data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA. The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
+Input data should be sparse gamete genotype data encoded either as 0/1/NA or as a VCF style input with A/C/G/T/NA. The data is either from a tab-delimited file with a header or a pre-loaded data frame/table.
 For both input types, the first column should contain SNP positions in integer format.
 For ACGT input type, specifically (acgt = TRUE), the second column should be the REF allele and the third column should be the ALT allele. All following columns should be gamete data, with each gamete having its own column. Within these columns, data should be A/C/G/T/NA
 For 0/1/NA input type, specifically (acgt = FALSE), gamete data starts in the second column and continues for the rest of the columns.

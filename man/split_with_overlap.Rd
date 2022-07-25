@@ -9,9 +9,9 @@ split_with_overlap(vector_of_positions, window_size, overlap_denom)
 \arguments{
 \item{vector_of_positions}{vector of SNP positions}
 
-\item{window_size}{User-input value for length of segment (default = 3000)}
+\item{window_size}{User-input value for length of segment}
 
-\item{overlap_denom}{User-input value for denominator in calculation of overlap, or the degree of overlap between segments (default = 2)}
+\item{overlap_denom}{User-input value for denominator in calculation of overlap, or the degree of overlap between segments}
 }
 \value{
 windows list of lists with the number of lists equal to the number of windows and each inner list containing the SNP positions in that overlapping segment

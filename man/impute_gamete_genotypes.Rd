@@ -8,7 +8,7 @@ impute_gamete_genotypes(
   original_gamete_data,
   complete_haplotypes,
   positions,
-  sequencing_error = 0.005,
+  genotyping_error = 0.005,
   avg_recomb = 1,
   smooth_imputed_genotypes = FALSE,
   fill_ends = TRUE,
@@ -22,9 +22,9 @@ impute_gamete_genotypes(
 
 \item{positions}{vector of SNP position}
 
-\item{sequencing_error}{User-input for expected error in sequencing (default = 0.005)}
+\item{genotyping_error}{User-input for expected error in genotyping (default = 0.005)}
 
-\item{avg_recomb}{User-input for average recombination rate that can be expected for a chromosome (default=1)s}
+\item{avg_recomb}{User-input for average recombination rate that can be expected for a chromosome (default=1)}
 
 \item{smooth_imputed_genotypes}{a bool, default is FALSE, whether to use smoothed data for ending genotypes. If \code{TRUE}, doesn't replace with original reads, returning smoothed data only. If \code{FALSE}, will return both smoothed and unsmoothed}
 

@@ -15,3 +15,4 @@
 #' 
 #' @keywords datasets 
 #' 
+"betaregmodel_20220718"
