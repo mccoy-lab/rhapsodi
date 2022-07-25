@@ -72,7 +72,7 @@ sim_autorun <- function(num_gametes, num_snps, coverage,
     estimated_coverage <- NULL
   }
   rhapsodi_out <- rhapsodi_autorun(NULL, use_dt = TRUE, input_dt = generated_data$gam_na, threads=threads, sampleName=sampleName, chrom=chrom, seqError_model=seqError_model, avg_recomb_model=avg_recomb_model,
-                                   window_length=window_length, overlap_denom=overlap_denom, calculuate_window_size_bool=calculate_window_size_bool, estimated_coverage = estimated_coverage, 
+                                   window_length=window_length, overlap_denom=overlap_denom, calculate_window_size_bool=calculate_window_size_bool, estimated_coverage = estimated_coverage, 
                                    mcstop = mcstop, stringent_stitch = stringent_stitch, stitch_new_min = stitch_new_min,
                                    smooth_imputed_genotypes=smooth_imputed_genotypes, fill_ends = fill_ends, smooth_crossovers=smooth_crossovers, verbose = verbose)
   

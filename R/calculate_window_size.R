@@ -16,14 +16,13 @@
 #' 
 #' @return window_size an integer; the preferred window size for accurate phasing given the data characteristics
 #' 
-#' @import betareg
 #' @importFrom stats predict
 #' 
 #' @export
 
 calculate_window_size <- function(ngam, cov, nsnp, ger, avgr){
   load(betaregmodel_20220718)
-  window_prop <- predict(betares, data.frame(gametes = ngam, coverage = cov, se = ger, avgr = avgr))
+  window_prop <- predict(betaregmodel_20220718, data.frame(gametes = ngam, coverage = cov, se = ger, avgr = avgr))
   window_size = as.integer(window_prop * nsnp)
   return(window_size)
 }
